@@ -1,0 +1,29 @@
+.navbar-nav .nav-item {
+  margin-right: 20px;
+  font-size: 15px;
+}
+.navbar-brand {
+  margin-right: 400px;
+}
+
+
+body {
+  padding-top: 120px;
+  margin: 20px;
+}
+
+/* Increase the size of the checkbox */
+input[type=checkbox] {
+    transform: scale(1.5);
+    -webkit-transform: scale(1.5);
+    -moz-transform: scale(1.5);
+    -ms-transform: scale(1.5);
+}
+
+/* Reduce the size of the button */
+.btn {
+    width: 130px;
+    height: 35px;
+    font-size: 12px;
+}
+

@@ -1,0 +1,213 @@
+:root{
+  --main-color:#8e44ad;
+  --red:#e74c3c;
+  --oragen:#f39c12;
+  --white:#fff;
+  --black:#2c3e50;
+  --light-color:#888;
+  --light-bg:#eee;
+  --border:.1rem solid rgba(0,0,0,.2);
+}
+
+*{
+  font-family: 'Nunito', sans-serif;
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+  outline: none; border: none;
+  text-decoration: none;
+}
+html{
+  font-size: 62.5%;
+  overflow-x: hidden;
+}
+
+body{
+  background-color: var(--light-bg);
+  padding-left: 30rem;
+}
+
+body.dark{
+  --white:#222;
+  --black:#fff;
+  --light-color:#aaa;
+  --light-bg:#333;
+  --border:.1rem solid rgba(255,255,255,.2);
+}
+
+body.active{
+  padding-left: 0;
+}
+
+.btn,
+.option-btn,
+.delete-btn,
+.inline-btn,
+.inline-option-btn,
+.inline-delete-btn{
+   border-radius: .5rem;
+   padding: 1rem 3rem;
+   font-size: 1.8rem;
+   color: #fff;
+   margin-top: 1rem;
+   text-transform: capitalize;
+   cursor: pointer;
+   text-align: center;
+}
+
+.btn,
+.option-btn,
+.delete-btn{
+   display: block;
+   background-color: #e74c3c;
+   width: 100%;
+}
+
+.btn:hover,
+.option-btn:hover,
+.delete-btn:hover,
+.inline-btn:hover,
+.inline-option-btn:hover,
+.inline-delete-btn:hover{
+   background-color: var(--black);
+   color: var(--white);
+}
+
+.flex-btn{
+   display:flex;
+   gap: 1rem;
+}
+
+.form-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height:80vh;
+}
+
+.form-container form{
+  background-color: var(--white);
+  border-radius: .5rem;
+  padding: 2rem;
+}
+
+.form-container .login{
+  width: 50rem;
+}
+
+.form-container .register{
+  width: 80rem;
+}
+
+.form-container .room1{
+  width: 90rem;
+}
+
+.form-container form h3{
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--black);
+  text-transform: capitalize;
+}
+
+.form-container form p{
+  padding-top: 1rem;
+  font-size: 1.7rem;
+  color: var(--light-color);
+}
+
+.form-container form p span{
+  color: var(--red);
+}
+
+.form-container .link{
+  padding-bottom: 1rem;
+  text-align: center;
+  font-size: 2rem;
+}
+
+.form-container .link a{
+  color: var(--main-color);
+}
+
+.form-container .link a:hover{
+  color: var(--black);
+  text-decoration: underline;
+}
+
+.form-container form .box{
+  width: 100%;
+  border-radius: .5rem;
+  margin: 1rem 0;
+  font-size: 1.8rem;
+  color: var(--black);
+  padding: 1.4rem;
+  background-color: var(--light-bg);
+}
+
+.form-container .flex{
+  display: flex;
+  gap: 2rem;
+}
+
+.form-container .flex .col{
+  flex: 1 1 25rem;
+}
+
+.form-container .room1 .uil-times{
+  position: absolute;
+  cursor: pointer;
+  color:rgb(143, 14, 59);
+  font-size: 4rem;
+}
+.form-container .room1 .uil-times:hover{
+  transform: rotate(90deg);
+}
+
+.form-container .ui-field-container {
+    flex-wrap: wrap;
+    width: 95%;
+    padding: 20px;
+    background-color: #ffff;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+  }
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  h3 {
+    background-color: #ffffff;
+    text-align: center;
+    padding: 15px 0;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .tab-content {
+    background-color: #fde2e6;
+    padding: 50px 40px;
+  }
+  .tab-content h4 {
+    font-size: 15px;
+    margin-bottom: 20px;
+    color: #000224;
+    font-weight: 600;
+  }
+  .tab-content p {
+    text-align: justify;
+    line-height: 1.9;
+    letter-spacing: 0.4px;
+    color: #202238;
+  }
+  .tab-content div {
+    display: none;
+  }
+  .tab-content .active {
+    display: block;
+  }
+  .tabs .active {
+    background-color: #ffd3da;
+    color: #4d5bf9;
+  }
+

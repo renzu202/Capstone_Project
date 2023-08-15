@@ -1,0 +1,41 @@
+
+.navbar-nav .nav-item {
+  margin-right: 12px;
+  font-size: 15px;
+}
+.navbar-brand {
+  margin-right: 620px;
+}
+
+.logo {
+
+ border-radius: 50%;
+ margin-left: 20px;
+}
+
+.dental-title {
+    position: absolute;
+    margin-top: -38px;
+    margin-left: 77px;
+    color: white;
+}
+
+body {
+    background: white;
+    font-family: 'Josefin Sans';
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    padding-top: 100px;
+    padding-bottom: 10px;
+    color: #566787;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #00011c;
+}

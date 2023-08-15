@@ -1,0 +1,140 @@
+/* Header */
+.navbar-nav .nav-item {
+  margin-right: 12px;
+  font-size: 15px;
+}
+.navbar-brand {
+  margin-right: 620px;
+}
+
+.logo {
+
+ border-radius: 50%;
+ margin-left: 20px;
+}
+
+.dental-title {
+    position: absolute;
+    margin-top: -38px;
+    margin-left: 77px;
+    color: white;
+}
+
+.container {
+  padding-top: 50px;
+  padding-bottom: 100px;
+}
+
+/* Body */
+body {
+    background: white;
+    font-family: 'Josefin Sans';
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    padding-top: 100px;
+    padding-bottom: 10px;
+    color: #566787;
+    background: #A9A09E;
+    padding-bottom: 40px;
+}
+p,
+label,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #00011c;
+}
+
+/* Buttons */
+
+.btn-container {
+  font-size: 0;
+  display: inline-block;
+}
+
+.btn-flip {
+  opacity: 1;
+  outline: 0;
+  color: #fff;
+  line-height: 40px;
+  position: relative;
+  text-align: center;
+  letter-spacing: 1px;
+  display: inline-block;
+  text-decoration: none;
+  font-family: "Open Sans";
+  text-transform: uppercase;
+}
+.btn-flip:hover:after {
+  opacity: 1;
+  transform: translateY(0) rotateX(0);
+}
+.btn-flip:hover:before {
+  opacity: 0;
+  transform: translateY(50%) rotateX(90deg);
+}
+.btn-flip:after {
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 325px;
+  color: #323237;
+  display: block;
+  transition: 0.5s;
+  position: absolute;
+  background: lightblue;
+  content: attr(data-back);
+  transform: translateY(-50%) rotateX(90deg);
+}
+.btn-flip:before {
+  top: 0;
+  left: 0;
+  opacity: 1;
+  width: 325px;
+  color: #adadaf;
+  display: block;
+  padding: 0 30px;
+  line-height: 40px;
+  transition: 0.5s;
+  position: relative;
+  background: #323237;
+  content: attr(data-front);
+  transform: translateY(0) rotateX(0);
+}
+
+
+/* This class applies the smooth edge effect to the image */
+.image1-container img,
+.image2-container img,
+.image3-container img {
+  border-radius: 20px;
+  display: block;
+  max-width: 100%;
+  height: auto; /* Setting height to "auto" maintains the aspect ratio */
+}
+
+/* Set specific dimensions for each container */
+.image1-container {
+  width: 320px;
+  height: 200px;
+}
+
+.image2-container {
+  width: 320px;
+  height: 200px;
+}
+
+.image3-container {
+  width: 320px;
+  height: 200px;
+}
+
+
+
+
+
+
