@@ -1,10 +1,27 @@
+
 let submitBtn = document.getElementById('submit-btn');
-let form = document.getElementsByTagName('form')[0];
+let myForm = document.getElementById("form-wrapper");
 let preloader = document.getElementById('preloader-wrapper');
 let bodyElement = document.querySelector('body');
 let successDiv = document.getElementById('success');
 let lastTab = document.getElementById('tab-6');
 
+
+// Add a keydown event listener to the form
+myForm.addEventListener("keydown", function(event) {
+    // Check if the pressed key is the Enter key (key code 13)
+    if (event.keyCode === 13) {
+        // Prevent the form from submitting
+        event.preventDefault();
+
+        // Simulate pressing the "Tab" key to move to the next focusable element
+        const focusableElements = myForm.querySelectorAll("input, button, select, textarea, a[href]");
+        const currentFocusedIndex = Array.from(focusableElements).indexOf(document.activeElement);
+        const nextFocusedIndex = (currentFocusedIndex + 1) % focusableElements.length;
+
+        focusableElements[nextFocusedIndex].focus();
+    }
+});
 
 // Tabs
 $(".tab").hide();
@@ -26,31 +43,30 @@ function NextVal() {
 
 
 //Tab 2 - Patient Information Record
-    // minor checkbox
-        const minorCheckbox = document.getElementById("minor");
-        const minorSection = document.getElementById("minor-section");
 
+// age event listener
+const ageInput = document.getElementById("Age");
 
-        minorCheckbox.addEventListener("change", function() {
-        var occupation1input = document.getElementById("Occupation")
+ageInput.addEventListener("blur", function() {
         var poGNameInput = document.getElementById("PoGName");
         var contact2Input = document.getElementById("Contact2");
         var occupation2Input = document.getElementById("Occupation2");
+    // Get the entered age
+    const enteredAge = parseInt(ageInput.value);
 
-            if (minorCheckbox.checked) {
-                minorSection.style.display = "block";
-                poGNameInput.value = "";
-                contact2Input.value = "";
-                occupation2Input.value = "";
-                occupation1input.value = "N/A";
-            } else {
-                minorSection.style.display = "none";
-                poGNameInput.value = "N/A";
-                contact2Input.value = 0;
-                occupation2Input.value = "N/A";
-                occupation1input.value = "";
-            }
-        });
+    // Check if the entered age is below 18
+    if (enteredAge < 18) {
+        $('#minor-section').show();
+        poGNameInput.value = "";
+        contact2Input.value = "";
+        occupation2Input.value = "";
+    } else {
+        $('#minor-section').hide();
+        poGNameInput.value = "N/A";
+        contact2Input.value = 0;
+        occupation2Input.value = "N/A";
+    }
+});
 
     // history checkbox
         const historyCheckbox = document.getElementById("history");
@@ -81,7 +97,6 @@ function NextVal() {
         var Rel = document.getElementById("Religion").value;
         var HA = document.getElementById("HomeAddress").value;
         var Nation = document.getElementById("Nationality").value;
-        var Occ1 = document.getElementById("Occupation").value;
         var PoGName = document.getElementById("PoGName").value;
         var CN2 = document.getElementById("Contact2").value;
         var Occ2 = document.getElementById("Occupation2").value;
@@ -89,6 +104,9 @@ function NextVal() {
         var Reason = document.getElementById("Reason").value;
         var PD = document.getElementById("Dentist").value;
         var LV = document.getElementById("LastVisit").value;
+        var q7input = document.getElementById("inlineRadio14");
+        var q8input = document.getElementById("inlineRadio16");
+        var q9input = document.getElementById("inlineRadio18");
 
 
         if (FN === "") {
@@ -163,13 +181,6 @@ function NextVal() {
             document.getElementById("Nationval").innerHTML = "";
         }
 
-        if (Occ1 === "") {
-            document.getElementById("Occupation1val").innerHTML = "*This field is required";
-            return false;
-        }
-        else {
-            document.getElementById("Occupation1val").innerHTML = "";
-        }
 
         if (PoGName === "") {
             document.getElementById("PoGNameval").innerHTML = "*This field is required";
@@ -227,6 +238,25 @@ function NextVal() {
             document.getElementById("LVval").innerHTML = "";
         }
 
+        if (Sex === "Female") {
+            q7input.value = "No";
+            q8input.value = "No";
+            q9input.value = "No";
+            q7input.checked = false;
+            q8input.checked = false;
+            q9input.checked = false;
+            $('#women-section').show()
+        }
+         else if (Sex === "Male") {
+            q7input.value = "N/A";
+            q8input.value = "N/A";
+            q9input.value = "N/A";
+            q7input.checked = true;
+            q8input.checked = true;
+            q9input.checked = true;
+            $('#women-section').hide()
+        }
+
         // Proceed if all field have value
         $("#tab-2").hide();
         $("#tab-3").show();
@@ -256,7 +286,9 @@ function handleOption2Change() {
 
     if (option2Selected.value === "Yes") {
         tb1.value = "";
+        $('.tb1Section').show();
     } else if (option2Selected.value === "No") {
+        $('.tb1Section').hide();
         tb1.value = "N/A";
     }
 }
@@ -267,7 +299,9 @@ function handleOption3Change() {
 
     if (option3Selected.value === "Yes") {
         tb2.value = "";
+        $('.tb2Section').show();
     } else if (option3Selected.value === "No") {
+        $('.tb2Section').hide();
         tb2.value = "N/A";
     }
 }
@@ -278,42 +312,28 @@ function handleOption4Change() {
 
     if (option4Selected.value === "Yes") {
         tb3.value = "";
+        $('.tb3Section').show();
     } else if (option4Selected.value === "No") {
+        $('.tb3Section').hide();
         tb3.value = "N/A";
     }
 }
 
-  // women checkbox
-        const womenCheckbox = document.getElementById("women");
-        const womenSection = document.getElementById("women-section");
 
 
-           womenCheckbox.addEventListener("change", function() {
-        var q7input = document.getElementById("inlineRadio14");
-        var q8input = document.getElementById("inlineRadio16");
-        var q9input = document.getElementById("inlineRadio18");
+ // medical conditions checkbox
+        const medicalCheckbox = document.getElementById("medCheck");
 
-        if (womenCheckbox.checked) {
-            q7input.value = "No";
-            q8input.value = "No";
-            q9input.value = "No";
-            q7input.checked = false;
-            q8input.checked = false;
-            q9input.checked = false;
-            womenSection.style.display = "block";
+
+           medicalCheckbox.addEventListener("change", function() {
+
+        if (medicalCheckbox.checked) {
+            $('.medicalCon-section').show()
         } else {
-            q7input.value = "N/A";
-            q8input.value = "N/A";
-            q9input.value = "N/A";
-            q7input.checked = true;
-            q8input.checked = true;
-            q9input.checked = true;
-            womenSection.style.display = "none";
+            $('.medicalCon-section').hide()
         }
     });
 
-// Trigger the change event programmatically to initialize the behavior
-womenCheckbox.dispatchEvent(new Event("change"));
 
     function NextVal2(){
         var pName = document.getElementById("PName").value;
@@ -409,6 +429,7 @@ womenCheckbox.dispatchEvent(new Event("change"));
         } else {
             document.getElementById("Option6val").innerHTML = "";
         }
+
 
 
 
@@ -625,29 +646,60 @@ async function fetchAvailableTimeSlots(selectedDate) {
     }
 }
 
-// Fetch available time slots data for a specific date
-async function updateAvailableSlotsData(selectedDate) {
-    // If data is not already fetched for the selected date, fetch it
-    if (!availableSlotsData[selectedDate]) {
-        await fetchAvailableTimeSlots(selectedDate);
+// Async function to fetch booked time slots for a given date
+async function fetchBookedTimeSlots(selectedDate) {
+    try {
+        const response = await $.ajax({
+            url: '/customer/appointments/verify-timeslot',
+            method: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify({ date_slot: selectedDate }),
+        });
+
+        // Convert the API response to a set for efficient lookup
+        const bookedTimeSlotsSet = new Set(response.map((time) => {
+            var [hour, minute] = time.split(":");
+            var hourInt = parseInt(hour);
+            if (hourInt >= 1 && hourInt <= 9) {
+                // Convert the 12-hour format to 24-hour format (integer)
+                hourInt += 12;
+            }
+            return hourInt * 60 + parseInt(minute);
+        }));
+
+        return bookedTimeSlotsSet;
+    } catch (error) {
+        console.log('Error fetching booked time slots:', error);
+        return new Set(); // Return an empty set in case of an error
     }
 }
 
-// Update event titles based on the availableSlotsData
+// Function to update event titles based on the booked time slots
 function updateEventTitle(info) {
     // Get the selected date from the event
     const selectedDate = moment(info.event.start).format('YYYY-MM-DD');
 
-    // Fetch available time slots data for the selected date
-    updateAvailableSlotsData(selectedDate).then(() => {
+    // Call the function to get the booked time slots for the selected date
+    fetchBookedTimeSlots(selectedDate).then(bookedTimeSlotsSet => {
         // Calculate the available slots for the event
-        const bookedTimeSlotsSet = availableSlotsData[selectedDate];
         const availableSlots = 12 - (bookedTimeSlotsSet ? bookedTimeSlotsSet.size : 0);
 
-        // Update the event title to show the number of available slots
-        info.el.querySelector('.fc-event-title.fc-sticky').textContent = `${availableSlots} Slots Available`;
+        // Get the event title element
+        const eventTitleElement = info.el.querySelector('.fc-event-title.fc-sticky');
+
+        // Update the event title and style based on the available slots
+        if (availableSlots > 0) {
+            eventTitleElement.textContent = `${availableSlots} Slots Available`;
+            eventTitleElement.style.color = ''; // Reset text color
+        } else {
+            eventTitleElement.textContent = 'Fully Booked';
+            eventTitleElement.style.color = 'red'; // Set text color to red
+        }
     });
+
 }
+
 
 
     $(function(){
@@ -677,18 +729,18 @@ events: function (fetchInfo, successCallback, failureCallback) {
     var startDate = moment(fetchInfo.start).startOf('month');
     var endDate = moment(fetchInfo.end).endOf('month');
 
-    // Calculate tomorrow's date
-    var tomorrow = moment().add(1, 'day').startOf('day');
+    // Calculate today's date
+    var today = moment().startOf('day');
 
-    // Ensure that the start date is not before tomorrow
-    if (startDate.isBefore(tomorrow)) {
-        startDate = tomorrow;
+    // Ensure that the start date is not before today
+    if (startDate.isBefore(today)) {
+        startDate = today;
     }
 
     // Create an array to hold the events for each day in the month
     var events = [];
 
-    // Loop through each day in the month starting from tomorrow
+    // Loop through each day in the month starting from today
     while (startDate.isSameOrBefore(endDate)) {
         // For each day, create an event object and add it to the events array
         events.push({
@@ -729,6 +781,9 @@ eventClick: function (info) {
                     }
                     return hourInt * 60 + parseInt(minute);
                 }));
+
+                // Log the booked time slots for the selected date to the console
+    console.log('Booked time slots for', selectedDate, bookedTimeSlotsSet);
 
                 // Generate the time slot HTML with only the available time slots
                 var timeslot_html = '';
@@ -792,7 +847,7 @@ $(document).on('click', '.btn-timeslot', function() {
 
     $('#patientDate').text(selectedDate);
     $('#patientTime').text(selectedSchedule);
-    $('.selected-schedule').text(selectedDate + ', ' + selectedSchedule); // Update the display of selected time slot
+    $('.selected-schedule').text('---------------->' + selectedDate + ', ' + selectedSchedule + ' <----------------'); // Update the display of selected time slot
     $('.timeslot_input').val(selectedSchedule); // Set the selected time slot in the hidden input field
     $('.btn-timeslot').not(this).prop('disabled', true);
     $('#timeslot_modal').modal('hide');
@@ -811,7 +866,6 @@ $(document).on('click', '.btn-timeslot', function() {
         $('body').addClass('modal-open');
     }
 });
-
 
     $(document).on('click', '.btn-calendar', function() {
         $(this).prop('disabled', true)
@@ -838,19 +892,3 @@ $(document).ready(function() {
         $('#appointmentLocation').text(appointmentLocation);
     });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

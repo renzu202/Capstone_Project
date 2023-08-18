@@ -65,7 +65,6 @@ async def book_appointment(request):
                 strRlg = data['Religion']
                 strNational = data['Nationality']
                 strHA = data['HomeAddress']
-                strOcp = data['Occupation']
                 strPoG = data['PoGName']
                 intCP1 = int(data['Contact2'])
                 strOcp1 = data['Occupation2']
@@ -115,9 +114,8 @@ async def book_appointment(request):
 
                 # SAVE RECORD TO DATABASE
                 sql1 = "INSERT INTO tbl_patient_information_record \
-                        (Full_Name, Sex, Contact_No, Email_Address, Birthdate, Age, Religion, Nationality, Home_Address, \
-                        Occupation, Parent_Name, Parent_Contact_No, Parent_Occupation, Date, Dental_Reason, Previous_Dentist, \
-                        Last_Visit) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                        (Full_Name, Sex, Contact_No, Email_Address, Birthdate, Age, Religion, Nationality, Home_Address, Parent_Name, Parent_Contact_No, Parent_Occupation, Date, Dental_Reason, Previous_Dentist, \
+                        Last_Visit) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                 sql2 = "INSERT INTO tbl_medical_history \
                         (Physicians_Name, Present_Medical_Care, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, \
                         Medical_Conditions, other) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
@@ -125,7 +123,7 @@ async def book_appointment(request):
                 sql3 = "INSERT INTO tbl_validation (Valid_ID, Appointment_Schedule, Date_Created) VALUES(%s, %s, %s)"
 
                 data1 = (strFN, strSex, intCP, strEmail, intBirth, strAge, strRlg, strNational, strHA,
-                         strOcp, strPoG, intCP1, strOcp1, intDate, strDR, strDenT, strLV)
+                         strPoG, intCP1, strOcp1, intDate, strDR, strDenT, strLV)
 
                 data2 = (strPName, strPMcare, strOption1, strOption2, strtb1, strOption3, strtb2, strOption4, strtb3, strOption5, strOption6, strOption7, strOption8, strOption9, checkbox_string, strothers)
 

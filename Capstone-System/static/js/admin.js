@@ -63,7 +63,6 @@ $(document).ready(function() {
         var religion = $(this).data('religion');
         var address = $(this).data('address');
         var nationality = $(this).data('nationality');
-        var occupation = $(this).data('occupation');
         var parent = $(this).data('parent');
         var gcontact = $(this).data('gcontact');
         var goccupation = $(this).data('goccupation');
@@ -115,7 +114,6 @@ $(document).ready(function() {
             <p><strong>Religion:</strong><span> ${religion}</span></p>
             <p><strong>Home Address:</strong><span> ${address}</span></p>
             <p><strong>Nationality:</strong><span> ${nationality}</span></p>
-            <p><strong>Occupation:</strong><span> ${occupation}</span></p>
             <br>
             <p>FOR MINORS:</p>
             <p><strong>Parent/Guardian's Name:</strong><span> ${parent}</span></p>

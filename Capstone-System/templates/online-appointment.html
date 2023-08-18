@@ -146,20 +146,15 @@
                       <input  type="text" class="form-control" name="Nationality" id="Nationality" placeholder="Enter nationality">
                       <span style="color: red;" id="Nationval"></span>
                   </div>
-               <div class="form-group col-md-6">
-                <label for="Occupation">Occupation:</label>
-                <input  type="text" class="form-control" name="Occupation" id="Occupation" placeholder="Enter occupation">
-                   <span style="color: red;" id="Occupation1val"></span>
-                </div>
+                 <div class="form-group col-md-6">
+                     <label>Date Today:</label>
+                <input type="date" class="form-control"  name="CDate" id="CDate" placeholder="Enter email address">
+                <span style="color: red;" id="CDATEval"></span>
             </div>
-            <br>
-            <label><b>FOR MINORS:</b></label><br>
-            <label>
-            <input type="checkbox" name="minor" id="minor">
-            <b>Click the checkbox if you're a minor or below 18.</b>
-            </label>
-            <br>
+            </div>
             <div id="minor-section" style="display:none;">
+                <br>
+            <label><b>FOR MINORS:</b></label>
             <div class="form-group">
                 <br>
                 <label for="PoGName">Parent/Guardian's Name:</label>
@@ -182,14 +177,10 @@
             </div>
             </div>
                <br>
-            <label>Date today and what is your reason for dental consultation:</label>
+            <label>What is your reason for dental consultation:</label>
             <div class="row">
-            <div class="form-group col-md-4">
-                <input type="date" class="form-control"  name="CDate" id="CDate" placeholder="Enter email address">
-                <span style="color: red;" id="CDATEval"></span>
-            </div>
             <br>
-            <div class="form-group col-md-8">
+            <div class="form-group col-md-12">
                 <input  type="text" class="form-control" name="Reason" id="Reason" placeholder="Enter reason for dental consultation">
                 <span style="color: red;" id="Reasonval"></span>
             </div>
@@ -250,7 +241,7 @@
         <input class="form-check-input" type="radio" name="Option1" id="inlineRadio2" value="No">
         <label class="form-check-label" for="inlineRadio2">No</label>
     </div>
-    <br><br>
+    <br><br><br>
         <label>2. Have you ever had serious illness or surgical operation?</label> <span style="color: red;" id="Option2val"></span>
     <br>
     <div class="form-check form-check-inline">
@@ -262,9 +253,9 @@
         <label class="form-check-label" for="inlineRadio4">No</label>
     </div>
     <br><br>
-    <div class="form-group">
+    <div class="form-group tb1Section" style="display:none;">
             <label for="tb1">If so, what illness or operation?</label> <span style="color: red;" id="tb1Val"></span>
-            <input type="text" class="form-control"  name="tb1" id="tb1" placeholder="Enter answer" value="N/A">
+            <input type="text" class="form-control"  name="tb1" id="tb1" placeholder="Enter answer" value="N/A"><br>
     </div>
     <br>
         <label>3. Have you ever been hospitalized?</label> <span style="color: red;" id="Option3val"></span>
@@ -278,9 +269,9 @@
         <label class="form-check-label" for="inlineRadio6">No</label>
     </div>
     <br><br>
-    <div class="form-group">
+    <div class="form-group tb2Section" style="display:none;">
             <label for="tb2">If so, when and why?</label> <span style="color: red;" id="tb2Val"></span>
-            <input type="text" class="form-control"  name="tb2" id="tb2" placeholder="Enter answer" value="N/A">
+            <input type="text" class="form-control"  name="tb2" id="tb2" placeholder="Enter answer" value="N/A"><br>
     </div>
     <br>
         <label>4. Are you taking any prescription/non-prescription medication?</label> <span style="color: red;" id="Option4val"></span>
@@ -294,9 +285,9 @@
         <label class="form-check-label" for="inlineRadio8">No</label>
     </div>
     <br><br>
-    <div class="form-group">
+    <div class="form-group tb3Section" style="display:none;">
             <label for="tb3">If so, please specify:</label> <span style="color: red;" id="tb3Val"></span>
-            <input type="text" class="form-control"  name="tb3" id="tb3" placeholder="Enter answer" value="N/A">
+            <input type="text" class="form-control"  name="tb3" id="tb3" placeholder="Enter answer" value="N/A"><br>
     </div>
         <br>
     <label>5. Do you smoke?</label> <span style="color: red;" id="Option5val"></span>
@@ -309,7 +300,7 @@
         <input class="form-check-input" type="radio" name="Option5" id="inlineRadio10" value="No">
         <label class="form-check-label" for="inlineRadio10">No</label>
     </div>
-    <br><br>
+    <br><br><br>
     <label>6. Do you use alcohol or other dangerous drugs?</label> <span style="color: red;" id="Option6val"></span>
     <br>
     <div class="form-check form-check-inline">
@@ -320,19 +311,13 @@
         <input class="form-check-input" type="radio" name="Option6" id="inlineRadio12" value="No">
         <label class="form-check-label" for="inlineRadio12">No</label>
     </div>
-    <br><br>
-        <label><b>For Women only:</b></label><br>
-             <label>
-            <input type="checkbox" name="women" id="women">
-            <b>Click the checkbox if you're a Woman.</b>
-            </label>
-        <br>
-               <div id="women-section" style="display:none;">
+               <br><br>
+               <div id="women-section">
           <br>
          <div class="row">
         <div class="col-md-6">
         <label>7. Are you pregnant?</label> <span style="color: red;" id="Option7val"></span>
-    <br>
+        <br>
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="Option7" id="inlineRadio13" value="Yes">
         <label class="form-check-label" for="inlineRadio13">Yes</label>
@@ -356,7 +341,7 @@
     </div>
     </div>
     </div>
-    <br>
+    <br><br>
             <label>9. Are you taking birth control pills or others?</label> <span style="color: red;" id="Option9val"></span>
     <br>
     <div class="form-check form-check-inline">
@@ -367,7 +352,14 @@
         <input class="form-check-input" type="radio" name="Option9" id="inlineRadio18" value="N/A">
         <label class="form-check-label" for="inlineRadio18">No</label>
     </div></div><br><br>
-        <label>Do you have or have you had any of the following? Please check.</label>
+
+               <label>
+                   <input type="checkbox" name="medCheck" id="medCheck">
+                   <b>Click the checkbox if you have Medical Conditions.</b>
+               </label>
+               <div class="medicalCon-section" style="display:none;">
+                   <br>
+                   <b>Do you have or have you had any of the following? Please check.</b>
         <br><br>
         <div class="row">
               <div class="col-sm-6">
@@ -516,6 +508,7 @@
         <label for="Other">Others:</label>
         <input type="text" class="form-control" name="Other" id="Other" placeholder="Enter others">
     </div>
+           </div>
                <br>
                  <div class="q-box__buttons">
                     <button type="button" class="index-btn" onclick = "Prev2()">Previous</button>
@@ -558,9 +551,6 @@
                             </div>
                             <div class="modal-body">
                                 <div class="row">
-
-                                    <small><b>Note:</b> Once appointment is booked, information submitted cannot be changed unless requested.</small>
-                                    <br><br><hr>
                                             <div class="calendar-container my-2">
                                                 <div class="col-md-12">
                                                     <div class="form-group">
@@ -572,7 +562,7 @@
                                                         <input type="hidden" class="date_input">
 
                                                   <input type="hidden" name="appointment_schedule" class="selected-schedule-input">
-                                                        Selected schedule: <span class="selected-schedule"></span>
+                                                        Selected schedule: <span style="color:red;" class="selected-schedule"></span>
 
                                                         <div id='appointment-calendar'></div>
                                                     </div>
@@ -613,7 +603,7 @@
                     <p>Sorry, we are fully booked today. Please select another day.</p>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-danger" data-bs-dismiss="modal">Okay</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Okay</button>
                 </div>
             </div>
         </div>
