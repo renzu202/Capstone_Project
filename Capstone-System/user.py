@@ -43,8 +43,17 @@ async def services_page(request):
     return aiohttp_jinja2.render_template('services.html', request, {})
 
 
-async def online_appointment_page(request):
-    return aiohttp_jinja2.render_template('online-appointment.html', request, {})
+async def book_an_appointment_page(request):
+    return aiohttp_jinja2.render_template('book-an-appointment.html', request, {})
+
+async def admin_dashboard_page(request):
+    return aiohttp_jinja2.render_template('admin-dashboard.html', request, {})
+
+async def admin_tables_page(request):
+    return aiohttp_jinja2.render_template('tables.html', request, {})
+
+async def admin_calendar_page(request):
+    return aiohttp_jinja2.render_template('admin-calendar.html', request, {})
 
 
 async def book_appointment(request):
@@ -193,7 +202,7 @@ async def send_message(request):
         return web.Response(text='Error while submitting message')
 
 
-async def admin_page(request):
+async def admin_table_page(request):
     async with request.app['db_pool'].acquire() as conn:
         async with conn.cursor() as cursor:
             await cursor.execute("SELECT * FROM tbl_patient_information_record")
@@ -205,7 +214,7 @@ async def admin_page(request):
             await cursor.execute("SELECT * FROM tbl_validation")
             OtherInfo = await cursor.fetchall()
 
-            return aiohttp_jinja2.render_template('admin.html', request, {'personalInfo': personalInfo, 'medicalInfo': medicalInfo, 'OtherInfo': OtherInfo})
+            return aiohttp_jinja2.render_template('admin-tables.html', request, {'personalInfo': personalInfo, 'medicalInfo': medicalInfo, 'OtherInfo': OtherInfo})
 
 
 async def get_image_url(request):
@@ -299,12 +308,15 @@ async def delete_user(request):
 
 app.router.add_get('/', home_page)
 app.router.add_get('/services_page', services_page)
-app.router.add_get('/online_appointment_page', online_appointment_page)
+app.router.add_get('/book_an_appointment_page', book_an_appointment_page)
 app.router.add_post('/book_appointment', book_appointment)
 app.router.add_post('/customer/appointments/verify-timeslot', verify_timeslot)
 app.router.add_get('/contact_us_page', contact_us_page)
 app.router.add_post('/send_message', send_message)
-app.router.add_get('/admin_page', admin_page)
+app.router.add_get('/admin_table_page', admin_table_page)
+app.router.add_get('/admin_dashboard_page', admin_dashboard_page)
+app.router.add_get('/admin_tables_page', admin_tables_page)
+app.router.add_get('/admin_calendar_page', admin_calendar_page)
 app.router.add_post('/submit_treatment', submit_treatment)
 app.router.add_get('/read_one_treatment/{id}', read_one_treatment)
 app.router.add_get('/delete_user/{id}', delete_user)

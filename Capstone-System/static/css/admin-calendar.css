@@ -22,21 +22,20 @@
 }
 
 body {
-    background: white;
+    background: #85AFAA;
     font-family: 'Josefin Sans';
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.4;
     padding-top: 100px;
     padding-bottom: 10px;
-    color: #566787;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    color: #00011c;
+.dashboard-link .fa,
+.patient-records-link .fa,
+.clinic-calendar-link .fa,
+.dashboard-link,
+.patient-records-link,
+.clinic-calendar-link {
+   color: black;
 }

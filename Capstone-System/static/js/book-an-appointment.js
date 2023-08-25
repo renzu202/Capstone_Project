@@ -1,4 +1,3 @@
-
 let submitBtn = document.getElementById('submit-btn');
 let myForm = document.getElementById("form-wrapper");
 let preloader = document.getElementById('preloader-wrapper');
@@ -25,9 +24,35 @@ myForm.addEventListener("keydown", function(event) {
 
 // Tabs
 $(".tab").hide();
-$("#tab-1").show();
+$("#tab-0").show();
+
+//Tab 0 - Patient Selection
+function NP() {
+    $("#tab-1").show();
+    $("#tab-0").hide();
+}
+
+function OP() {
+    $("#tab-0").hide();
+    $("#tab-OP").show();
+}
+
+//Tab OP - Old Patient
+function PrevOP() {
+    $("#tab-0").show();
+    $("#tab-OP").hide();
+}
+
+function NextOPval() {
+
+}
 
 //Tab 1 - Informed Consent
+function PrevVal() {
+    $("#tab-1").hide();
+    $("#tab-0").show();
+}
+
 function NextVal() {
     var checkbox = document.getElementById("agreement");
     if (!checkbox.checked) {
@@ -847,7 +872,7 @@ $(document).on('click', '.btn-timeslot', function() {
 
     $('#patientDate').text(selectedDate);
     $('#patientTime').text(selectedSchedule);
-    $('.selected-schedule').text('---------------->' + selectedDate + ', ' + selectedSchedule + ' <----------------'); // Update the display of selected time slot
+    $('.selected-schedule').text(selectedDate + ', ' + selectedSchedule); // Update the display of selected time slot
     $('.timeslot_input').val(selectedSchedule); // Set the selected time slot in the hidden input field
     $('.btn-timeslot').not(this).prop('disabled', true);
     $('#timeslot_modal').modal('hide');
@@ -858,14 +883,28 @@ $(document).on('click', '.btn-timeslot', function() {
 
         var converted_time = $(this).text().split(' -')[0]
         converted_time = moment(converted_time, 'hh:mm A').format('HH:mm')
-        $('.timeslot_input').val(converted_time)
-    })
+        $('.timeslot_input').val(converted_time);
+
+    // Show the "Selected Schedule" modal
+    $('#selected_schedule_modal').modal('show');
+    });
 
     $(document).on('hidden.bs.modal', '.modal', function () {
     if ($('.modal:visible').length) {
         $('body').addClass('modal-open');
     }
-});
+    });
+
+    // Add a listener for the "Select Another" button in the "Selected Schedule" modal
+    $(document).on('click', '#select_another_button', function() {
+        $('#selected_schedule_modal').modal('hide');
+    });
+
+    // Add a listener for the "Confirm" button in the "Selected Schedule" modal
+    $(document).on('click', '#confirm_button', function() {
+        $('#selected_schedule_modal').modal('hide');
+        $('#calendarModal').modal('hide');
+    });
 
     $(document).on('click', '.btn-calendar', function() {
         $(this).prop('disabled', true)
@@ -892,3 +931,4 @@ $(document).ready(function() {
         $('#appointmentLocation').text(appointmentLocation);
     });
 });
+
