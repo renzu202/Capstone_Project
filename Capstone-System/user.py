@@ -49,9 +49,6 @@ async def book_an_appointment_page(request):
 async def admin_dashboard_page(request):
     return aiohttp_jinja2.render_template('admin-dashboard.html', request, {})
 
-async def admin_tables_page(request):
-    return aiohttp_jinja2.render_template('tables.html', request, {})
-
 async def admin_calendar_page(request):
     return aiohttp_jinja2.render_template('admin-calendar.html', request, {})
 
@@ -158,13 +155,22 @@ async def verify_timeslot(request):
 
         async with request.app['db_pool'].acquire() as conn:
             async with conn.cursor() as cursor:
-                # Fetch the booked time slots for the selected date from the database
+                # Fetch the booked time slots from tbl_validation
                 query = "SELECT Appointment_Schedule FROM tbl_validation WHERE DATE(Appointment_Schedule) = DATE(%s)"
                 await cursor.execute(query, (date_input,))
-                result = await cursor.fetchall()
+                result_validation = await cursor.fetchall()
 
-                # Extract the time slots from the result and return as a list
-                booked_timeslots = [time_slot[0].strftime('%H:%M') for time_slot in result]
+                # Fetch the booked time slots from tbl_clinic_calendar
+                query_calendar = "SELECT DoR_Timeslots FROM tbl_admin_timeslot WHERE DATE(DoR_Timeslots) = DATE(%s)"
+                await cursor.execute(query_calendar, (date_input,))
+                result_calendar = await cursor.fetchall()
+
+                # Extract the time slots from the results and merge them
+                booked_timeslots = [
+                    time_slot[0].strftime('%H:%M')
+                    for result in [result_validation, result_calendar]
+                    for time_slot in result
+                ]
 
                 # Return the booked time slots as JSON
                 return web.json_response(booked_timeslots)
@@ -202,7 +208,7 @@ async def send_message(request):
         return web.Response(text='Error while submitting message')
 
 
-async def admin_table_page(request):
+async def admin_tables_page(request):
     async with request.app['db_pool'].acquire() as conn:
         async with conn.cursor() as cursor:
             await cursor.execute("SELECT * FROM tbl_patient_information_record")
@@ -298,12 +304,81 @@ async def delete_user(request):
             async with conn.cursor() as cursor:
                 await cursor.execute("DELETE FROM tbl_patient_information_record WHERE ID=%s", patient_id)
 
-        flash_message = 'Record successfully deleted from the server!'
-        return web.Response(text=flash_message)
+        redirect_url = '/admin_tables_page'
+        return web.HTTPFound(redirect_url)
 
     except Exception as e:
         print(e)
         return web.Response(text='Error while deleting user')
+
+async def save_timeslot(request):
+    try:
+        data = await request.json()
+        selected_schedule = data.get("selected_schedule")
+
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                # Save the selected_schedule to your database table
+                sql = "INSERT INTO tbl_admin_timeslot (DoR_Timeslots) VALUES (%s)"
+                await cursor.execute(sql, (selected_schedule,))
+
+        return web.json_response({"message": "Schedule saved successfully"})
+    except Exception as e:
+        return web.json_response({"error": str(e)}, status=500)
+
+async def fetch_timeslots(request):
+    try:
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                query = "SELECT DoR_Timeslots FROM tbl_admin_timeslot"
+                await cursor.execute(query)
+                result = await cursor.fetchall()
+
+                timeslots = [
+                    timeslot[0].strftime('%Y-%m-%d %H:%M:%S')
+                    for timeslot in result
+                ]
+
+                print("Timeslots API Response:", timeslots)
+
+                return web.json_response(timeslots)
+    except Exception as e:
+        return web.json_response({'error': str(e)})
+
+async def disable_day(request):
+    try:
+        data = await request.json()
+        selected_day = data.get("selected_day")
+
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                # Save the selected_schedule to your database table
+                sql = "INSERT INTO tbl_admin_date (Disabled_Dates) VALUES (%s)"
+                await cursor.execute(sql, (selected_day,))
+
+        return web.json_response({"message": "Schedule saved successfully"})
+    except Exception as e:
+        return web.json_response({"error": str(e)}, status=500)
+
+async def fetch_disabled_dates(request):
+    try:
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                query = "SELECT Disabled_Dates FROM tbl_admin_date"
+                await cursor.execute(query)
+                result = await cursor.fetchall()
+
+                disabled_dates = [
+                    date[0].strftime('%Y-%m-%d')
+                    for date in result
+                ]
+
+                return web.json_response(disabled_dates)
+    except Exception as e:
+        return web.json_response({'error': str(e)})
+
+
+
 
 
 app.router.add_get('/', home_page)
@@ -313,14 +388,17 @@ app.router.add_post('/book_appointment', book_appointment)
 app.router.add_post('/customer/appointments/verify-timeslot', verify_timeslot)
 app.router.add_get('/contact_us_page', contact_us_page)
 app.router.add_post('/send_message', send_message)
-app.router.add_get('/admin_table_page', admin_table_page)
-app.router.add_get('/admin_dashboard_page', admin_dashboard_page)
 app.router.add_get('/admin_tables_page', admin_tables_page)
+app.router.add_get('/admin_dashboard_page', admin_dashboard_page)
 app.router.add_get('/admin_calendar_page', admin_calendar_page)
 app.router.add_post('/submit_treatment', submit_treatment)
 app.router.add_get('/read_one_treatment/{id}', read_one_treatment)
 app.router.add_get('/delete_user/{id}', delete_user)
 app.router.add_get('/get_image_url', get_image_url)
+app.router.add_post('/save-timeslot', save_timeslot)
+app.router.add_post('/disable-day', disable_day)
+app.router.add_get('/fetch-disabled-dates', fetch_disabled_dates)
+app.router.add_get('/fetch_timeslots', fetch_timeslots)
 
 app.on_startup.append(create_pool)
 app.on_cleanup.append(close_pool)

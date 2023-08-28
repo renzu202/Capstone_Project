@@ -629,18 +629,12 @@ document.addEventListener("DOMContentLoaded", function () {
  var appointment_id = 0;
 
 var timeslots = [
-    "10:00 am - 10:30 am",
-    "10:30 am - 11:00 am",
-    "11:00 am - 11:30 am",
-    "11:30 am - 12:00 pm",
-    "12:00 pm - 12:30 pm",
-    "12:30 pm - 1:00 pm",
-    "01:00 pm - 01:30 pm",
-    "01:30 pm - 02:00 pm",
-    "02:00 pm - 02:30 pm",
-    "02:30 pm - 03:00 pm",
-    "03:00 pm - 03:30 pm",
-    "03:30 pm - 04:00 pm",
+    "10:00 am - 11:00 am",
+    "11:00 am - 12:00 pm",
+    "12:00 pm - 01:00 pm",
+    "01:00 pm - 02:00 pm",
+    "02:00 pm - 03:00 pm",
+    "03:00 pm - 4:00 pm",
 ];
 
 
@@ -700,29 +694,75 @@ async function fetchBookedTimeSlots(selectedDate) {
     }
 }
 
+async function fetchBookedTimeSlotsFromCalendar(selectedDate) {
+    try {
+        const response = await $.ajax({
+            url: '/customer/appointments/verify-timeslot',
+            method: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify({ date_slot: selectedDate }),
+        });
+
+ // Convert the API response to a set for efficient lookup
+        const bookedTimeSlotsSet = new Set(response.map((time) => {
+            var [hour, minute] = time.split(":");
+            var hourInt = parseInt(hour);
+            if (hourInt >= 1 && hourInt <= 9) {
+                // Convert the 12-hour format to 24-hour format (integer)
+                hourInt += 12;
+            }
+            return hourInt * 60 + parseInt(minute);
+        }));
+
+        return bookedTimeSlotsSet;
+    } catch (error) {
+        console.log('Error fetching booked time slots from calendar:', error);
+        return new Set(); // Return an empty set in case of an error
+    }
+}
+
 // Function to update event titles based on the booked time slots
 function updateEventTitle(info) {
     // Get the selected date from the event
     const selectedDate = moment(info.event.start).format('YYYY-MM-DD');
 
-    // Call the function to get the booked time slots for the selected date
-    fetchBookedTimeSlots(selectedDate).then(bookedTimeSlotsSet => {
-        // Calculate the available slots for the event
-        const availableSlots = 12 - (bookedTimeSlotsSet ? bookedTimeSlotsSet.size : 0);
+    // Fetch disabled dates from the API
+    fetch('/fetch-disabled-dates')
+        .then(response => response.json())
+        .then(disabledDates => {
+            const eventTitleElement = info.el.querySelector('.fc-event-title.fc-sticky');
 
-        // Get the event title element
-        const eventTitleElement = info.el.querySelector('.fc-event-title.fc-sticky');
+            // Check if the selected date is disabled
+            if (disabledDates.includes(selectedDate)) {
+                eventTitleElement.textContent = 'Not Available';
+                eventTitleElement.style.color = '#433F3E';
+                return; // Exit the function if the date is disabled
+            }
 
-        // Update the event title and style based on the available slots
-        if (availableSlots > 0) {
-            eventTitleElement.textContent = `${availableSlots} Slots Available`;
-            eventTitleElement.style.color = ''; // Reset text color
-        } else {
-            eventTitleElement.textContent = 'Fully Booked';
-            eventTitleElement.style.color = 'red'; // Set text color to red
-        }
-    });
+            // Fetch booked time slots from the API for the selected date
+            fetchBookedTimeSlots(selectedDate).then(bookedTimeSlotsSet => {
+                // Fetch booked time slots from the calendar's own API for the selected date
+                fetchBookedTimeSlotsFromCalendar(selectedDate).then(bookedTimeSlotsFromCalendar => {
+                    // Combine the two sets of booked time slots
+                    const combinedBookedTimeSlots = new Set([...bookedTimeSlotsSet, ...bookedTimeSlotsFromCalendar]);
 
+                    // Calculate available slots
+                    const availableSlots = 6 - combinedBookedTimeSlots.size;
+
+                    if (availableSlots > 0) {
+                        eventTitleElement.textContent = `${availableSlots} Slots Available`;
+                        eventTitleElement.style.color = '';
+                    } else {
+                        eventTitleElement.textContent = 'Fully Booked';
+                        eventTitleElement.style.color = 'red';
+                    }
+                });
+            });
+        })
+        .catch(error => {
+            console.log('Error fetching disabled dates:', error);
+        });
 }
 
 
@@ -740,19 +780,19 @@ function updateEventTitle(info) {
                 left  : false,
                 center: 'title',
             },
+            hiddenDays: [0],
             height: 500,
             allDaySlot: false,
             selectable: false,
             droppable: false,
             editable: false,
-            disableDragging: false,
             themeSystem: 'bootstrap',
             weekends: true,
 
 events: function (fetchInfo, successCallback, failureCallback) {
     // Get the start and end date of the current month
     var startDate = moment(fetchInfo.start).startOf('month');
-    var endDate = moment(fetchInfo.end).endOf('month');
+     var endDate = moment(today).add(2, 'months');
 
     // Calculate today's date
     var today = moment().startOf('day');
@@ -783,6 +823,13 @@ events: function (fetchInfo, successCallback, failureCallback) {
 },
 
 eventClick: function (info) {
+    var eventTitle = $(info.el).find('.fc-sticky').text();
+
+    if (eventTitle === 'Not Available') {
+        showNotAvailableModal(); // Show the "Not Available" modal
+        return; // Prevent further processing
+    }
+
     var slotsAvailable = parseInt($(info.el).find('.fc-sticky').text());
     if (slotsAvailable > 0) {
         // Get the selected date from the calendar
@@ -848,7 +895,6 @@ eventClick: function (info) {
     }
 },
                 eventDidMount: updateEventTitle,
-            editable  : true
         });
 
     })
@@ -883,6 +929,7 @@ $(document).on('click', '.btn-timeslot', function() {
 
         var converted_time = $(this).text().split(' -')[0]
         converted_time = moment(converted_time, 'hh:mm A').format('HH:mm')
+
         $('.timeslot_input').val(converted_time);
 
     // Show the "Selected Schedule" modal
@@ -906,15 +953,24 @@ $(document).on('click', '.btn-timeslot', function() {
         $('#calendarModal').modal('hide');
     });
 
-    $(document).on('click', '.btn-calendar', function() {
-        $(this).prop('disabled', true)
+$(document).ready(function() {
+    var isCalendarRendered = false;
 
-        if ($('.continue-modal-btn').is(':visible')) {
-            $(this).prop('disabled', false)
+    $(document).on('click', '.btn-calendar', function() {
+        if (!isCalendarRendered) {
+            // Render the calendar
+            calendar.render();
+            $('.btn-calendar').text('Close Calendar');
+        } else {
+            // Hide and destroy the calendar
+            calendar.destroy();
+            $('.btn-calendar').text('Open Calendar');
         }
 
-        calendar.render();
-    })
+        // Toggle the flag
+        isCalendarRendered = !isCalendarRendered;
+    });
+});
 
 $(document).ready(function() {
     $('.tab input, .tab select, .tab textarea').on('change', function() {
@@ -931,4 +987,8 @@ $(document).ready(function() {
         $('#appointmentLocation').text(appointmentLocation);
     });
 });
+
+function showNotAvailableModal() {
+    $('#not_available_modal').modal('show');
+}
 

@@ -39,3 +39,73 @@ body {
 .clinic-calendar-link {
    color: black;
 }
+
+#appointment-calendar {
+    background: #535252;
+    color: #CEB339;
+}
+
+
+
+.fc-event-title-container {
+    text-align: center;
+    cursor: pointer;
+}
+
+.modal-dialog {
+  max-width: 800px;
+  width: 100%;
+}
+
+.ddl {
+    width: 300px;
+    min-height: 300px;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 3px solid black;
+    padding: 10px;
+    background-color: #f9f9f9;
+    margin-right: 50px;
+}
+
+.drs {
+    width: 300px;
+    min-height: 300px;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 3px solid black;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.ddl ul li:nth-child(odd) {
+    background-color: #f9f9f9; /* Light gray background for odd lines */
+    padding: 5px;
+}
+
+.drs ul li:nth-child(odd) {
+    background-color: #f9f9f9; /* Light gray background for odd lines */
+    padding: 5px;
+}
+
+.ddl ul li:nth-child(even) {
+    background-color: #e0e0e0; /* Slightly darker background for even lines */
+    padding: 5px;
+}
+
+.drs ul li:nth-child(even) {
+    background-color: #e0e0e0; /* Slightly darker background for even lines */
+    padding: 5px;
+}
+
+
+@media (max-width: 420px) {
+
+.ddl {
+    margin-bottom: 10px;
+}
+
+}
+
+
+
