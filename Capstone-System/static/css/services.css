@@ -134,6 +134,24 @@ h6 {
   height: 200px;
 }
 
+.margin1,
+.margin2,
+.margin3,
+.margin4,
+.margin5
+{
+    margin-bottom: 150px;
+}
+
+@media (max-width: 420px) {
+
+.image1-container,
+.image2-container{
+    margin-bottom: 120px;
+}
+
+
+}
 
 
 
