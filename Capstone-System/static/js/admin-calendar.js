@@ -19,7 +19,7 @@ var timeslots = [
 
   function fetchAndDisplayDisabledDates() {
             $.ajax({
-                url: '/fetch-disabled-dates', // Update with your API endpoint URL
+                url: '/fetch-disabled-dates',
                 method: 'GET',
                 dataType: 'json',
                 success: function (response) {
@@ -34,7 +34,7 @@ var timeslots = [
 
         function fetchAndDisplayTimeslots() {
             $.ajax({
-                url: '/fetch_timeslots', // Update with your API endpoint URL
+                url: '/fetch_timeslots',
                 method: 'GET',
                 dataType: 'json',
                 success: function (response) {
@@ -461,6 +461,64 @@ $(document).on('click', '#confirm_disable_button', function() {
 function showNotAvailableModal() {
     $('#not_available_modal').modal('show');
 }
+
+// Clinic Calendar Deleting
+
+// Function to delete disabled date
+function deleteDisabledDate(date) {
+    $.ajax({
+        url: `/delete-disabled-date?date=${date}`,
+        method: 'DELETE',
+        success: function (response) {
+            fetchAndDisplayDisabledDates();
+        },
+        error: function (error) {
+            console.log('Error deleting disabled date:', error);
+        }
+    });
+}
+
+// Function to delete disabled timeslot
+function deleteDisabledTimeslot(timeslot) {
+    $.ajax({
+        url: `/delete-disabled-timeslot?timeslot=${timeslot}`,
+        method: 'DELETE',
+        success: function (response) {
+            fetchAndDisplayTimeslots();
+        },
+        error: function (error) {
+            console.log('Error deleting disabled timeslot:', error);
+        }
+    });
+}
+
+$(document).on('click', '#deleteDateButton', function() {
+    var dateToDelete = $('#deleteDisabledDate').val();
+
+    // Validate the input format (YYYY-MM-DD)
+    var datePattern = /^\d{4}-\d{2}-\d{2}$/;
+    if (!datePattern.test(dateToDelete)) {
+        alert('Invalid date format. Please use YYYY-MM-DD.');
+        return;
+    }
+        deleteDisabledDate(dateToDelete);
+        $('.btn-calendar').click();
+        $('.btn-calendar').click();
+});
+
+$(document).on('click', '#deleteTimeslotButton', function() {
+    var timeslotToDelete = $('#deleteDisabledTimeslot').val();
+
+     // Validate the input format (YYYY-MM-DD HH:MM:SS)
+    var datetimePattern = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+    if (!datetimePattern.test(timeslotToDelete)) {
+        alert('Invalid datetime format. Please use YYYY-MM-DD HH:MM:SS.');
+        return;
+    }
+        deleteDisabledTimeslot(timeslotToDelete);
+        $('.btn-calendar').click();
+        $('.btn-calendar').click();
+});
 
 
 

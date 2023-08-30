@@ -377,6 +377,29 @@ async def fetch_disabled_dates(request):
     except Exception as e:
         return web.json_response({'error': str(e)})
 
+async def delete_disabled_date(request):
+    date_to_delete = request.query.get('date')
+    try:
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                query = "DELETE FROM tbl_admin_date WHERE Disabled_Dates = %s"
+                await cursor.execute(query, date_to_delete)
+                return web.json_response({'message': f'Disabled date {date_to_delete} deleted successfully'})
+    except Exception as e:
+        return web.json_response({'error': str(e)})
+
+async def delete_disabled_timeslot(request):
+    timeslot_to_delete = request.query.get('timeslot')
+    try:
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                query = "DELETE FROM tbl_admin_timeslot WHERE DoR_Timeslots = %s"
+                await cursor.execute(query, timeslot_to_delete)
+                return web.json_response({'message': f'Disabled timeslot {timeslot_to_delete} deleted successfully'})
+    except Exception as e:
+        return web.json_response({'error': str(e)})
+
+
 
 
 
@@ -399,6 +422,8 @@ app.router.add_post('/save-timeslot', save_timeslot)
 app.router.add_post('/disable-day', disable_day)
 app.router.add_get('/fetch-disabled-dates', fetch_disabled_dates)
 app.router.add_get('/fetch_timeslots', fetch_timeslots)
+app.router.add_delete('/delete-disabled-date', delete_disabled_date)
+app.router.add_delete('/delete-disabled-timeslot', delete_disabled_timeslot)
 
 app.on_startup.append(create_pool)
 app.on_cleanup.append(close_pool)

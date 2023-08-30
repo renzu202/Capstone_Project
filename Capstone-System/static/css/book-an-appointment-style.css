@@ -536,6 +536,11 @@ width: 100% !important;
   width: 100%;
 }
 
+#consentmodal .consent-modal {
+  max-width: 1000px;
+  width: 100%;
+}
+
 
 
 
