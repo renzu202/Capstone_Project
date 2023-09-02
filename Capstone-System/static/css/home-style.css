@@ -22,7 +22,10 @@
 }
 
 body {
-    background: white;
+    background-image: url('/static/img/bg-image.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
     font-family: 'Josefin Sans';
     font-size: 1rem;
     font-weight: 600;
@@ -40,3 +43,15 @@ h5,
 h6 {
     color: #00011c;
 }
+
+
+/* Mobile */
+@media (max-width: 420px) {
+
+  .navbar-nav {
+    display: block;
+  }
+
+
+}
+

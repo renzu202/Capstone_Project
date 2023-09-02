@@ -28,15 +28,16 @@
 
 /* Body */
 body {
-    background: white;
+    background-image: url('/static/img/bg-image.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
     font-family: 'Josefin Sans';
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.4;
     padding-top: 100px;
     padding-bottom: 10px;
-    color: #566787;
-    background: #A9A09E;
     padding-bottom: 40px;
 }
 p,
@@ -152,8 +153,3 @@ h6 {
 
 
 }
-
-
-
-
-

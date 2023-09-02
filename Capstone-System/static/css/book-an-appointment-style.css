@@ -23,12 +23,14 @@
 
 
 body {
-    background: #A9A09E;
+    background-image: url('/static/img/bg-image.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
     font-family: 'Josefin Sans';
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.4;
-    color: #000;
     padding-top: 100px;
     padding-bottom: 10px;
 }
@@ -509,7 +511,7 @@ width: 100% !important;
 
 @media (max-width: 420px) {
    .dental-title {
-      font-size: 1rem; /* Adjust font size for smaller screens */
+      font-size: 1rem;
    }
 
    button.index-btn {
@@ -541,13 +543,4 @@ width: 100% !important;
   width: 100%;
 }
 
-
-
-
-
-
-
-
-
-
-
+ /* Background */

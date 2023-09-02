@@ -7,6 +7,8 @@ import aiohttp_jinja2
 import jinja2
 import aiomysql
 import logging
+import bcrypt
+
 
 
 app = web.Application()
@@ -24,6 +26,75 @@ db_config = {
     'db': 'db_capstone',
     'autocommit': True,
 }
+
+async def create_admin_credentials(app):
+    admin_username = "admin"
+    admin_password = "password"
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(admin_password.encode('utf-8'), salt)
+
+    async with aiomysql.create_pool(**db_config) as pool:
+        async with pool.acquire() as conn:
+            async with conn.cursor() as cursor:
+                # Create the admin_credentials table if it doesn't exist
+                create_table_sql = """
+                CREATE TABLE IF NOT EXISTS admin_credentials (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    username VARCHAR(255) NOT NULL UNIQUE,
+                    hashed_password VARCHAR(255) NOT NULL,
+                    salt VARCHAR(255) NOT NULL
+                )
+                """
+                await cursor.execute(create_table_sql)
+
+                # Check if the admin already exists
+                check_admin_sql = "SELECT id FROM admin_credentials WHERE username = %s"
+                await cursor.execute(check_admin_sql, (admin_username,))
+                admin_exists = await cursor.fetchone()
+
+                if not admin_exists:
+                    # Insert admin credentials into the table
+                    insert_admin_sql = """
+                    INSERT INTO admin_credentials (username, hashed_password, salt)
+                    VALUES (%s, %s, %s)
+                    """
+                    await cursor.execute(insert_admin_sql, (admin_username, hashed_password.decode('utf-8'), salt.decode('utf-8')))
+
+# Ensure that the admin credentials are created when the application starts
+app.on_startup.append(create_admin_credentials)
+
+
+async def login(request):
+    if request.method == 'POST':
+        data = await request.post()
+        username = data.get('username')
+        password = data.get('password')
+
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                # Retrieve the hashed password and salt based on the provided username
+                query = "SELECT hashed_password, salt FROM admin_credentials WHERE username = %s"
+                await cursor.execute(query, (username,))
+                result = await cursor.fetchone()
+
+                if result:
+                    stored_hashed_password = result[0]
+                    salt = result[1]
+
+                    # Verify the entered password
+                    if bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
+                        # Password is correct, redirect to success page
+                        return aiohttp_jinja2.render_template('admin-A&M.html', request, {'success': True})
+                    else:
+                        # Invalid password, redirect to error page
+                        return aiohttp_jinja2.render_template('admin-login.html', request, {'error': True})
+                else:
+                    # Admin not found, redirect to error page
+                    return aiohttp_jinja2.render_template('admin-login.html', request, {'error': True})
+
+    # Handle GET requests, render the login form
+    return aiohttp_jinja2.render_template('admin-login.html', request, {'error': False, 'success': False})
+
 
 
 async def create_pool(app):
@@ -52,6 +123,12 @@ async def admin_dashboard_page(request):
 async def admin_calendar_page(request):
     return aiohttp_jinja2.render_template('admin-calendar.html', request, {})
 
+async def admin_AandM_page(request):
+    return aiohttp_jinja2.render_template('admin-A&M.html', request, {})
+
+async def admin_login_page(request):
+    return aiohttp_jinja2.render_template('admin-login.html', request, {})
+
 
 async def book_appointment(request):
     async with request.app['db_pool'].acquire() as conn:
@@ -62,7 +139,9 @@ async def book_appointment(request):
                 # GET USER INPUTS
 
                 #data 1
-                strFN = data['FullName']
+                strFN = data['FirstName']
+                strMN = data['MiddleName']
+                strLN = data['LastName']
                 strSex = data['Sex']
                 intCP = int(data['Contact'])
                 strEmail = data['Email']
@@ -120,15 +199,15 @@ async def book_appointment(request):
 
                 # SAVE RECORD TO DATABASE
                 sql1 = "INSERT INTO tbl_patient_information_record \
-                        (Full_Name, Sex, Contact_No, Email_Address, Birthdate, Age, Religion, Nationality, Home_Address, Parent_Name, Parent_Contact_No, Parent_Occupation, Date, Dental_Reason, Previous_Dentist, \
-                        Last_Visit) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                   (First_Name, Middle_Name, Last_Name, Sex, Contact_No, Email_Address, Birthdate, Age, Religion, Nationality, Home_Address, Parent_Name, Parent_Contact_No, Parent_Occupation, Date, Dental_Reason, Previous_Dentist, \
+                    Last_Visit) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                 sql2 = "INSERT INTO tbl_medical_history \
-                        (Physicians_Name, Present_Medical_Care, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, \
-                        Medical_Conditions, other) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                    (Physicians_Name, Present_Medical_Care, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, \
+                    Medical_Conditions, other) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
                 sql3 = "INSERT INTO tbl_validation (Valid_ID, Appointment_Schedule, Date_Created) VALUES(%s, %s, %s)"
 
-                data1 = (strFN, strSex, intCP, strEmail, intBirth, strAge, strRlg, strNational, strHA,
+                data1 = (strFN, strMN, strLN, strSex, intCP, strEmail, intBirth, strAge, strRlg, strNational, strHA,
                          strPoG, intCP1, strOcp1, intDate, strDR, strDenT, strLV)
 
                 data2 = (strPName, strPMcare, strOption1, strOption2, strtb1, strOption3, strtb2, strOption4, strtb3, strOption5, strOption6, strOption7, strOption8, strOption9, checkbox_string, strothers)
@@ -188,7 +267,9 @@ async def send_message(request):
         data = await request.post()
 
         # GET USER INPUTS
-        strFname = data['FullName']
+        strFname = data['FirstName']
+        strMname = data['MiddleName']
+        strLname = data['LastName']
         strEmail = data['EmailAdd']
         strSubject = data['Subject']
         strMess = data['Message']
@@ -196,8 +277,8 @@ async def send_message(request):
         async with request.app['db_pool'].acquire() as conn:
             async with conn.cursor() as cursor:
                 # SAVE RECORD TO DATABASE
-                sql = "INSERT INTO tbl_messages (Full_Name, Email_Address, Subject, Message) VALUES(%s, %s, %s, %s)"
-                data = (strFname, strEmail, strSubject, strMess)
+                sql = "INSERT INTO tbl_messages (First_Name, Middle_Name, Last_Name, Email_Address, Subject, Message) VALUES(%s, %s, %s, %s, %s, %s)"
+                data = (strFname, strMname, strLname, strEmail, strSubject, strMess)
                 await cursor.execute(sql, data)
 
         flash_message = 'Record successfully saved in the database!'
@@ -414,6 +495,8 @@ app.router.add_post('/send_message', send_message)
 app.router.add_get('/admin_tables_page', admin_tables_page)
 app.router.add_get('/admin_dashboard_page', admin_dashboard_page)
 app.router.add_get('/admin_calendar_page', admin_calendar_page)
+app.router.add_get('/admin_A&M_page', admin_AandM_page)
+app.router.add_get('/admin_login_page', admin_login_page)
 app.router.add_post('/submit_treatment', submit_treatment)
 app.router.add_get('/read_one_treatment/{id}', read_one_treatment)
 app.router.add_get('/delete_user/{id}', delete_user)
@@ -424,6 +507,7 @@ app.router.add_get('/fetch-disabled-dates', fetch_disabled_dates)
 app.router.add_get('/fetch_timeslots', fetch_timeslots)
 app.router.add_delete('/delete-disabled-date', delete_disabled_date)
 app.router.add_delete('/delete-disabled-timeslot', delete_disabled_timeslot)
+app.router.add_post('/login', login)
 
 app.on_startup.append(create_pool)
 app.on_cleanup.append(close_pool)

@@ -6,6 +6,24 @@ let successDiv = document.getElementById('success');
 let lastTab = document.getElementById('tab-6');
 
 
+// Helper function to capitalize the first word of a string
+function capitalizeFirstWord(input) {
+    const words = input.split(' ');
+    const capitalizedFirstWord = words.map((word, index) => index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word);
+    return capitalizedFirstWord.join(' ');
+}
+
+// Get all input elements within the form
+var inputElements = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea');
+
+// Attach input event listeners to capitalize the first word of the text as the user types
+inputElements.forEach(function(inputElement) {
+    inputElement.addEventListener('input', function() {
+        this.value = capitalizeFirstWord(this.value);
+    });
+});
+
+
 // Add a keydown event listener to the form
 myForm.addEventListener("keydown", function(event) {
     // Check if the pressed key is the Enter key (key code 13)
@@ -113,7 +131,9 @@ ageInput.addEventListener("blur", function() {
         });
 
     function NextVal1() {
-        var FN = document.getElementById("FullName").value;
+        var FN = document.getElementById("FirstName").value;
+        var MN = document.getElementById("MiddleName").value;
+        var LN = document.getElementById("LastName").value;
         var Sex = document.getElementById("Sex").value;
         var CN1 = document.getElementById("Contact").value;
         var EA = document.getElementById("Email").value;
@@ -140,6 +160,22 @@ ageInput.addEventListener("blur", function() {
         }
         else {
             document.getElementById("FNval").innerHTML = "";
+        }
+
+        if (MN === "") {
+            document.getElementById("MNval").innerHTML = "*This field is required";
+            return false;
+        }
+        else {
+            document.getElementById("MNval").innerHTML = "";
+        }
+
+        if (LN === "") {
+            document.getElementById("LNval").innerHTML = "*This field is required";
+            return false;
+        }
+        else {
+            document.getElementById("LNval").innerHTML = "";
         }
 
         if (Sex === "") {
@@ -974,13 +1010,15 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     $('.tab input, .tab select, .tab textarea').on('change', function() {
-        const fullName = $('#FullName').val();
+        const FirstName = $('#FirstName').val();
+        const MiddleName = $('#MiddleName').val();
+        const LastName = $('#LastName').val();
         const dob = $('#Birth').val();
         const contactNumber = $('#Contact').val();
         const emailAddress = $('#Email').val();
         const appointmentLocation = 'Unit OB6 Estelita Calilung Bldg., San Matias, Guagua Pampanga';
 
-        $('#patientName').text(fullName);
+        $('#patientName').text(LastName + ", " + FirstName + " " + MiddleName);
         $('#patientDOB').text(dob);
         $('#patientContact').text(contactNumber);
         $('#patientEmail').text(emailAddress);

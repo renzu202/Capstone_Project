@@ -21,7 +21,7 @@
   <img src="/static/img/logo.png" width="50" height="auto" class="d-inline-block align-top logo" alt="Logo">
      <h5 class="dental-title">ARC-Smile Dental Center</h5>
  </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
  </button>
  <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -39,25 +39,40 @@
         <a class="nav-link" href="/contact_us_page">CONTACT US</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/admin_dashboard_page">ADMIN</a>
+        <a class="nav-link" href="/admin_login_page">ADMIN</a>
  </li>
  </ul>
  </div>
 </nav>
 
+
  <div class="card-body">
              <form action="/send_message" method="POST" name="frmUser" id="frmUser">
                  <div class="row">
-                 <div class="col-sm-6">
+                 <div class="col-sm-6 custom-background">
+             <br>
             <h2>Send Message</h2>
             <br>
 
             <!-- TEXT INPUT ELEMENTS -->
 
-            <div class="form-group">
-                <label for="FullName">Full Name:</label>
-                <input type="text" class="form-control"  name="FullName" id="FullName" placeholder="enter full name" required>
-            </div>
+            <div class="row">
+                    <div class="form-group col-md-4">
+                         <label for="FirstName">First Name:</label>
+                         <input type="text" class="form-control"  name="FirstName" id="FirstName" placeholder="Enter first name">
+                         <span style="color: red;" id="FNval"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                         <label for="MiddleName">Middle Name:</label>
+                         <input type="text" class="form-control"  name="MiddleName" id="MiddleName" placeholder="Enter middle name">
+                         <span style="color: red;" id="MNval"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                         <label for="LastName">Last Name:</label>
+                         <input type="text" class="form-control"  name="LastName" id="LastName" placeholder="Enter last name">
+                         <span style="color: red;" id="LNval"></span>
+                    </div>
+              </div>
             <br>
             <div class="form-group">
                  <label for="EmailAdd">Email Address:</label>
@@ -80,10 +95,10 @@
             <div class="form-group">
                 <button type="submit" class="form-control btn btn-primary mb-2" id="btnSubmit">SUBMIT MESSAGE</button>
             </div>
-                     </div>
+            </div>
 
      <div id="map" class="col-sm-6">
-		<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15416.571805348935!2d120.6223422!3d14.9847678!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3396597bd2ee96cb%3A0x1db600bb16762557!2sARC-S%20DENTAL%20CENTER!5e0!3m2!1sen!2sph!4v1680955083473!5m2!1sen!2sph" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+		<iframe class="map-iframe" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15416.571805348935!2d120.6223422!3d14.9847678!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3396597bd2ee96cb%3A0x1db600bb16762557!2sARC-S%20DENTAL%20CENTER!5e0!3m2!1sen!2sph!4v1680955083473!5m2!1sen!2sph" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
      </div>
                  </div>
                      </form>

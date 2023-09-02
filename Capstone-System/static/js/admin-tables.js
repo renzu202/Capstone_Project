@@ -54,7 +54,9 @@ $(document).ready(function() {
     // Event handler for the "Patient Record" link click
     $('.view').click(function() {
         var id = $(this).data('id');
-        var name = $(this).data('name');
+        var fname = $(this).data('fname');
+        var mname = $(this).data('mname');
+        var lname = $(this).data('lname');
         var sex = $(this).data('sex');
         var contact = $(this).data('contact');
         var email = $(this).data('email');
@@ -105,7 +107,7 @@ $(document).ready(function() {
             <div class="col-sm-6 column-left" style="border-right: 2px solid #ccc;">
             <p>PATIENT INFORMATION RECORD</p>
             <p><strong>ID No.:</strong><span> ${id}</span></p>
-            <p><strong>Full Name:</strong><span> ${name}</span></p>
+            <p><strong>Full Name:</strong><span> ${lname}, ${fname} ${mname}</span></p>
             <p><strong>Sex:</strong><span> ${sex}</span></p>
             <p><strong>Contact Number:</strong><span> ${contact}</span></p>
             <p><strong>Email Address:</strong><span> ${email}</span></p>
