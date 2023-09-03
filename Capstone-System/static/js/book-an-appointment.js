@@ -42,7 +42,7 @@ myForm.addEventListener("keydown", function(event) {
 
 // Tabs
 $(".tab").hide();
-$("#tab-6").show();
+$("#tab-0").show();
 
 //Tab 0 - Patient Selection
 function NP() {
