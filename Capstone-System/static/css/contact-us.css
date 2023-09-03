@@ -63,5 +63,11 @@ label {
     height: 500px;
 }
 
+#FirstName,
+#MiddleName,
+#Lastname {
+    margin-bottom: 20px;
+}
+
 }
 

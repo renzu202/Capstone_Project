@@ -344,7 +344,7 @@ async def submit_treatment(request):
                 await cursor.execute(sql, data)
 
         flash_message = 'Record successfully saved in the database!'
-        return web.Response(text=flash_message)
+        return web.Response(text='')
 
     except Exception as e:
         print(e)

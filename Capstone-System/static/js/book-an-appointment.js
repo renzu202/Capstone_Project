@@ -42,7 +42,7 @@ myForm.addEventListener("keydown", function(event) {
 
 // Tabs
 $(".tab").hide();
-$("#tab-0").show();
+$("#tab-6").show();
 
 //Tab 0 - Patient Selection
 function NP() {
@@ -106,10 +106,26 @@ ageInput.addEventListener("blur", function() {
     } else {
         $('#minor-section').hide();
         poGNameInput.value = "N/A";
-        contact2Input.value = 0;
+        contact2Input.value = "00000000000";
         occupation2Input.value = "N/A";
     }
 });
+
+ var contactInput = document.getElementById("Contact");
+
+    // Add an event listener to intercept keypresses
+    contactInput.addEventListener("input", function() {
+        // Remove non-numeric characters using a regular expression
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+ var contact2Input = document.getElementById("Contact2");
+
+    // Add an event listener to intercept keypresses
+    contact2Input.addEventListener("input", function() {
+        // Remove non-numeric characters using a regular expression
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
 
     // history checkbox
         const historyCheckbox = document.getElementById("history");
@@ -130,13 +146,28 @@ ageInput.addEventListener("blur", function() {
             }
         });
 
+// Date validation
+function validateDate(input) {
+    const dateValue = input.value;
+    const parts = dateValue.split('-');
+
+    if (parts.length === 3 && parts[0].length !== 4) {
+        document.getElementById("BDval").innerHTML = "Please enter a valid date in mm-dd-yyyy format";
+        input.setCustomValidity("Invalid date");
+    } else {
+        document.getElementById("BDval").innerHTML = "";
+        input.setCustomValidity("");
+    }
+}
+
     function NextVal1() {
         var FN = document.getElementById("FirstName").value;
         var MN = document.getElementById("MiddleName").value;
         var LN = document.getElementById("LastName").value;
         var Sex = document.getElementById("Sex").value;
         var CN1 = document.getElementById("Contact").value;
-        var EA = document.getElementById("Email").value;
+        var emailInput = document.getElementById("Email");
+        var emailValue = emailInput.value;
         var BD = document.getElementById("Birth").value;
         var Age = document.getElementById("Age").value;
         var Rel = document.getElementById("Religion").value;
@@ -178,6 +209,14 @@ ageInput.addEventListener("blur", function() {
             document.getElementById("LNval").innerHTML = "";
         }
 
+         if (Age === "") {
+            document.getElementById("Ageval").innerHTML = "*This field is required";
+            return false;
+        }
+        else {
+            document.getElementById("Ageval").innerHTML = "";
+        }
+
         if (Sex === "") {
             document.getElementById("Sexval").innerHTML = "*This field is required";
             return false;
@@ -194,29 +233,55 @@ ageInput.addEventListener("blur", function() {
             document.getElementById("Contact1val").innerHTML = "";
         }
 
-        if (EA === "") {
+        if (CN1.charAt(0) !== '0') {
+            document.getElementById("Contact1val").innerHTML = "*The number should start with 0";
+            return false;
+        } else {
+            document.getElementById("Contact1val").innerHTML = "";
+        }
+
+        if (!/^[0-9]+$/.test(CN1) || CN1.length !== 11) {
+            document.getElementById("Contact1val").innerHTML = "*The number should be 11 digits";
+            return false;
+        } else {
+            document.getElementById("Contact1val").innerHTML = "";
+        }
+
+        if (emailValue === "") {
             document.getElementById("EAval").innerHTML = "*This field is required";
             return false;
-        }
-        else {
-            document.getElementById("EAval").innerHTML = "";
+        } else {
+            // Regular expression pattern for a basic email format validation
+            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailPattern.test(emailValue)) {
+                document.getElementById("EAval").innerHTML = "Invalid email";
+                return false;
+            } else {
+                document.getElementById("EAval").innerHTML = "";
+            }
         }
 
         if (BD === "") {
             document.getElementById("BDval").innerHTML = "*This field is required";
             return false;
-        }
-        else {
+        } else {
             document.getElementById("BDval").innerHTML = "";
-        }
 
-        if (Age === "") {
-            document.getElementById("Ageval").innerHTML = "*This field is required";
+        // Validate the format of the birthdate (yyyy-mm-dd)
+        var birthDateParts = BD.split('-');
+        if (birthDateParts.length !== 3 || birthDateParts[0].length !== 4) {
+            document.getElementById("BDval").innerHTML = "Please enter a valid date in mm-dd-yyyy format";
             return false;
+        } else {
+            // Check if the year part has exactly four digits
+            var year = parseInt(birthDateParts[0], 10);
+            if (isNaN(year) || year < 1000 || year > 9999) {
+                document.getElementById("BDval").innerHTML = "Invalid year format (use yyyy)";
+                return false;
+            }
         }
-        else {
-            document.getElementById("Ageval").innerHTML = "";
-        }
+    }
 
         if (Rel === "") {
             document.getElementById("Relval").innerHTML = "*This field is required";
@@ -256,6 +321,20 @@ ageInput.addEventListener("blur", function() {
             return false;
         }
         else {
+            document.getElementById("Contact2val").innerHTML = "";
+        }
+
+        if (CN2.charAt(0) !== '0') {
+            document.getElementById("Contact2val").innerHTML = "*The number should start with 0";
+            return false;
+        } else {
+            document.getElementById("Contact2val").innerHTML = "";
+        }
+
+        if (!/^[0-9]+$/.test(CN2) || CN2.length !== 11) {
+            document.getElementById("Contact2val").innerHTML = "*The number should be 11 digits";
+            return false;
+        } else {
             document.getElementById("Contact2val").innerHTML = "";
         }
 

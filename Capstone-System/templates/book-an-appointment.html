@@ -142,7 +142,7 @@
              <div class="row">
                   <div class="form-group col-md-6 mb-4">
                       <label for="Contact">Contact No.:</label>
-                      <input  type="number" class="form-control" name="Contact" id="Contact" placeholder="Enter mobile number">
+                      <input  type="text" class="form-control" name="Contact" maxlength="11" id="Contact" placeholder="Enter mobile number">
                       <span style="color: red;" id="Contact1val"></span>
                   </div>
                 <br>
@@ -157,7 +157,7 @@
                <div class="col-md-6 mb-4">
                   <div class="form-group">
                       <label for="Birth">Birthdate:</label>
-                      <input type="date" class="form-control"  name="Birth" id="Birth" placeholder="Enter email address">
+                      <input type="date" class="form-control"  name="Birth" id="Birth" placeholder="Enter email address" oninput="validateDate(this)">
                       <span style="color: red;" id="BDval"></span>
                   </div>
                </div>
@@ -198,7 +198,7 @@
             <div class="row">
             <div class="form-group col-md-6 mb-4">
                 <label for="Contact2">Contact No.:</label>
-                <input type="number" class="form-control"  name="Contact2" id="Contact2" placeholder="Enter contact no." value="0">
+                <input type="text" class="form-control"  name="Contact2" maxlength="11" id="Contact2" placeholder="Enter mobile no." value="N/A">
                 <span style="color: red;" id="Contact2val"></span>
             </div>
 
@@ -705,12 +705,6 @@
         Location: <span id="appointmentLocation"></span>
     </p>
 
-    <h5 style="color: blue;">Appointment Reminder:</h5>
-    <p>
-        Please remember to arrive 15 minutes before your scheduled appointment time to complete any necessary paperwork.
-        If you need to reschedule or cancel your appointment, please notify us at least 24 hours in advance to our email.
-    </p>
-    <p style="color: blue;">(arcsdentalcenter@gmail.com)</p>
      <br>
                 <!-- Hidden input field for the submission date -->
                 <input type="hidden" id="submissionDate" name="submissionDate" value="">
@@ -763,7 +757,7 @@
     <br><br>
       </div>
       <div class="modal-footer">
-        <button type="button" id="btn_agree" class="btn btn-primary close" data-dismiss="modal">Agree</button>
+        <button type="button" id="btn_agree" class="btn btn-primary close" data-bs-dismiss="modal">Agree</button>
       </div>
     </div>
   </div>

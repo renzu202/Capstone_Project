@@ -74,19 +74,17 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="treatmentModalLabel">Add Treatment</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
                 </button>
             </div>
             <div class="modal-body">
                 <!--Content-->
-                <br>
                  <form action="/submit_treatment" method="POST" enctype="multipart/form-data" id="form-wrapper" name="form-wrapper">
                   <div class="form-group">
-                      <label for="ID">ID:</label>
-                      <input  type="number" class="form-control" name="ID" id="ID" placeholder="enter id" required>
+                      <input  type="number" class="form-control" name="ID" id="ID" value="{{ row[0] }}" placeholder="enter id" required style="display:none;">
                   </div>
-                <br>
+
                   <div class="form-group">
                       <label for="Date">Date:</label>
                       <input  type="date" class="form-control" name="Date" id="Date" placeholder="enter date" required>

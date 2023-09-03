@@ -44,6 +44,46 @@ h6 {
     color: #00011c;
 }
 
+/*
+.mof-image {
+  position: absolute;
+  right: 100px;
+  width: 500px;
+  height: 540px;
+  z-index: 1;
+}
+*/
+
+.contact-image {
+  display: block;
+  margin: 0 auto;
+  width: 900px;
+  height: 250px;
+  z-index: 1;
+}
+
+/* Left black column */
+.left-column {
+    background-color: black;
+    position: absolute;
+    top: 100px;
+    left: 0;
+    width: 300px;
+    height: 250px;
+    z-index: -1; /* Place it behind the image */
+}
+
+/* Right black column */
+.right-column {
+    background-color: black;
+    position: absolute;
+    top: 100px;
+    right: 0;
+    width: 300px;
+    height: 250px;
+    z-index: -1; /* Place it behind the image */
+}
+
 
 /* Mobile */
 @media (max-width: 420px) {
