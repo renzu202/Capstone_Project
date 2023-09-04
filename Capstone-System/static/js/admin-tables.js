@@ -142,7 +142,7 @@ $(document).ready(function() {
             <p><strong>4. Are you taking any prescription/non-prescription medication?: </strong><span> ${q6}</span></p>
             <p><strong>If so, please specify:</strong><span> ${q7}</span></p>
             <p><strong>5. Do you smoke?:</strong><span> ${q8}</span></p>
-            <p><strong>6. Do you use alcohol or other dangerous drugs?: </strong><span> ${q9}</span></p>
+            <p><strong>6. Do you use alcohol?: </strong><span> ${q9}</span></p>
             <p>FOR WOMEN ONLY:</p>
             <p><strong>7. Are you pregnant?:</strong><span> ${q10}</span></p>
             <p><strong>8. Are you nursing?:</strong><span> ${q11}</span></p>

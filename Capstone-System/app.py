@@ -36,16 +36,6 @@ async def create_admin_credentials(app):
     async with aiomysql.create_pool(**db_config) as pool:
         async with pool.acquire() as conn:
             async with conn.cursor() as cursor:
-                # Create the admin_credentials table if it doesn't exist
-                create_table_sql = """
-                CREATE TABLE IF NOT EXISTS admin_credentials (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    username VARCHAR(255) NOT NULL UNIQUE,
-                    hashed_password VARCHAR(255) NOT NULL,
-                    salt VARCHAR(255) NOT NULL
-                )
-                """
-                await cursor.execute(create_table_sql)
 
                 # Check if the admin already exists
                 check_admin_sql = "SELECT id FROM admin_credentials WHERE username = %s"
@@ -84,7 +74,7 @@ async def login(request):
                     # Verify the entered password
                     if bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
                         # Password is correct, redirect to success page
-                        return aiohttp_jinja2.render_template('admin-A&M.html', request, {'success': True})
+                        return aiohttp_jinja2.render_template('admin-dashboard.html', request, {'success': True})
                     else:
                         # Invalid password, redirect to error page
                         return aiohttp_jinja2.render_template('admin-login.html', request, {'error': True})
@@ -123,12 +113,50 @@ async def admin_dashboard_page(request):
 async def admin_calendar_page(request):
     return aiohttp_jinja2.render_template('admin-calendar.html', request, {})
 
-async def admin_AandM_page(request):
-    return aiohttp_jinja2.render_template('admin-A&M.html', request, {})
-
 async def admin_login_page(request):
     return aiohttp_jinja2.render_template('admin-login.html', request, {})
 
+async def verify_timeslot(request):
+    try:
+        data = await request.json()
+
+        date_input = data.get('date_slot')
+
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                # Fetch the booked time slots from tbl_validation
+                query = "SELECT Appointment_Schedule FROM tbl_appointments WHERE DATE(Appointment_Schedule) = DATE(%s)"
+                await cursor.execute(query, (date_input,))
+                result_validation = await cursor.fetchall()
+
+                # Fetch the booked time slots from tbl_clinic_calendar
+                query_calendar = "SELECT DoR_Timeslots FROM tbl_admin_timeslot WHERE DATE(DoR_Timeslots) = DATE(%s)"
+                await cursor.execute(query_calendar, (date_input,))
+                result_calendar = await cursor.fetchall()
+
+                # Extract the time slots from the results and merge them
+                booked_timeslots = [
+                    time_slot[0].strftime('%H:%M')
+                    for result in [result_validation, result_calendar]
+                    for time_slot in result
+                ]
+
+                # Return the booked time slots as JSON
+                return web.json_response(booked_timeslots)
+
+    except Exception as e:
+        return web.json_response({'error': str(e)})
+
+async def admin_AandM_page(request):
+    async with request.app['db_pool'].acquire() as conn:
+        async with conn.cursor() as cursor:
+            await cursor.execute("SELECT * FROM tbl_appointments")
+            AptInfo = await cursor.fetchall()
+
+            await cursor.execute("SELECT * FROM tbl_messages")
+            MessInfo = await cursor.fetchall()
+
+            return aiohttp_jinja2.render_template('admin-A&M.html', request, {'AptInfo': AptInfo, 'MessInfo': MessInfo})
 
 async def book_appointment(request):
     async with request.app['db_pool'].acquire() as conn:
@@ -207,6 +235,8 @@ async def book_appointment(request):
 
                 sql3 = "INSERT INTO tbl_validation (Valid_ID, Appointment_Schedule, Date_Created) VALUES(%s, %s, %s)"
 
+                sql4 = "INSERT INTO tbl_appointments (First_Name, Middle_Name, Last_Name, Email_Address, Appointment_Schedule) VALUES(%s, %s, %s, %s, %s)"
+
                 data1 = (strFN, strMN, strLN, strSex, intCP, strEmail, intBirth, strAge, strRlg, strNational, strHA,
                          strPoG, intCP1, strOcp1, intDate, strDR, strDenT, strLV)
 
@@ -214,9 +244,12 @@ async def book_appointment(request):
 
                 data3 = (unique_filename, data['appointment_schedule'], intDateCreated)
 
+                data4 = (strFN, strMN, strLN, strEmail, data['appointment_schedule'])
+
                 await cursor.execute(sql1, data1)
                 await cursor.execute(sql2, data2)
                 await cursor.execute(sql3, data3)
+                await cursor.execute(sql4, data4)
 
                 flash_message = 'Record successfully saved in the database!'
                 return web.Response(text=flash_message)
@@ -225,37 +258,6 @@ async def book_appointment(request):
                 print("Error:", e)
                 return web.Response(text='Error while submitting appointment')
 
-
-async def verify_timeslot(request):
-    try:
-        data = await request.json()
-
-        date_input = data.get('date_slot')
-
-        async with request.app['db_pool'].acquire() as conn:
-            async with conn.cursor() as cursor:
-                # Fetch the booked time slots from tbl_validation
-                query = "SELECT Appointment_Schedule FROM tbl_validation WHERE DATE(Appointment_Schedule) = DATE(%s)"
-                await cursor.execute(query, (date_input,))
-                result_validation = await cursor.fetchall()
-
-                # Fetch the booked time slots from tbl_clinic_calendar
-                query_calendar = "SELECT DoR_Timeslots FROM tbl_admin_timeslot WHERE DATE(DoR_Timeslots) = DATE(%s)"
-                await cursor.execute(query_calendar, (date_input,))
-                result_calendar = await cursor.fetchall()
-
-                # Extract the time slots from the results and merge them
-                booked_timeslots = [
-                    time_slot[0].strftime('%H:%M')
-                    for result in [result_validation, result_calendar]
-                    for time_slot in result
-                ]
-
-                # Return the booked time slots as JSON
-                return web.json_response(booked_timeslots)
-
-    except Exception as e:
-        return web.json_response({'error': str(e)})
 
 
 async def contact_us_page(request):
@@ -281,8 +283,7 @@ async def send_message(request):
                 data = (strFname, strMname, strLname, strEmail, strSubject, strMess)
                 await cursor.execute(sql, data)
 
-        flash_message = 'Record successfully saved in the database!'
-        return web.Response(text=flash_message)
+        return aiohttp_jinja2.render_template('contact-us.html', request, {})
 
     except Exception as e:
         print(e)
@@ -360,12 +361,10 @@ async def read_one_treatment(request):
             async with conn.cursor() as cursor:
                 await cursor.execute("SELECT * FROM tbl_patient_information_record WHERE id=%s", patient_id)
                 row = await cursor.fetchone()
-                logging.info(f"Patient Information: {row}")
 
                 # Retrieve treatment records for the patient
                 await cursor.execute("SELECT * FROM tbl_treatment_record WHERE ID=%s", patient_id)
                 treatment_records = await cursor.fetchall()
-                logging.info(f"Treatment Records: {treatment_records}")
 
                 if row:
                     return aiohttp_jinja2.render_template('treatment-records.html', request, {'row': row, 'treatment_records': treatment_records})
@@ -386,6 +385,36 @@ async def delete_user(request):
                 await cursor.execute("DELETE FROM tbl_patient_information_record WHERE ID=%s", patient_id)
 
         redirect_url = '/admin_tables_page'
+        return web.HTTPFound(redirect_url)
+
+    except Exception as e:
+        print(e)
+        return web.Response(text='Error while deleting user')
+
+async def delete_appointment(request):
+    try:
+        patient_id = request.match_info['id']
+
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                await cursor.execute("DELETE FROM tbl_appointments WHERE ID=%s", patient_id)
+
+        redirect_url = '/admin_A&M_page'
+        return web.HTTPFound(redirect_url)
+
+    except Exception as e:
+        print(e)
+        return web.Response(text='Error while deleting user')
+
+async def delete_message(request):
+    try:
+        patient_id = request.match_info['id']
+
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                await cursor.execute("DELETE FROM tbl_messages WHERE ID=%s", patient_id)
+
+        redirect_url = '/admin_A&M_page'
         return web.HTTPFound(redirect_url)
 
     except Exception as e:
@@ -500,6 +529,8 @@ app.router.add_get('/admin_login_page', admin_login_page)
 app.router.add_post('/submit_treatment', submit_treatment)
 app.router.add_get('/read_one_treatment/{id}', read_one_treatment)
 app.router.add_get('/delete_user/{id}', delete_user)
+app.router.add_get('/delete_appointment/{id}', delete_appointment)
+app.router.add_get('/delete_message/{id}', delete_message)
 app.router.add_get('/get_image_url', get_image_url)
 app.router.add_post('/save-timeslot', save_timeslot)
 app.router.add_post('/disable-day', disable_day)

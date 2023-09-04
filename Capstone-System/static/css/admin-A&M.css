@@ -29,6 +29,7 @@ body {
     line-height: 1.4;
     padding-top: 100px;
     padding-bottom: 10px;
+    margin: 0px;
 }
 
 .dashboard-link .fa,
@@ -37,8 +38,8 @@ body {
 .dashboard-link,
 .patient-records-link,
 .clinic-calendar-link {
-    color: black;
-  }
+   color: black;
+}
 
 /* Table */
 .table-responsive {
@@ -154,36 +155,8 @@ table.table td i {
     font-size: 95%;
 }
 
-.modal-content p{
-    color: black;
-    }
-
-.modal-content{
-    border: none;
-}
-
-.modal-dialog {
-  max-width: 1000px;
-  width: 100%;
-}
-
-.modal-title{
-    color: black;
-}
-
-.modal-content p span {
-  color: green;
-}
-
-.custom-modal-dialog {
-  max-width: 800px;
-  width: 100%;
-}
-
-#treatmentModal label{
-    color:black;
-}
-
-#treatmentModal span{
-    color:black;
+#messageModal .modal-body {
+    overflow: auto; /* Add scrollbars for long content */
+    max-height: 400px;
+    word-wrap: break-word; /* Wrap long words to the next line */
 }

@@ -16,3 +16,19 @@ inputElements.forEach(function(inputElement) {
         this.value = capitalizeFirstWord(this.value);
     });
 });
+
+// Message limiter
+
+    var messageTextarea = document.getElementById("Message");
+
+    // Select the element where the character count will be displayed
+    var charCountElement = document.getElementById("charCount");
+
+    // Add an event listener to the textarea to track changes
+    messageTextarea.addEventListener("input", function() {
+        // Get the current character count
+        var currentCount = messageTextarea.value.length;
+
+        // Update the character count display
+        charCountElement.textContent = currentCount + "/500 characters";
+    });

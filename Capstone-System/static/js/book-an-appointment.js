@@ -746,7 +746,6 @@ document.addEventListener("DOMContentLoaded", function () {
 var timeslots = [
     "10:00 am - 11:00 am",
     "11:00 am - 12:00 pm",
-    "12:00 pm - 01:00 pm",
     "01:00 pm - 02:00 pm",
     "02:00 pm - 03:00 pm",
     "03:00 pm - 4:00 pm",
@@ -863,7 +862,7 @@ function updateEventTitle(info) {
                     const combinedBookedTimeSlots = new Set([...bookedTimeSlotsSet, ...bookedTimeSlotsFromCalendar]);
 
                     // Calculate available slots
-                    const availableSlots = 6 - combinedBookedTimeSlots.size;
+                    const availableSlots = 5 - combinedBookedTimeSlots.size;
 
                     if (availableSlots > 0) {
                         eventTitleElement.textContent = `${availableSlots} Slots Available`;

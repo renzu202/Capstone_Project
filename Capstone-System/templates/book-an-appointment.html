@@ -58,13 +58,13 @@
          <div id="steps-container">
 
            <div class="tab" id="tab-0">
-            <h4 style="text-align: center;"> Select if you are an old patient or new patient:</h4><br><br><br>
+            <h4 style="text-align: center;"> Select if you are an old patient or new patient:</h4><br><br>
          <div class="q-box__buttons">
-            <button type="button" class="index-btn" onclick = "OP()">Old Patient</button>
+            <button type="button" class="index-btn" id="OPB" onclick = "OP()">Old Patient</button>
          </div>
          <br>
          <div class="q-box__buttons">
-            <button type="button" class="index-btn" onclick = "NP()">New Patient</button>
+            <button type="button" class="index-btn" id="NPB" onclick = "NP()">New Patient</button>
          </div>
            </div>
 
@@ -334,7 +334,7 @@
         <label class="form-check-label" for="inlineRadio10">No</label>
     </div>
     <br><br><br>
-    <label>6. Do you use alcohol or other dangerous drugs?</label> <span style="color: red;" id="Option6val"></span>
+    <label>6. Do you use alcohol?</label> <span style="color: red;" id="Option6val"></span>
     <br>
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="Option6" id="inlineRadio11" value="Yes">
@@ -594,8 +594,8 @@
                                                         <input type="hidden" class="timeslot_input">
                                                         <input type="hidden" class="date_input">
 
-                                                  <input type="hidden" name="appointment_schedule" class="selected-schedule-input">
-                                                        Selected schedule: <span style="color:red;" class="selected-schedule"></span>
+                                            <input type="hidden" name="appointment_schedule" class="selected-schedule-input">
+                                            Selected schedule: <span style="color:red;" class="selected-schedule"></span>
 
                                                         <div id='appointment-calendar'></div>
                                                     </div>
