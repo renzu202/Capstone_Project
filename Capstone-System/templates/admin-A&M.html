@@ -40,26 +40,26 @@
         <a class="nav-link" href="/contact_us_page">CONTACT US</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/admin_login_page">ADMIN</a>
+        <a class="nav-link" href="/admin_dashboard_page">ADMIN</a>
       </li>
     </ul>
   </div>
 </nav>
 <div class="container-xl">
-  <div class="row">
-    <div class="col-md-3">
+<div class="row justify-content-center">
+    <div class="col-md-2">
       <a href="/admin_dashboard_page" class="dashboard-link">
         <i class="fa fa-tachometer mb-3" aria-hidden="true"></i>
         Dashboard
       </a>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
       <a href="/admin_tables_page" class="patient-records-link">
         <i class="fa fa-users mb-3" aria-hidden="true"></i>
         Patient Records
       </a>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
       <a href="/admin_calendar_page" class="clinic-calendar-link">
         <i class="fa fa-calendar mb-3" aria-hidden="true"></i>
         Clinic Calendar
@@ -71,6 +71,11 @@
         Appointments & Messages
       </a>
     </div>
+  <div class="col-md-2">
+  <form method="get" action="/logout">
+    <button type="submit">Log Out</button>
+  </form>
+  </div>
   </div>
 </div>
     <div class="container-fluid">
@@ -108,11 +113,14 @@
                             <td>{{ Aptdata[4] }}</td>
                             <td>{{ Aptdata[5] }}</td>
                             <td>
+                    <a href="#" class="view" title="View Dental Reason" data-bs-toggle="modal" data-bs-target="#ReasonModal" data-dental="{{ Aptdata[6] }}">
+                        <i class="bi bi-eye-fill"></i>
+                    </a>
                     <a href="#" class="complete" title="Finish Appointment">
                     <i class="fa-solid fa-flag-checkered" style="color:green;"></i>
                     </a>
                     <a href="/delete_appointment/{{ Aptdata[0] }}" class="delete" title="Cancel Appointment" onclick="return confirm('Are you sure you want to cancel this appointment?');">
-                        <i class="material-icons">&#xE872;</i>
+                        <i class="fa-solid fa-ban" style="color:red;"></i>
                     </a>
                             </td>
                         </tr>
@@ -155,7 +163,6 @@
                             <td>{{ Messdata[4] }}</td>
                             <td>{{ Messdata[5] }}</td>
                             <td>
-
                     <a href="#" class="view" title="View Message" data-bs-toggle="modal" data-bs-target="#messageModal"
                        data-mess="{{ Messdata[6] }}">
                        <i class="fa-regular fa-message"></i>
@@ -180,6 +187,23 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="messageModalLabel">View Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!--Content-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--View Dental Reason Modal-->
+    <div class="modal fade" id="ReasonModal" tabindex="-1" role="dialog" aria-labelledby="ReasonModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ReasonModalLabel">Reason for dental consultation</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"></span>
                 </button>

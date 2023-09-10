@@ -59,3 +59,13 @@ $(document).ready(function() {
         $('#messageModal .modal-body').text(message);
     });
 });
+
+$(document).ready(function() {
+    // Event handler for the "Patient Record" link click
+    $('.view').click(function() {
+        var message = $(this).data('dental');
+
+        // Set the user information in the modal
+        $('#ReasonModal .modal-body').text(message);
+    });
+});

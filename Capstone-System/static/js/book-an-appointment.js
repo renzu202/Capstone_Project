@@ -1,9 +1,12 @@
 let submitBtn = document.getElementById('submit-btn');
+let OPsubmitBtn = document.getElementById('OP-submit-btn');
 let myForm = document.getElementById("form-wrapper");
 let preloader = document.getElementById('preloader-wrapper');
 let bodyElement = document.querySelector('body');
 let successDiv = document.getElementById('success');
+let OPsuccessDiv = document.getElementById('OP-success');
 let lastTab = document.getElementById('tab-6');
+let OPlastTab = document.getElementById('OP-tab-3')
 
 
 // Helper function to capitalize the first word of a string
@@ -60,10 +63,131 @@ function PrevOP() {
     $("#tab-0").show();
     $("#tab-OP").hide();
 }
+async function fetchPatientInfo() {
+    try {
+        const email = document.getElementById("emailV").value;
+        const response = await fetch(`/api/fetch-patient-info?emailV=${email}`);
 
-function NextOPval() {
-
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById("OP-FirstName").value = data.First_Name || "";
+            document.getElementById("OP-MiddleName").value = data.Middle_Name || "";
+            document.getElementById("OP-LastName").value = data.Last_Name || "";
+            document.getElementById("OP-Email").value = data.Email_Address || "";
+            document.getElementById("OP-Contact").value = data.Contact_No || "";
+        } else if (response.status === 404) {
+            alert("Email address not found.");
+        } else {
+            alert("An error occurred.");
+        }
+    } catch (error) {
+        console.error("An error occurred:", error);
+    }
 }
+
+
+async function validateEmailAndPIN() {
+    const email = document.getElementById('emailV').value;
+    const pin = document.getElementById('CodeV').value;
+
+    // Create a JSON object with email and pin
+    const data = {
+        email: email,
+        pin: pin
+    };
+
+    try {
+        const response = await fetch('/validate-email-pin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            if (result.valid) {
+                // Email and PIN are valid, show "tab-1"
+                document.getElementById('tab-OP').style.display = 'none';
+                document.getElementById('OP-tab-1').style.display = 'block';
+                $("#qc1").hide();
+                $("#qc2").show();
+
+                // Fetch patient information and populate fields
+                await fetchPatientInfo();
+            } else {
+                // Invalid email and/or PIN, show an error message or take appropriate action
+                alert('Invalid email and/or PIN. Please try again.');
+            }
+        } else {
+            // Handle server error or network issue
+            alert('Server error or network issue. Please try again later.');
+        }
+    } catch (error) {
+        console.error(error);
+        // Handle any other errors
+    }
+}
+
+
+//Tab OP-tab-1
+function OPPrevVal1() {
+    $("#OP-tab-1").hide();
+    $("#tab-OP").show();
+}
+
+function OPNextVal1() {
+    var checkbox = document.getElementById("OP-agreement");
+    if (!checkbox.checked) {
+        document.getElementById("OP-agreeVal").innerHTML = "You must agree by reading the informed consent or clicking the checkbox.";
+        return false;
+    }
+    else {
+        document.getElementById("OP-agreeVal").innerHTML = "";
+        $("#OP-tab-1").hide();
+        $("#OP-tab-2").show();
+    }
+}
+
+//Tab OP-tab-2
+function OPPrevVal2() {
+    $("#OP-tab-2").hide();
+    $("#OP-tab-1").show();
+}
+
+function OPNextVal2() {
+
+var OPReason = document.getElementById("OP-Reason").value;
+var OPscheduleError = document.getElementById('OP-schedule-error');
+var OPscheduleInput = document.querySelector('.selected-schedule-input');
+
+        if (OPReason === "") {
+            document.getElementById("OP-Reasonval").innerHTML = "*This field is required";
+            return false;
+        }
+        else {
+            document.getElementById("OP-Reasonval").innerHTML = "";
+        }
+
+	 if (!OPscheduleInput.value) {
+        	OPscheduleError.textContent = 'Please select an appointment';
+        	OPscheduleError.style.display = 'block';
+        	return false;
+    	} else {
+        	OPscheduleError.style.display = 'none';
+    	}
+
+    $("#OP-tab-2").hide();
+    $("#OP-tab-3").show();
+}
+
+//Tab OP-tab-3
+function OPPrevVal3() {
+    $("#OP-tab-3").hide();
+    $("#OP-tab-2").show();
+}
+
 
 //Tab 1 - Informed Consent
 function PrevVal() {
@@ -86,6 +210,12 @@ function NextVal() {
 
 
 //Tab 2 - Patient Information Record
+
+        // set the current date as the "Date" input's value
+    document.addEventListener("DOMContentLoaded", function () {
+        const currentDate = new Date().toISOString().substr(0, 10); // Get current date in YYYY-MM-DD format
+        document.getElementById("CDate").value = currentDate;
+    });
 
 // age event listener
 const ageInput = document.getElementById("Age");
@@ -123,6 +253,14 @@ ageInput.addEventListener("blur", function() {
 
     // Add an event listener to intercept keypresses
     contact2Input.addEventListener("input", function() {
+        // Remove non-numeric characters using a regular expression
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+ var pinInput = document.getElementById("PIN");
+
+    // Add an event listener to intercept keypresses
+    pinInput.addEventListener("input", function() {
         // Remove non-numeric characters using a regular expression
         this.value = this.value.replace(/[^0-9]/g, '');
     });
@@ -176,7 +314,6 @@ function validateDate(input) {
         var PoGName = document.getElementById("PoGName").value;
         var CN2 = document.getElementById("Contact2").value;
         var Occ2 = document.getElementById("Occupation2").value;
-        var CDate = document.getElementById("CDate").value;
         var Reason = document.getElementById("Reason").value;
         var PD = document.getElementById("Dentist").value;
         var LV = document.getElementById("LastVisit").value;
@@ -262,6 +399,18 @@ function validateDate(input) {
             }
         }
 
+         fetch('/api/get-all-emails')
+            .then(response => response.json())
+            .then(data => {
+                var emailAddresses = data.email_addresses;
+                if (emailAddresses.includes(emailValue)) {
+                    document.getElementById("EAval").innerHTML = "Email Address already exists";
+                    return false;
+                } else {
+                    document.getElementById("EAval").innerHTML = "";
+                }
+            });
+
         if (BD === "") {
             document.getElementById("BDval").innerHTML = "*This field is required";
             return false;
@@ -344,14 +493,6 @@ function validateDate(input) {
         }
         else {
             document.getElementById("Occupation2val").innerHTML = "";
-        }
-
-        if (CDate === "") {
-            document.getElementById("CDATEval").innerHTML = "*This field is required";
-            return false;
-        }
-        else {
-            document.getElementById("CDATEval").innerHTML = "";
         }
 
         if (Reason === "") {
@@ -638,7 +779,41 @@ function handleOption4Change() {
         $("#tab-5").show();
         }
 
+// Submit old patient
+OPsubmitBtn.addEventListener('click', async (event) => {
+    event.preventDefault(); // Prevent form submission and page reload
 
+    preloader.classList.add('d-block');
+
+    const timer = ms => new Promise(res => setTimeout(res, ms));
+
+    try {
+        await timer(100);
+
+        bodyElement.classList.add('loaded');
+
+        OPlastTab.classList.add('d-none');
+        OPsuccessDiv.classList.add('d-block');
+
+        // Collect form data
+        const OPformData = new FormData(document.getElementById('OP-form-wrapper'));
+
+        // Send AJAX request
+        const response = await fetch('/OP_book_appointment', {
+            method: 'POST',
+            body: OPformData, // Ensure formData is correctly assigned to the body
+        });
+
+        const data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+
+
+//Submit new patient
 submitBtn.addEventListener('click', async (event) => {
     event.preventDefault(); // Prevent form submission and page reload
 
@@ -700,6 +875,7 @@ submitBtn.addEventListener('click', async (event) => {
 
 $(document).on('click', '#btn_agree', function() {
             $('#agreement').prop('checked', true)
+            $('#OP-agreement').prop('checked', true)
             $('#consentmodal').modal('hide')
         })
 
@@ -889,7 +1065,7 @@ function updateEventTitle(info) {
 
         var Calendar = FullCalendar.Calendar;
 
-        calendar = new Calendar(document.getElementById('appointment-calendar'), {
+        calendar = new Calendar(document.querySelector('.appointment-calendar'), {
             headerToolbar: {
                 left  : false,
                 center: 'title',
@@ -1032,6 +1208,8 @@ $(document).on('click', '.btn-timeslot', function() {
 
     $('#patientDate').text(selectedDate);
     $('#patientTime').text(selectedSchedule);
+    $('#OP-patientDate').text(selectedDate);
+    $('#OP-patientTime').text(selectedSchedule);
     $('.selected-schedule').text(selectedDate + ', ' + selectedSchedule); // Update the display of selected time slot
     $('.timeslot_input').val(selectedSchedule); // Set the selected time slot in the hidden input field
     $('.btn-timeslot').not(this).prop('disabled', true);
@@ -1088,19 +1266,35 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     $('.tab input, .tab select, .tab textarea').on('change', function() {
+
+    // New Patient
         const FirstName = $('#FirstName').val();
         const MiddleName = $('#MiddleName').val();
         const LastName = $('#LastName').val();
-        const dob = $('#Birth').val();
         const contactNumber = $('#Contact').val();
         const emailAddress = $('#Email').val();
         const appointmentLocation = 'Unit OB6 Estelita Calilung Bldg., San Matias, Guagua Pampanga';
 
+    // Old Patient
+        const OPFirstName = $('#OP-FirstName').val();
+        const OPMiddleName = $('#OP-MiddleName').val();
+        const OPLastName = $('#OP-LastName').val();
+        const OPcontactNumber = $('#OP-Contact').val();
+        const OPemailAddress = $('#OP-Email').val();
+        const OPappointmentLocation = 'Unit OB6 Estelita Calilung Bldg., San Matias, Guagua Pampanga';
+
+
+    // New Patient
         $('#patientName').text(LastName + ", " + FirstName + " " + MiddleName);
-        $('#patientDOB').text(dob);
         $('#patientContact').text(contactNumber);
         $('#patientEmail').text(emailAddress);
         $('#appointmentLocation').text(appointmentLocation);
+
+    // Old Patient
+        $('#OP-patientName').text(OPLastName + ", " + OPFirstName + " " + OPMiddleName);
+        $('#OP-patientContact').text(OPcontactNumber);
+        $('#OP-patientEmail').text(OPemailAddress);
+        $('#OP-appointmentLocation').text(OPappointmentLocation);
     });
 });
 

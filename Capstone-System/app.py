@@ -1,3 +1,7 @@
+from aiohttp_session import setup, get_session
+from aiohttp_session.cookie_storage import EncryptedCookieStorage
+from cryptography.fernet import Fernet
+import base64
 from aiohttp import web
 import os
 import time
@@ -27,6 +31,27 @@ db_config = {
     'autocommit': True,
 }
 
+async def create_pool(app):
+    app['db_pool'] = await aiomysql.create_pool(**db_config)
+
+
+async def close_pool(app):
+    app['db_pool'].close()
+    await app['db_pool'].wait_closed()
+
+# Generate a random Fernet key
+key = Fernet.generate_key()
+
+# Encode the key as URL-safe base64 bytes
+key_bytes = base64.urlsafe_b64decode(key)
+
+# Print the key as a string (optional)
+print(key.decode())
+
+# Use the key as bytes in your aiohttp application
+secret_key = key_bytes
+setup(app, EncryptedCookieStorage(secret_key))
+
 async def create_admin_credentials(app):
     admin_username = "admin"
     admin_password = "password"
@@ -53,7 +78,6 @@ async def create_admin_credentials(app):
 # Ensure that the admin credentials are created when the application starts
 app.on_startup.append(create_admin_credentials)
 
-
 async def login(request):
     if request.method == 'POST':
         data = await request.post()
@@ -73,8 +97,13 @@ async def login(request):
 
                     # Verify the entered password
                     if bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
-                        # Password is correct, redirect to success page
-                        return aiohttp_jinja2.render_template('admin-dashboard.html', request, {'success': True})
+                        # Password is correct, set a session cookie with the username
+                        session = await get_session(request)
+                        session['user_id'] = username  # Set the user_id in the session
+                        # Set user_authenticated to True to indicate a successful login
+                        user_authenticated = True
+                        return aiohttp_jinja2.render_template('admin-dashboard.html', request, {'user_authenticated': user_authenticated})
+
                     else:
                         # Invalid password, redirect to error page
                         return aiohttp_jinja2.render_template('admin-login.html', request, {'error': True})
@@ -87,14 +116,37 @@ async def login(request):
 
 
 
-async def create_pool(app):
-    app['db_pool'] = await aiomysql.create_pool(**db_config)
+async def logout(request):
+    # Remove the user's session or any necessary logout logic
+    session = await get_session(request)
+    session.pop('user_id', None)  # Remove the user_id from the session
 
+    # Redirect to the login page or another appropriate page after logout
+    return web.HTTPFound('/admin_login_page')  # Redirect to the login page
 
-async def close_pool(app):
-    app['db_pool'].close()
-    await app['db_pool'].wait_closed()
+# Endpoint for validating email and 4-digit PIN
+async def validate_email_and_pin(request):
+    try:
+        data = await request.json()
+        email = data.get('email')
+        pin = data.get('pin')
 
+        # Perform email and PIN validation here
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                query = "SELECT Email_Address, 4digit_PIN FROM tbl_verification WHERE Email_Address = %s AND 4digit_PIN = %s"
+                await cursor.execute(query, (email, pin))
+                result = await cursor.fetchone()
+
+                if result:
+                    # Email and PIN match a row in the database
+                    return web.json_response({'valid': True})
+                else:
+                    # Email and PIN do not match any row
+                    return web.json_response({'valid': False})
+
+    except Exception as e:
+        return web.json_response({'error': str(e)}, status=500)
 
 async def home_page(request):
     return aiohttp_jinja2.render_template('home.html', request, {})
@@ -108,7 +160,16 @@ async def book_an_appointment_page(request):
     return aiohttp_jinja2.render_template('book-an-appointment.html', request, {})
 
 async def admin_dashboard_page(request):
-    return aiohttp_jinja2.render_template('admin-dashboard.html', request, {})
+    session = await get_session(request)
+    user_id = session.get('user_id')
+
+    if user_id:
+        # User is authenticated, allow access to the admin dashboard page
+        return aiohttp_jinja2.render_template('admin-dashboard.html', request, {'user_authenticated': True})
+
+    # User is not authenticated, render the admin login page without redirecting
+    return aiohttp_jinja2.render_template('admin-login.html', request, {'user_authenticated': False})
+
 
 async def admin_calendar_page(request):
     return aiohttp_jinja2.render_template('admin-calendar.html', request, {})
@@ -147,6 +208,23 @@ async def verify_timeslot(request):
     except Exception as e:
         return web.json_response({'error': str(e)})
 
+async def get_all_email_addresses(request):
+    try:
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                # Retrieve all email addresses from the database
+                query = "SELECT Email_Address FROM tbl_patient_information_record"
+                await cursor.execute(query)
+                result = await cursor.fetchall()
+
+                # Extract the email addresses from the result
+                email_addresses = [row[0] for row in result]
+
+                return web.json_response({'email_addresses': email_addresses})
+
+    except Exception as e:
+        return web.json_response({'error': str(e)}, status=500)
+
 async def admin_AandM_page(request):
     async with request.app['db_pool'].acquire() as conn:
         async with conn.cursor() as cursor:
@@ -166,13 +244,13 @@ async def book_appointment(request):
 
                 # GET USER INPUTS
 
-                #data 1
                 strFN = data['FirstName']
                 strMN = data['MiddleName']
                 strLN = data['LastName']
                 strSex = data['Sex']
                 intCP = int(data['Contact'])
                 strEmail = data['Email']
+                intPIN = data['PIN']
                 intBirth = data['Birth']
                 strAge = data['Age']
                 strRlg = data['Religion']
@@ -186,7 +264,6 @@ async def book_appointment(request):
                 strDenT = data['Dentist']
                 strLV = data['LastVisit']
 
-                # data2
                 strPName = data['PName']
                 strPMcare = data['PMCare']
                 strOption1 = data['Option1']
@@ -227,24 +304,23 @@ async def book_appointment(request):
 
                 # SAVE RECORD TO DATABASE
                 sql1 = "INSERT INTO tbl_patient_information_record \
-                   (First_Name, Middle_Name, Last_Name, Sex, Contact_No, Email_Address, Birthdate, Age, Religion, Nationality, Home_Address, Parent_Name, Parent_Contact_No, Parent_Occupation, Date, Dental_Reason, Previous_Dentist, \
-                    Last_Visit) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                   (First_Name, Middle_Name, Last_Name, Sex, Contact_No, Email_Address, Birthdate, Age, Religion, Nationality, Home_Address, Parent_Name, Parent_Contact_No, Parent_Occupation, Date, Dental_Reason, Previous_Dentist, Last_Visit, Valid_ID, Appointment_Schedule, Date_Created) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                 sql2 = "INSERT INTO tbl_medical_history \
                     (Physicians_Name, Present_Medical_Care, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, \
                     Medical_Conditions, other) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
-                sql3 = "INSERT INTO tbl_validation (Valid_ID, Appointment_Schedule, Date_Created) VALUES(%s, %s, %s)"
+                sql3 = "INSERT INTO tbl_appointments (First_Name, Middle_Name, Last_Name, Email_Address, Appointment_Schedule, Dental_Reason) VALUES(%s, %s, %s, %s, %s, %s)"
 
-                sql4 = "INSERT INTO tbl_appointments (First_Name, Middle_Name, Last_Name, Email_Address, Appointment_Schedule) VALUES(%s, %s, %s, %s, %s)"
+                sql4 = "INSERT INTO tbl_verification (Email_Address, 4digit_PIN) VALUES(%s, %s)"
 
                 data1 = (strFN, strMN, strLN, strSex, intCP, strEmail, intBirth, strAge, strRlg, strNational, strHA,
-                         strPoG, intCP1, strOcp1, intDate, strDR, strDenT, strLV)
+                         strPoG, intCP1, strOcp1, intDate, strDR, strDenT, strLV, unique_filename, data['appointment_schedule'], intDateCreated)
 
                 data2 = (strPName, strPMcare, strOption1, strOption2, strtb1, strOption3, strtb2, strOption4, strtb3, strOption5, strOption6, strOption7, strOption8, strOption9, checkbox_string, strothers)
 
-                data3 = (unique_filename, data['appointment_schedule'], intDateCreated)
+                data3 = (strFN, strMN, strLN, strEmail, data['appointment_schedule'], strDR)
 
-                data4 = (strFN, strMN, strLN, strEmail, data['appointment_schedule'])
+                data4 = (strEmail, intPIN)
 
                 await cursor.execute(sql1, data1)
                 await cursor.execute(sql2, data2)
@@ -258,7 +334,69 @@ async def book_appointment(request):
                 print("Error:", e)
                 return web.Response(text='Error while submitting appointment')
 
+async def OP_book_appointment(request):
+    async with request.app['db_pool'].acquire() as conn:
+        async with conn.cursor() as cursor:
+            try:
+                data = await request.post()
 
+                # GET USER INPUTS
+
+                strFN = data['OP-FirstName']
+                strMN = data['OP-MiddleName']
+                strLN = data['OP-LastName']
+                strEmail = data['OP-Email']
+                strDR = data['OP-Reason']
+
+                # SAVE RECORD TO DATABASE
+                sql1 = "INSERT INTO tbl_appointments \
+                   (First_Name, Middle_Name, Last_Name, Email_Address, Appointment_Schedule, Dental_Reason) VALUES(%s, %s, %s, %s, %s, %s)"
+
+                data1 = (strFN, strMN, strLN, strEmail, data['appointment_schedule'], strDR)
+
+                await cursor.execute(sql1, data1)
+
+                flash_message = 'Record successfully saved in the database!'
+                return web.Response(text=flash_message)
+
+            except Exception as e:
+                print("Error:", e)
+                return web.Response(text='Error while submitting appointment')
+
+async def fetch_patient_info(request):
+    try:
+        email = request.query.get('emailV')  # Get the email address from the query parameter
+
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                # Execute a SQL query to retrieve patient information based on the email address
+                query = "SELECT Email_Address, First_Name, Middle_Name, Last_Name, Contact_No FROM tbl_patient_information_record WHERE Email_Address = %s"
+                await cursor.execute(query, email)
+                result = await cursor.fetchone()
+
+                if result:
+                    # Extract the desired fields from the result
+                    email_address, first_name, middle_name, last_name, contact_no = result
+
+                    # Create a dictionary to store the fetched data
+                    patient_info = {
+                        "Email_Address": email_address,
+                        "First_Name": first_name,
+                        "Middle_Name": middle_name,
+                        "Last_Name": last_name,
+                        "Contact_No": contact_no
+                    }
+
+                    logging.info(f"Fetched patient info: {patient_info}")
+
+                    # Return the fetched data as JSON
+                    return web.json_response(patient_info)
+                else:
+                    # Email address not found in the database
+                    return web.json_response({"error": "Email address not found"}, status=404)
+
+    except Exception as e:
+        return web.json_response({"error": str(e)}, status=500)
 
 async def contact_us_page(request):
     return aiohttp_jinja2.render_template('contact-us.html', request, {})
@@ -299,10 +437,7 @@ async def admin_tables_page(request):
             await cursor.execute("SELECT * FROM tbl_medical_history")
             medicalInfo = await cursor.fetchall()
 
-            await cursor.execute("SELECT * FROM tbl_validation")
-            OtherInfo = await cursor.fetchall()
-
-            return aiohttp_jinja2.render_template('admin-tables.html', request, {'personalInfo': personalInfo, 'medicalInfo': medicalInfo, 'OtherInfo': OtherInfo})
+            return aiohttp_jinja2.render_template('admin-tables.html', request, {'personalInfo': personalInfo, 'medicalInfo': medicalInfo})
 
 
 async def get_image_url(request):
@@ -313,7 +448,7 @@ async def get_image_url(request):
 
     async with request.app['db_pool'].acquire() as conn:
         async with conn.cursor() as cursor:
-            await cursor.execute("SELECT Valid_ID FROM tbl_validation WHERE ID = %s", (user_id,))
+            await cursor.execute("SELECT Valid_ID FROM tbl_patient_information_record WHERE ID = %s", (user_id,))
             image_url = await cursor.fetchone()
 
             if image_url:
@@ -331,9 +466,9 @@ async def submit_treatment(request):
         intDate = data['Date']
         strProced = data['Procedure']
         strRem = data['Remarks']
-        intAC = data['AmountCharged']
-        intAP = data['AmountPaid']
-        intBal = data['Balance']
+        floatAC = float(data['AmountCharged'])
+        floatAP = float(data['AmountPaid'])
+        floatBal = floatAC - floatAP
         intNA = data['NextAppointment']
 
         async with request.app['db_pool'].acquire() as conn:
@@ -341,15 +476,43 @@ async def submit_treatment(request):
                 # SAVE RECORD TO DATABASE
                 sql = "INSERT INTO tbl_treatment_record \
                        (ID, Date, `Procedure`, Remarks, Amount_Charged, Amount_Paid, Balance, Next_Appointment) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"
-                data = (patient_id, intDate, strProced, strRem, intAC, intAP, intBal, intNA)
+                data = (patient_id, intDate, strProced, strRem, floatAC, floatAP, floatBal, intNA)
                 await cursor.execute(sql, data)
 
-        flash_message = 'Record successfully saved in the database!'
         return web.Response(text='')
 
     except Exception as e:
         print(e)
         return web.Response(text='Error while submitting message')
+
+async def update_treatment(request):
+    try:
+        data = await request.post()
+
+        # GET USER INPUTS
+        patient_id = data['ID']
+        intDate = data['Date']
+        strProced = data['Procedure']
+        strRem = data['Remarks']
+        floatAC = float(data['AmountCharged'])
+        floatAP = float(data['AmountPaid'])
+        floatBal = floatAC - floatAP
+        intNA = data['NextAppointment']
+
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                # UPDATE EXISTING RECORD
+                sql = "UPDATE tbl_treatment_record SET Date=%s, `Procedure`=%s, Remarks=%s, Amount_Charged=%s, Amount_Paid=%s, Balance=%s, Next_Appointment=%s WHERE T_ID=%s"
+                data = (intDate, strProced, strRem, floatAC, floatAP, floatBal, intNA, patient_id)
+
+                await cursor.execute(sql, data)
+
+        return web.Response(text='Treatment record updated successfully')
+
+    except Exception as e:
+        print(e)
+        return web.Response(text='Error while updating treatment record')
+
 
 
 async def read_one_treatment(request):
@@ -384,6 +547,12 @@ async def delete_user(request):
             async with conn.cursor() as cursor:
                 await cursor.execute("DELETE FROM tbl_patient_information_record WHERE ID=%s", patient_id)
 
+                await cursor.execute("DELETE FROM tbl_medical_history WHERE ID=%s", patient_id)
+
+                await cursor.execute("DELETE FROM tbl_verification WHERE ID=%s", patient_id)
+
+                await cursor.execute("DELETE FROM tbl_treatment_record WHERE ID=%s", patient_id)
+
         redirect_url = '/admin_tables_page'
         return web.HTTPFound(redirect_url)
 
@@ -405,6 +574,21 @@ async def delete_appointment(request):
     except Exception as e:
         print(e)
         return web.Response(text='Error while deleting user')
+
+async def delete_treatment(request):
+    try:
+        patient_id = request.match_info['id']
+
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                await cursor.execute("DELETE FROM tbl_treatment_record WHERE T_ID=%s", patient_id)
+
+        return web.Response(text='')
+
+    except Exception as e:
+       print(e)
+    return web.Response(text='Error while submitting message')
+
 
 async def delete_message(request):
     try:
@@ -518,6 +702,7 @@ app.router.add_get('/', home_page)
 app.router.add_get('/services_page', services_page)
 app.router.add_get('/book_an_appointment_page', book_an_appointment_page)
 app.router.add_post('/book_appointment', book_appointment)
+app.router.add_post('/OP_book_appointment', OP_book_appointment)
 app.router.add_post('/customer/appointments/verify-timeslot', verify_timeslot)
 app.router.add_get('/contact_us_page', contact_us_page)
 app.router.add_post('/send_message', send_message)
@@ -531,14 +716,21 @@ app.router.add_get('/read_one_treatment/{id}', read_one_treatment)
 app.router.add_get('/delete_user/{id}', delete_user)
 app.router.add_get('/delete_appointment/{id}', delete_appointment)
 app.router.add_get('/delete_message/{id}', delete_message)
+app.router.add_get('/delete_treatment/{id}', delete_treatment)
 app.router.add_get('/get_image_url', get_image_url)
 app.router.add_post('/save-timeslot', save_timeslot)
 app.router.add_post('/disable-day', disable_day)
 app.router.add_get('/fetch-disabled-dates', fetch_disabled_dates)
 app.router.add_get('/fetch_timeslots', fetch_timeslots)
+app.router.add_get('/api/get-all-emails', get_all_email_addresses)
 app.router.add_delete('/delete-disabled-date', delete_disabled_date)
 app.router.add_delete('/delete-disabled-timeslot', delete_disabled_timeslot)
 app.router.add_post('/login', login)
+app.router.add_route('*', '/logout', logout)
+app.router.add_post('/validate-email-pin', validate_email_and_pin)
+app.router.add_post('/update_treatment', update_treatment)
+app.router.add_get('/api/fetch-patient-info', fetch_patient_info)
+
 
 app.on_startup.append(create_pool)
 app.on_cleanup.append(close_pool)

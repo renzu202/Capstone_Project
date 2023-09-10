@@ -160,3 +160,9 @@ table.table td i {
     max-height: 400px;
     word-wrap: break-word; /* Wrap long words to the next line */
 }
+
+#ReasonModal .modal-body {
+    overflow: auto;
+    max-height: 400px;
+    word-wrap: break-word;
+}

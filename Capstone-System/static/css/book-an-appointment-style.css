@@ -60,7 +60,8 @@ p {
     border: 3px solid black;
 }
 
-#form-wrapper{
+#form-wrapper,
+#OP-form-wrapper{
     padding: 42px;
 }
 
@@ -500,11 +501,12 @@ width: 100% !important;
   width: 100%;
 }
 
-#emailV {
+#emailV,
+#CodeV {
     width: 400px;
 }
 
-#appointment-calendar {
+.appointment-calendar {
     background: #535252;
     color: #CEB339;
 }

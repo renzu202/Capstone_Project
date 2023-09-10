@@ -106,7 +106,6 @@ $(document).ready(function() {
             <div class="row">
             <div class="col-sm-6 column-left" style="border-right: 2px solid #ccc;">
             <p>PATIENT INFORMATION RECORD</p>
-            <p><strong>ID No.:</strong><span> ${id}</span></p>
             <p><strong>Full Name:</strong><span> ${lname}, ${fname} ${mname}</span></p>
             <p><strong>Sex:</strong><span> ${sex}</span></p>
             <p><strong>Contact Number:</strong><span> ${contact}</span></p>

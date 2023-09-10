@@ -39,26 +39,26 @@
         <a class="nav-link" href="/contact_us_page">CONTACT US</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/admin_login_page">ADMIN</a>
+        <a class="nav-link" href="/admin_dashboard_page">ADMIN</a>
       </li>
     </ul>
   </div>
 </nav>
 <div class="container-xl">
-  <div class="row">
-    <div class="col-md-3">
+  <div class="row justify-content-center">
+    <div class="col-md-2">
       <a href="/admin_dashboard_page" class="dashboard-link">
         <i class="fa fa-tachometer mb-3" aria-hidden="true"></i>
         Dashboard
       </a>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
       <a href="/admin_tables_page" class="patient-records-link">
         <i class="fa fa-users mb-3" aria-hidden="true"></i>
         Patient Records
       </a>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
       <a href="/admin_calendar_page" class="clinic-calendar-link">
         <i class="fa fa-calendar mb-3" aria-hidden="true"></i>
         Clinic Calendar
@@ -70,6 +70,11 @@
         Appointments & Messages
       </a>
     </div>
+  <div class="col-md-2">
+  <form method="get" action="/logout">
+    <button type="submit">Log Out</button>
+  </form>
+  </div>
   </div>
   <hr>
   <!--Calendar-->
