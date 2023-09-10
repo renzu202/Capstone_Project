@@ -583,11 +583,14 @@ async def delete_treatment(request):
             async with conn.cursor() as cursor:
                 await cursor.execute("DELETE FROM tbl_treatment_record WHERE T_ID=%s", patient_id)
 
-        return web.Response(text='')
+        # No response is needed here
 
     except Exception as e:
-       print(e)
-    return web.Response(text='Error while submitting message')
+        print(e)
+
+    # Redirect to the same page (refresh)
+    return web.HTTPFound(request.headers.get('Referer', '/'))
+
 
 
 async def delete_message(request):

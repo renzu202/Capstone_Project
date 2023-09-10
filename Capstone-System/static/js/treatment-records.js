@@ -43,6 +43,7 @@ document.getElementById("edit-form-wrapper").addEventListener("submit", function
             });
         });
 
+
     // Next Appointment checkbox
         const appointmentCheckbox = document.getElementById("checkAppointment");
         const appointmentSection = document.getElementById("NA-section");
