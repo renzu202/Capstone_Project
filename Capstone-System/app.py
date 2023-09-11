@@ -25,8 +25,8 @@ aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader('templates'))
 # MySQL configurations
 db_config = {
     'host': 'localhost',
-    'user': 'root',
-    'password': '123456',
+    'user': 'arcs',
+    'password': '12345678',
     'db': 'db_capstone',
     'autocommit': True,
 }
