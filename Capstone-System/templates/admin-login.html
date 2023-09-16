@@ -40,7 +40,7 @@
         <a class="nav-link" href="/contact_us_page">CONTACT US</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/admin_dashboard_page">ADMIN</a>
+        <a class="nav-link" href="/admin_dashboard_page" style="color:white;">ADMIN</a>
       </li>
     </ul>
   </div>
@@ -56,11 +56,23 @@
 <div class="layer"></div>
 </div>
 
- <form class="login" method="POST" action="/login">
-     <label style="color:red;">Login for Admin</label>
-        <input type="text" name="username" placeholder="Username" required><br>
-        <input type="password" name="password" placeholder="Password" required><br>
-        <button type="submit">Login</button>
+
+ <form class="login" id="login" method="POST" action="/login">
+<div class="row mb-4">
+  <div class="col-sm-2">
+    <img src="/static/img/logo.png" id="AdminLogo" alt="Logo">
+  </div>
+  <div class="col-sm-5" style="margin-top:15px;">
+    <h2 style="color: black; margin-left:45px;">Admin</h2>
+</div>
+    <div class="col-sm-5">
+        <button type="button" id="showLoginFormButton" style="margin-left:35px; margin-top:18px;">▼</button>
+    </div>
+  </div>
+
+        <input type="text" id="username" name="username" style="display:none;" placeholder="Username" required><br>
+        <input type="password" id="password" name="password" style="display:none;" placeholder="Password" required><br>
+        <button type="submit" id="submit" style="display:none;">Log in</button>
      <p id="error-message" style="color: red;"></p>
  </form>
 

@@ -8,6 +8,24 @@ let OPsuccessDiv = document.getElementById('OP-success');
 let lastTab = document.getElementById('tab-6');
 let OPlastTab = document.getElementById('OP-tab-3')
 
+// Field ToolTip
+ function showToolTip(element) {
+        var tooltip = element.querySelector('.tooltip');
+        if (!tooltip) {
+            tooltip = document.createElement("div");
+            tooltip.className = "tooltip";
+            tooltip.innerText = "Required Field";
+            element.appendChild(tooltip);
+        }
+        tooltip.style.display = "block";
+    }
+
+    function hideToolTip(element) {
+        var tooltip = element.querySelector('.tooltip');
+        if (tooltip) {
+            tooltip.style.display = "none";
+        }
+    }
 
 // Helper function to capitalize the first word of a string
 function capitalizeFirstWord(input) {
@@ -112,13 +130,17 @@ async function validateEmailAndPIN() {
                 document.getElementById('tab-OP').style.display = 'none';
                 document.getElementById('OP-tab-1').style.display = 'block';
                 $("#qc1").hide();
-                $("#qc2").show();
+                $("#qc2").hide();
+                $("#qc3").show();
+                $("#qc4").show();
+
 
                 // Fetch patient information and populate fields
                 await fetchPatientInfo();
             } else {
                 // Invalid email and/or PIN, show an error message or take appropriate action
                 alert('Invalid email and/or PIN. Please try again.');
+                return false;
             }
         } else {
             // Handle server error or network issue
@@ -134,7 +156,12 @@ async function validateEmailAndPIN() {
 //Tab OP-tab-1
 function OPPrevVal1() {
     $("#OP-tab-1").hide();
-    $("#tab-OP").show();
+    $("#tab-0").show();
+    $("#qc1").show();
+    $("#qc2").show();
+    $("#qc3").hide();
+    $("#qc4").hide();
+
 }
 
 function OPNextVal1() {
@@ -257,14 +284,6 @@ ageInput.addEventListener("blur", function() {
         this.value = this.value.replace(/[^0-9]/g, '');
     });
 
- var pinInput = document.getElementById("PIN");
-
-    // Add an event listener to intercept keypresses
-    pinInput.addEventListener("input", function() {
-        // Remove non-numeric characters using a regular expression
-        this.value = this.value.replace(/[^0-9]/g, '');
-    });
-
     // history checkbox
         const historyCheckbox = document.getElementById("history");
         const historySection = document.getElementById("dentalHistory-section");
@@ -308,12 +327,9 @@ function validateDate(input) {
         var emailValue = emailInput.value;
         var BD = document.getElementById("Birth").value;
         var Age = document.getElementById("Age").value;
-        var Rel = document.getElementById("Religion").value;
         var HA = document.getElementById("HomeAddress").value;
-        var Nation = document.getElementById("Nationality").value;
         var PoGName = document.getElementById("PoGName").value;
         var CN2 = document.getElementById("Contact2").value;
-        var Occ2 = document.getElementById("Occupation2").value;
         var Reason = document.getElementById("Reason").value;
         var PD = document.getElementById("Dentist").value;
         var LV = document.getElementById("LastVisit").value;
@@ -404,12 +420,10 @@ function validateDate(input) {
             .then(data => {
                 var emailAddresses = data.email_addresses;
                 if (emailAddresses.includes(emailValue)) {
-                    document.getElementById("EAval").innerHTML = "Email Address already exists";
+                    document.getElementById("EAval").innerHTML = "Email Address already registered";
                     return false;
                 } else {
                     document.getElementById("EAval").innerHTML = "";
-                }
-            });
 
         if (BD === "") {
             document.getElementById("BDval").innerHTML = "*This field is required";
@@ -432,14 +446,6 @@ function validateDate(input) {
         }
     }
 
-        if (Rel === "") {
-            document.getElementById("Relval").innerHTML = "*This field is required";
-            return false;
-        }
-        else {
-            document.getElementById("Relval").innerHTML = "";
-        }
-
         if (HA === "") {
             document.getElementById("HAval").innerHTML = "*This field is required";
             return false;
@@ -447,15 +453,6 @@ function validateDate(input) {
         else {
             document.getElementById("HAval").innerHTML = "";
         }
-
-        if (Nation === "") {
-            document.getElementById("Nationval").innerHTML = "*This field is required";
-            return false;
-        }
-        else {
-            document.getElementById("Nationval").innerHTML = "";
-        }
-
 
         if (PoGName === "") {
             document.getElementById("PoGNameval").innerHTML = "*This field is required";
@@ -485,14 +482,6 @@ function validateDate(input) {
             return false;
         } else {
             document.getElementById("Contact2val").innerHTML = "";
-        }
-
-        if (Occ2 === "") {
-            document.getElementById("Occupation2val").innerHTML = "*This field is required";
-            return false;
-        }
-        else {
-            document.getElementById("Occupation2val").innerHTML = "";
         }
 
         if (Reason === "") {
@@ -541,6 +530,9 @@ function validateDate(input) {
         // Proceed if all field have value
         $("#tab-2").hide();
         $("#tab-3").show();
+            }
+        });
+
     }
 
     function Prev1() {
@@ -617,8 +609,6 @@ function handleOption4Change() {
 
 
     function NextVal2(){
-        var pName = document.getElementById("PName").value;
-        var pmCare = document.getElementById("PMCare").value;
         var option1Selected = document.querySelector('input[name="Option1"]:checked');
         var option2Selected = document.querySelector('input[name="Option2"]:checked');
         var option3Selected = document.querySelector('input[name="Option3"]:checked');
@@ -629,21 +619,6 @@ function handleOption4Change() {
         var tb2 = document.getElementById("tb2").value;
         var tb3 = document.getElementById("tb3").value;
 
-         if (pName === "") {
-            document.getElementById("PnameVal").innerHTML = "*This field is required";
-            return false;
-        }
-        else {
-            document.getElementById("PnameVal").innerHTML = "";
-        }
-
-         if (pmCare === "") {
-            document.getElementById("PMcareVal").innerHTML = "*This field is required";
-            return false;
-        }
-        else {
-            document.getElementById("PMcareVal").innerHTML = "";
-        }
 
         if (!option1Selected) {
         document.getElementById("Option1val").innerHTML = "*Please select an option";
@@ -847,9 +822,39 @@ submitBtn.addEventListener('click', async (event) => {
         const otherValue = otherField.value.trim();
         const strothers = otherValue !== '' ? otherValue : 'N/A';
 
+                // Handle Religion field
+        const religionField = document.getElementById('Religion');
+        const strRlg = religionField.value.trim();
+        const strReligion = strRlg !== '' ? strRlg : 'N/A';
+
+        // Handle Nationality field
+        const nationalityField = document.getElementById('Nationality');
+        const strNational = nationalityField.value.trim();
+        const strNationality = strNational !== '' ? strNational : 'N/A';
+
+        // Handle Occupation2 field
+        const occupation2Field = document.getElementById('Occupation2');
+        const strOcp1 = occupation2Field.value.trim();
+        const strOccupation2 = strOcp1 !== '' ? strOcp1 : 'N/A';
+
+        // Handle PName field
+        const pNameField = document.getElementById('PName');
+        const strPName = pNameField.value.trim();
+        const strPatientName = strPName !== '' ? strPName : 'N/A';
+
+// Handle PMCare field
+const pmCareField = document.getElementById('PMCare');
+const strPMcare = pmCareField.value.trim();
+const strPMCare = strPMcare !== '' ? strPMcare : 'N/A';
+
         // Set the modified values to the form fields
         formData.set('checkbox_field', checkboxString);
         formData.set('Other', strothers);
+        formData.set('Religion', strReligion);
+        formData.set('Nationality', strNationality);
+        formData.set('Occupation2', strOccupation2);
+        formData.set('PName', strPatientName);
+        formData.set('PMCare', strPMCare);
 
         // Get the current date and time
         const currentDate = new Date();

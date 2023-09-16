@@ -40,7 +40,7 @@
         <a class="nav-link" href="/contact_us_page">CONTACT US</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/admin_dashboard_page">ADMIN</a>
+        <a class="nav-link" href="/admin_dashboard_page" style="color:white;">ADMIN</a>
       </li>
     </ul>
   </div>
@@ -48,40 +48,39 @@
 <div class="container-xl">
 <div class="row justify-content-center">
     <div class="col-md-2">
-      <a href="/admin_dashboard_page" class="dashboard-link">
+      <a href="/admin_dashboard_page" class="dashboard-link hc">
         <i class="fa fa-tachometer mb-3" aria-hidden="true"></i>
         Dashboard
       </a>
     </div>
     <div class="col-md-2">
-      <a href="/admin_tables_page" class="patient-records-link">
+      <a href="/admin_tables_page" class="patient-records-link hc">
         <i class="fa fa-users mb-3" aria-hidden="true"></i>
         Patient Records
       </a>
     </div>
     <div class="col-md-2">
-      <a href="/admin_calendar_page" class="clinic-calendar-link">
+      <a href="/admin_calendar_page" class="clinic-calendar-link hc">
         <i class="fa fa-calendar mb-3" aria-hidden="true"></i>
         Clinic Calendar
       </a>
     </div>
     <div class="col-md-3">
-      <a href="/admin_A&M_page" class="clinic-calendar-link">
+      <a href="/admin_A&M_page" class="clinic-calendar-link hcm">
         <i class="fa fa-paper-plane mb-3" aria-hidden="true"></i>
         Appointments & Messages
       </a>
     </div>
   <div class="col-md-2">
   <form method="get" action="/logout">
-    <button class="btn-danger" type="submit">Log Out</button>
+    <button class="btn-outline-dark" style="width:100px; height:auto;border-radius:10px;" type="submit">Log Out</button>
   </form>
   </div>
   </div>
 </div>
-    <div class="container-fluid">
+    <div class="container-xl">
   <hr>
-      <div class="row">
-      <div class="table-responsive col-md-6 mb-4">
+      <div class="table-responsive mb-4">
         <div class="table-wrapper">
             <div class="table-title">
                 <div class="row">
@@ -113,8 +112,12 @@
                             <td>{{ Aptdata[4] }}</td>
                             <td>{{ Aptdata[5] }}</td>
                             <td>
+                     <div class="d-flex">
                     <a href="#" class="view" title="View Dental Reason" data-bs-toggle="modal" data-bs-target="#ReasonModal" data-dental="{{ Aptdata[6] }}">
                         <i class="bi bi-eye-fill"></i>
+                    </a>
+                    <a href="#" class="view" title="Enable Timeslot" data-bs-toggle="modal" data-bs-target="#EnableCon" data-patient-id="{{ Aptdata[0] }}">
+                        <i class="fa-solid fa-clock" style="color: #2b2b27;"></i>
                     </a>
                     <a href="#" class="complete" title="Finish Appointment">
                     <i class="fa-solid fa-flag-checkered" style="color:green;"></i>
@@ -122,6 +125,7 @@
                     <a href="/delete_appointment/{{ Aptdata[0] }}" class="delete" title="Cancel Appointment" onclick="return confirm('Are you sure you want to cancel this appointment?');">
                         <i class="fa-solid fa-ban" style="color:red;"></i>
                     </a>
+                     </div>
                             </td>
                         </tr>
                         {% endfor %}
@@ -131,7 +135,7 @@
         </div>
     </div>
 
-           <div class="table-responsive col-md-6">
+           <div class="table-responsive">
         <div class="table-wrapper">
             <div class="table-title">
                 <div class="row">
@@ -179,7 +183,30 @@
             </div>
         </div>
     </div>
-     </div>
+
+<!--Enable Confirmation Modal-->
+    <div class="modal fade" id="EnableCon" tabindex="-1" role="dialog" aria-labelledby="EnableModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="EnableModalLabel">Enable Timeslot</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>This will enable the timeslot of this patient from calendar but will not cancel the appointment.</p>
+                <br>
+                <p style="color:red;">Warning:</p>
+                <p>Disabling and Enabling it again will need to do manually from clinic calendar.</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+             <a href="#" class="btn btn-danger" id="confirm_enable_button">Yes</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!--View Message Modal-->
     <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">

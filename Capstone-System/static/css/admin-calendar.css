@@ -22,7 +22,7 @@
 }
 
 body {
-    background: #85AFAA;
+    background: gray;
     font-family: 'Josefin Sans';
     font-size: 1rem;
     font-weight: 600;
@@ -96,6 +96,35 @@ body {
 .drs ul li:nth-child(even) {
     background-color: #e0e0e0; /* Slightly darker background for even lines */
     padding: 5px;
+}
+
+.modal-header {
+    background-color: gray;
+}
+
+
+.modal-title {
+    color: white;
+}
+
+.hc {
+   color: black;
+}
+
+.hcm {
+   color: #F1E9E9;
+}
+
+.dashboard-link:hover,
+.patient-records-link:hover,
+.clinic-calendar-link:hover {
+  color: #CCC8C8;
+}
+
+.btn-calendar{
+    margin-left: 50px;
+    height: 35px;
+    border-radius: 10px;
 }
 
 

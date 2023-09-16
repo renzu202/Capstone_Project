@@ -5,10 +5,17 @@
 }
 
 .logo {
-
  border-radius: 50%;
  margin-left: 20px;
 }
+
+.login img#AdminLogo {
+  width: 70px;
+  height: auto;
+  border-radius: 50%
+}
+
+
 
 .dental-title {
     position: absolute;
@@ -41,6 +48,7 @@ body {
 
 /* Content*/
 
+
 .login {
   overflow: hidden;
   background-color: white;
@@ -50,6 +58,7 @@ body {
   top: 50%;
   left: 50%;
   width: 400px;
+  height: 140px;
   -webkit-transform: translate(-50%, -50%);
   -moz-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
@@ -101,7 +110,7 @@ body {
 .login > button {
   font-family: "Asap", sans-serif;
   cursor: pointer;
-  color: #fff;
+  color: white;
   font-size: 16px;
   text-transform: uppercase;
   width: 80px;
@@ -110,13 +119,13 @@ body {
   margin-top: 10px;
   margin-left: -5px;
   border-radius: 5px;
-  background-color: #f45b69;
+  background-color: black;
   -webkit-transition: background-color 300ms;
   -moz-transition: background-color 300ms;
   transition: background-color 300ms;
 }
 .login > button:hover {
-  background-color: #f24353;
+  background-color: #494846;
 }
 
 @-webkit-keyframes wawes {

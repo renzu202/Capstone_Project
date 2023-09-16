@@ -40,6 +40,7 @@ body {
     padding-bottom: 10px;
     padding-bottom: 40px;
 }
+
 p,
 label,
 h1,
@@ -88,9 +89,10 @@ h6 {
   display: block;
   transition: 0.5s;
   position: absolute;
-  background: lightblue;
+  background: #adadaf;
   content: attr(data-back);
   transform: translateY(-50%) rotateX(90deg);
+  border-radius: 10px;
 }
 .btn-flip:before {
   top: 0;
@@ -103,9 +105,10 @@ h6 {
   line-height: 40px;
   transition: 0.5s;
   position: relative;
-  background: #323237;
+  background: #201F1E;
   content: attr(data-front);
   transform: translateY(0) rotateX(0);
+  border-radius: 10px;
 }
 
 

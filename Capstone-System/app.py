@@ -2,7 +2,6 @@ from aiohttp_session import setup, get_session
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
 from cryptography.fernet import Fernet
 import base64
-from aiohttp import web
 import os
 import time
 import random
@@ -13,7 +12,7 @@ import aiomysql
 import logging
 import bcrypt
 
-
+from aiohttp import web
 
 app = web.Application()
 logging.basicConfig(level=logging.INFO)
@@ -26,7 +25,8 @@ aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader('templates'))
 db_config = {
     'host': 'localhost',
     'user': 'arcs',
-    'password': '12345678',
+    'port': 3306,
+    'password': 'ArcSdent@l123',
     'db': 'db_capstone',
     'autocommit': True,
 }
@@ -124,7 +124,7 @@ async def logout(request):
     # Redirect to the login page or another appropriate page after logout
     return web.HTTPFound('/admin_login_page')  # Redirect to the login page
 
-# Endpoint for validating email and 4-digit PIN
+# Endpoint for validating email and password
 async def validate_email_and_pin(request):
     try:
         data = await request.json()
@@ -134,7 +134,7 @@ async def validate_email_and_pin(request):
         # Perform email and PIN validation here
         async with request.app['db_pool'].acquire() as conn:
             async with conn.cursor() as cursor:
-                query = "SELECT Email_Address, 4digit_PIN FROM tbl_verification WHERE Email_Address = %s AND 4digit_PIN = %s"
+                query = "SELECT Email_Address, Password FROM tbl_verification WHERE Email_Address = %s AND Password = %s"
                 await cursor.execute(query, (email, pin))
                 result = await cursor.fetchone()
 
@@ -186,7 +186,7 @@ async def verify_timeslot(request):
         async with request.app['db_pool'].acquire() as conn:
             async with conn.cursor() as cursor:
                 # Fetch the booked time slots from tbl_validation
-                query = "SELECT Appointment_Schedule FROM tbl_appointments WHERE DATE(Appointment_Schedule) = DATE(%s)"
+                query = "SELECT Appointment_Schedule FROM tbl_timeslots_booked WHERE DATE(Appointment_Schedule) = DATE(%s)"
                 await cursor.execute(query, (date_input,))
                 result_validation = await cursor.fetchall()
 
@@ -250,7 +250,7 @@ async def book_appointment(request):
                 strSex = data['Sex']
                 intCP = int(data['Contact'])
                 strEmail = data['Email']
-                intPIN = data['PIN']
+                strPass = data['PIN']
                 intBirth = data['Birth']
                 strAge = data['Age']
                 strRlg = data['Religion']
@@ -311,7 +311,9 @@ async def book_appointment(request):
 
                 sql3 = "INSERT INTO tbl_appointments (First_Name, Middle_Name, Last_Name, Email_Address, Appointment_Schedule, Dental_Reason) VALUES(%s, %s, %s, %s, %s, %s)"
 
-                sql4 = "INSERT INTO tbl_verification (Email_Address, 4digit_PIN) VALUES(%s, %s)"
+                sql4 = "INSERT INTO tbl_verification (Email_Address, Password) VALUES(%s, %s)"
+
+                sql5 = "INSERT INTO tbl_timeslots_booked (Appointment_Schedule) VALUES(%s)"
 
                 data1 = (strFN, strMN, strLN, strSex, intCP, strEmail, intBirth, strAge, strRlg, strNational, strHA,
                          strPoG, intCP1, strOcp1, intDate, strDR, strDenT, strLV, unique_filename, data['appointment_schedule'], intDateCreated)
@@ -320,12 +322,15 @@ async def book_appointment(request):
 
                 data3 = (strFN, strMN, strLN, strEmail, data['appointment_schedule'], strDR)
 
-                data4 = (strEmail, intPIN)
+                data4 = (strEmail, strPass)
+
+                data5 = (data['appointment_schedule'])
 
                 await cursor.execute(sql1, data1)
                 await cursor.execute(sql2, data2)
                 await cursor.execute(sql3, data3)
                 await cursor.execute(sql4, data4)
+                await cursor.execute(sql5, data5)
 
                 flash_message = 'Record successfully saved in the database!'
                 return web.Response(text=flash_message)
@@ -352,9 +357,14 @@ async def OP_book_appointment(request):
                 sql1 = "INSERT INTO tbl_appointments \
                    (First_Name, Middle_Name, Last_Name, Email_Address, Appointment_Schedule, Dental_Reason) VALUES(%s, %s, %s, %s, %s, %s)"
 
+                sql2 = "INSERT INTO tbl_timeslots_booked (Appointment_Schedule) VALUES(%s)"
+
                 data1 = (strFN, strMN, strLN, strEmail, data['appointment_schedule'], strDR)
 
+                data2= (data['appointment_schedule'])
+
                 await cursor.execute(sql1, data1)
+                await cursor.execute(sql2, data2)
 
                 flash_message = 'Record successfully saved in the database!'
                 return web.Response(text=flash_message)
@@ -567,6 +577,22 @@ async def delete_appointment(request):
         async with request.app['db_pool'].acquire() as conn:
             async with conn.cursor() as cursor:
                 await cursor.execute("DELETE FROM tbl_appointments WHERE ID=%s", patient_id)
+                await cursor.execute("DELETE FROM tbl_timeslots_booked WHERE ID=%s", patient_id)
+
+        redirect_url = '/admin_A&M_page'
+        return web.HTTPFound(redirect_url)
+
+    except Exception as e:
+        print(e)
+        return web.Response(text='Error while deleting user')
+
+async def delete_timeslots_booked(request):
+    try:
+        patient_id = request.match_info['id']
+
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                await cursor.execute("DELETE FROM tbl_timeslots_booked WHERE ID=%s", patient_id)
 
         redirect_url = '/admin_A&M_page'
         return web.HTTPFound(redirect_url)
@@ -720,6 +746,7 @@ app.router.add_get('/delete_user/{id}', delete_user)
 app.router.add_get('/delete_appointment/{id}', delete_appointment)
 app.router.add_get('/delete_message/{id}', delete_message)
 app.router.add_get('/delete_treatment/{id}', delete_treatment)
+app.router.add_get('/delete_timeslots_booked/{id}', delete_timeslots_booked)
 app.router.add_get('/get_image_url', get_image_url)
 app.router.add_post('/save-timeslot', save_timeslot)
 app.router.add_post('/disable-day', disable_day)
@@ -739,7 +766,7 @@ app.on_startup.append(create_pool)
 app.on_cleanup.append(close_pool)
 
 def main():
-    web.run_app(app, host='localhost', port=8080)
+    web.run_app(app, host='127.0.0.1', port=8000)
 
 if __name__ == "__main__":
     main()

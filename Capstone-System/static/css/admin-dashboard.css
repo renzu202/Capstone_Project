@@ -22,7 +22,7 @@
 }
 
 body {
-    background: #85AFAA;
+    background: gray;
     font-family: 'Josefin Sans';
     font-size: 1rem;
     font-weight: 600;
@@ -40,3 +40,16 @@ body {
    color: black;
 }
 
+.hc {
+   color: black;
+}
+
+.hcm {
+   color: #F1E9E9;
+}
+
+.dashboard-link:hover,
+.patient-records-link:hover,
+.clinic-calendar-link:hover {
+  color: #CCC8C8;
+}

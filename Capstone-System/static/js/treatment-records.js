@@ -88,3 +88,11 @@ function editRecord(id, remarks, procedure, amountCharged, amountPaid, nextAppoi
     $('#editTreatmentModal').modal('show');
 }
 
+// Delete Function
+    $('#deleteRecordModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var recordId = button.data('record-id'); // Extract record ID from data-* attributes
+        var modal = $(this);
+        modal.find('#deleteRecordLink').attr('href', '/delete_treatment/' + recordId);
+    });
+

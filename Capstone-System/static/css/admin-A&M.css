@@ -22,7 +22,7 @@
 }
 
 body {
-    background: #85AFAA;
+    background: gray;
     font-family: 'Josefin Sans';
     font-size: 1rem;
     font-weight: 600;
@@ -40,6 +40,21 @@ body {
 .clinic-calendar-link {
    color: black;
 }
+
+.hc {
+   color: black;
+}
+
+.hcm {
+   color: #F1E9E9;
+}
+
+.dashboard-link:hover,
+.patient-records-link:hover,
+.clinic-calendar-link:hover {
+  color: #CCC8C8;
+}
+
 
 /* Table */
 .table-responsive {
@@ -156,13 +171,27 @@ table.table td i {
 }
 
 #messageModal .modal-body {
-    overflow: auto; /* Add scrollbars for long content */
+    overflow: auto;
     max-height: 400px;
-    word-wrap: break-word; /* Wrap long words to the next line */
+    word-wrap: break-word;
 }
 
 #ReasonModal .modal-body {
     overflow: auto;
     max-height: 400px;
     word-wrap: break-word;
+}
+
+#EnableCon .modal-dialog {
+  max-width: 700px;
+  width: 100%;
+}
+
+.modal-header {
+    background-color: gray;
+}
+
+
+.modal-title {
+    color: white;
 }

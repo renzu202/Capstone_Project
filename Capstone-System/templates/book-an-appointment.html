@@ -34,7 +34,7 @@
         <a class="nav-link" href="/services_page">SERVICES</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/book_an_appointment_page">BOOK AN APPOINTMENT</a>
+        <a class="nav-link" href="/book_an_appointment_page" style="color:white;"x>BOOK AN APPOINTMENT</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/contact_us_page">CONTACT US</a>
@@ -53,10 +53,12 @@
       <div class="col-lg-7 mx-0 px-0">
 
       <!-- Old Patient Form-->
-       <div class="qbox-container" id="qc2" style="display:none;">
+       <div class="qbox-container" id="qc3" style="display:none;">
+           <div class="qbox-container" id="qc4" style="padding:30px; background: white; display:none;">
       <form action="/OP_book_appointment" method="POST" enctype="multipart/form-data" id="OP-form-wrapper" name="OP-form-wrapper">
           <div class="tab" id="OP-tab-1">
                 <br>
+              <hr>
                <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#consentmodal"> <b style="font-size: 20px;">INFORMED CONSENT</b></a><br>
                 <span style="font-size: 15px;">Please click and read the informed consent above before you continue.</span>
     <br><br><br><br><br><br>
@@ -66,11 +68,12 @@
         <b style="color:#294FE1;">I understand the potential risks and benefits outlined in the informed consent.</b>
         </label>
         <span style="color: red;" id="OP-agreeVal"></span>
+              <hr>
         <br><br><br><br>
 
          <div class="q-box__buttons">
-            <button type="button" class="index-btn" onclick = "OPPrevVal1()">Previous</button>
-            <button type="button" class="index-btn" onclick = "OPNextVal1()">Next</button>
+            <button type="button" class="index-btn btn-dark" onclick = "OPPrevVal1()">Previous</button>
+            <button type="button" class="index-btn btn-dark" onclick = "OPNextVal1()">Next</button>
          </div>
             </div>
 
@@ -83,14 +86,16 @@
            <label>What is your reason for dental consultation:</label>
             <br>
             <div class="form-group col-md-12 mb-4">
-                <input  type="text" class="form-control" name="OP-Reason" id="OP-Reason" placeholder="Enter reason for dental consultation">
+                <input  type="text" class="form-control" name="OP-Reason" id="OP-Reason" placeholder="Enter reason for dental consultation" style="width:300px;">
                 <span style="color: red;" id="OP-Reasonval"></span>
             </div>
+           <hr>
 
             <br><br>
                 <h4>Select Preferred Time/Date</h4>
                              <button type="button" id="OP-AppointmentButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#calendarModal">Book Appointment</button><label style="color:red;"><--- Click Here</label>
-                 <br><br><br><br>
+                    <hr>
+                 <br><br>
 
                  <h4>Appointment Schedule:</h4><br>
                  <span style="color:blue;" class="selected-schedule"></span>
@@ -102,8 +107,8 @@
             <input type="hidden" name="appointment_schedule" class="selected-schedule-input">
 
                  <div class="q-box__buttons">
-                    <button type="button" class="index-btn" onclick = "OPPrevVal2()">Previous</button>
-                    <button type="button" class="index-btn" onclick = "OPNextVal2()">Next</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "OPPrevVal2()">Previous</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "OPNextVal2()">Next</button>
                  </div>
        </div>
 
@@ -125,8 +130,8 @@
     </p>
      <br>
                  <div class="q-box__buttons">
-                    <button type="button" class="index-btn" onclick ="OPPrevVal3()">Previous</button>
-                    <button id="OP-submit-btn" class="index-btn" type="submit">Submit</button>
+                    <button type="button" class="index-btn btn-dark" onclick ="OPPrevVal3()">Previous</button>
+                    <button id="OP-submit-btn" class="index-btn btn-dark" type="submit">Submit</button>
                  </div>
 </div>
            <div id="OP-success" style="display:none;">
@@ -137,21 +142,22 @@
             </div>
       </form>
        </div>
-
+       </div>
 
       <!-- New Patient FORMS -->
    <div class="qbox-container" id="qc1">
+       <div class="qbox-container" id="qc2" style="padding:30px; background: white;">
       <form action="/book_appointment" method="POST" enctype="multipart/form-data" id="form-wrapper" name="form-wrapper">
          <div id="steps-container">
 
            <div class="tab" id="tab-0">
             <h4 style="text-align: center;"> Select if you are an old patient or new patient:</h4><br><br>
          <div class="q-box__buttons">
-            <button type="button" class="index-btn" id="OPB" onclick = "OP()">Old Patient</button>
+            <button type="button" class="index-btn btn-dark" id="OPB" onclick = "OP()">Old Patient</button>
          </div>
          <br>
          <div class="q-box__buttons">
-            <button type="button" class="index-btn" id="NPB" onclick = "NP()">New Patient</button>
+            <button type="button" class="index-btn btn-dark" id="NPB" onclick = "NP()">New Patient</button>
          </div>
            </div>
 
@@ -161,16 +167,17 @@
                       <input type="email" class="form-control" style="margin: 0 auto; display: block;" name="emailV" id="emailV" placeholder="Enter email">
                <br>
                <br>
-                      <input type="password" class="form-control" style="margin: 0 auto; display: block;" name="CodeV" id="CodeV" placeholder="Enter 4-digit pin" maxlength="4">
+                      <input type="password" class="form-control" style="margin: 0 auto; display: block;" name="CodeV" id="CodeV" placeholder="Enter password" maxlength="20">
                 <br><br><br><br>
                  <div class="q-box__buttons">
-                    <button type="button" class="index-btn" onclick = "PrevOP()">Previous</button>
-                    <button type="button" class="index-btn" onclick="validateEmailAndPIN()">Next</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "PrevOP()">Previous</button>
+                    <button type="button" class="index-btn btn-dark" onclick="validateEmailAndPIN()">Next</button>
                  </div>
            </div>
 
            <div class="tab" id="tab-1">
                 <br>
+               <hr>
                <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#consentmodal"> <b style="font-size: 20px;">INFORMED CONSENT</b></a><br>
                 <span style="font-size: 15px;">Please click and read the informed consent above before you continue.</span>
     <br><br><br><br><br><br>
@@ -180,45 +187,61 @@
         <b style="color:#294FE1;">I understand the potential risks and benefits outlined in the informed consent.</b>
         </label>
         <span style="color: red;" id="agreeVal"></span>
-        <br><br><br><br>
+               <hr>
+        <br><br><br><br><br><br>
 
          <div class="q-box__buttons">
-            <button type="button" class="index-btn" onclick = "PrevVal()">Previous</button>
-            <button type="button" class="index-btn" onclick = "NextVal()">Next</button>
+            <button type="button" class="index-btn btn-dark" onclick = "PrevVal()">Previous</button>
+            <button type="button" class="index-btn btn-dark" onclick = "NextVal()">Next</button>
          </div>
             </div>
 
            <div class="tab" id="tab-2">
+               <hr>
+               <h5 style="text-align:center;">REGISTRATION FORM</h5>
+               <hr>
+               <br>
                <h4>PATIENT INFORMATION RECORD</h4>
-               <span style="font-size: 13px;">Enter N/A to the field if not applicable or available.</span>
-             <br><br><br>
+               <span style="font-size: 13px;">Fields containing  "<span style="color: red; font-size:15px;">*</span>" or asterisk are required.</span>
+               <hr>
+             <br>
 
             <!-- TEXT INPUT ELEMENTS -->
               <div class="row">
                     <div class="form-group col-md-4 mb-4">
-                         <label for="FirstName">First Name:</label>
+                         <label for="FirstName">
+                            <span style="color: red;font-size:18px;">*</span>First Name:
+                         </label>
                          <input type="text" class="form-control"  name="FirstName" id="FirstName" placeholder="Enter first name">
                          <span style="color: red;" id="FNval"></span>
                     </div>
                     <div class="form-group col-md-4 mb-4">
-                         <label for="MiddleName">Middle Name:</label>
+                         <label for="MiddleName">
+                            <span style="color: red;font-size:18px;">*</span>Middle Name:
+                         </label>
                          <input type="text" class="form-control"  name="MiddleName" id="MiddleName" placeholder="Enter middle name">
                          <span style="color: red;" id="MNval"></span>
                     </div>
                     <div class="form-group col-md-4 mb-4">
-                         <label for="LastName">Last Name:</label>
+                         <label for="LastName">
+                            <span style="color: red;font-size:18px;">*</span>Last Name:
+                         </label>
                          <input type="text" class="form-control"  name="LastName" id="LastName" placeholder="Enter last name">
                          <span style="color: red;" id="LNval"></span>
                     </div>
               </div>
                <div class="row">
                       <div class="form-group col-md-6 mb-4">
-                          <label for="Age">Age:</label>
+                          <label for="Age">
+                              <span style="color: red;font-size:18px;">*</span>Age:
+                          </label>
                           <input  type="number" class="form-control" name="Age" id="Age" placeholder="Enter age">
                           <span style="color: red;" id="Ageval"></span>
                       </div>
                       <div class="form-group col-md-6 mb-4">
-                            <label for="Sex">Sex:</label>
+                            <label for="Sex">
+                                <span style="color: red;font-size:18px;">*</span>Sex:
+                            </label>
                             <select class="form-control form-select" id="Sex" name="Sex">
                             <option value="" selected disabled>select</option>
                             <option>Male</option>
@@ -230,13 +253,17 @@
 
              <div class="row">
                   <div class="form-group col-md-6 mb-4">
-                      <label for="Contact">Contact No.:</label>
+                      <label for="Contact"><span style="color: red;font-size:18px;">*</span>
+                          Contact No.:
+                      </label>
                       <input  type="text" class="form-control" name="Contact" maxlength="11" id="Contact" placeholder="Enter mobile number">
                       <span style="color: red;" id="Contact1val"></span>
                   </div>
                 <br>
                   <div class="form-group col-md-6 mb-4">
-                      <label for="Email">Email Address:</label>
+                      <label for="Email">
+                          <span style="color: red;font-size:18px;">*</span>Email Address:
+                      </label>
                       <input type="email" class="form-control"  name="Email" id="Email" placeholder="Enter email address">
                       <span style="color: red;" id="EAval"></span>
                   </div>
@@ -244,20 +271,26 @@
 
             <div class="row">
                 <div class="form-group col-md-6 mb-4">
-                <label for="PIN">Preferred 4-digit PIN:</label>
-                <input type="password" class="form-control" name="PIN" id="PIN" maxlength="4" placeholder="Enter your 4-digit PIN">
+                <label for="PIN">
+                    <span style="color: red;font-size:18px;">*</span>New Password:
+                </label>
+                <input type="password" class="form-control" name="PIN" id="PIN" maxlength="20" placeholder="Enter your new password">
                      <span style="color: red;" id="PINval"></span>
                  </div>
                <div class="col-md-6 mb-4">
                   <div class="form-group">
-                      <label for="Birth">Birthdate:</label>
+                      <label for="Birth">
+                          <span style="color: red;font-size:18px;">*</span>Birthdate:
+                      </label>
                       <input type="date" class="form-control"  name="Birth" id="Birth" placeholder="Enter email address" oninput="validateDate(this)">
                       <span style="color: red;" id="BDval"></span>
                   </div>
                </div>
             </div>
             <div class="form-group mb-4">
-                <label for="HomeAddress">Home Address:</label>
+                <label for="HomeAddress">
+                    <span style="color: red;font-size:18px;">*</span>Home Address:
+                </label>
                 <textarea class="form-control" name="HomeAddress" id="HomeAddress" placeholder="Enter home address"></textarea>
                 <span style="color: red;" id="HAval"></span>
             </div>
@@ -280,14 +313,18 @@
             <label><b>FOR MINORS:</b></label>
             <div class="form-group mb-4">
                 <br>
-                <label for="PoGName">Parent/Guardian's Name:</label>
+                <label for="PoGName">
+                    <span style="color: red;font-size:18px;">*</span>Parent/Guardian's Name:
+                </label>
                 <input  type="text" class="form-control" name="PoGName" id="PoGName" placeholder="Enter parent/guardian's name" value="N/A">
                 <span style="color: red;" id="PoGNameval"></span>
             </div>
 
             <div class="row">
             <div class="form-group col-md-6 mb-4">
-                <label for="Contact2">Contact No.:</label>
+                <label for="Contact2">
+                    <span style="color: red;font-size:18px;">*</span>Contact No.:
+                </label>
                 <input type="text" class="form-control"  name="Contact2" maxlength="11" id="Contact2" placeholder="Enter mobile no." value="N/A">
                 <span style="color: red;" id="Contact2val"></span>
             </div>
@@ -300,7 +337,7 @@
             </div>
             </div>
 
-            <label>What is your reason for dental consultation:</label>
+            <label><span style="color: red;font-size:18px;">*</span>What is your reason for dental consultation:</label>
             <div class="row">
             <br>
             <div class="form-group col-md-12 mb-4">
@@ -318,13 +355,17 @@
             <br>
             <div class="row">
             <div class="form-group col-md-6 mb-4">
-                <label for="Dentist">Previous Dentist: Dr.</label>
+                <label for="Dentist">
+                    <span style="color: red;font-size:18px;">*</span>Previous Dentist: Dr.
+                </label>
                 <input  type="text" class="form-control" name="Dentist" id="Dentist" placeholder="Enter previous dentist" value="N/A">
                 <span style="color: red;" id="PDval"></span>
             </div>
 
             <div class="form-group col-md-6 mb-4">
-                <label for="LastVisit">Last Dental Visit:</label>
+                <label for="LastVisit">
+                    <span style="color: red;font-size:18px;">*</span>Last Dental Visit:
+                </label>
                 <input  type="date" class="form-control" name="LastVisit" id="LastVisit" placeholder="Enter date" value="1111-11-11">
                 <span style="color: red;" id="LVval"></span>
             </div>
@@ -337,14 +378,13 @@
                  </div>
 
                  <div class="q-box__buttons">
-                    <button type="button" class="index-btn" onclick = "Prev1()">Previous</button>
-                    <button type="button" class="index-btn" onclick = "NextVal1()">Next</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "Prev1()">Previous</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "NextVal1()">Next</button>
                  </div>
             </div>
 
            <div class="tab" id="tab-3">
-               <h5>MEDICAL HISTORY</h5>
-               <span style="font-size: 13px;">Enter N/A to the field if not applicable or available.</span>
+               <h4>MEDICAL HISTORY</h4>
     <br><br>
     <div class="row">
     <div class="form-group col-md-6 mb-4">
@@ -360,7 +400,7 @@
     </div>
     </div>
     <br>
-        <label>1. Are you in good health?</label> <span style="color: red;" id="Option1val"></span>
+        <label>1. <span style="color: red;font-size:18px;">*</span>Are you in good health?</label> <span style="color: red;" id="Option1val"></span>
     <br>
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="Option1" id="inlineRadio1" value="Yes">
@@ -371,7 +411,7 @@
         <label class="form-check-label" for="inlineRadio2">No</label>
     </div>
     <br><br><br>
-        <label>2. Have you ever had serious illness or surgical operation?</label> <span style="color: red;" id="Option2val"></span>
+        <label>2. <span style="color: red;font-size:18px;">*</span>Have you ever had serious illness or surgical operation?</label> <span style="color: red;" id="Option2val"></span>
     <br>
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="Option2" id="inlineRadio3" value="Yes">
@@ -383,11 +423,11 @@
     </div>
     <br><br>
     <div class="form-group tb1Section" style="display:none;">
-            <label for="tb1">If so, what illness or operation?</label> <span style="color: red;" id="tb1Val"></span>
+            <label for="tb1"><span style="color: red;font-size:18px;">*</span>If so, what illness or operation?</label> <span style="color: red;" id="tb1Val"></span>
             <input type="text" class="form-control"  name="tb1" id="tb1" placeholder="Enter answer" value="N/A"><br>
     </div>
     <br>
-        <label>3. Have you ever been hospitalized?</label> <span style="color: red;" id="Option3val"></span>
+        <label>3. <span style="color: red;font-size:18px;">*</span>Have you ever been hospitalized?</label> <span style="color: red;" id="Option3val"></span>
     <br>
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="Option3" id="inlineRadio5" value="Yes">
@@ -399,11 +439,11 @@
     </div>
     <br><br>
     <div class="form-group tb2Section" style="display:none;">
-            <label for="tb2">If so, when and why?</label> <span style="color: red;" id="tb2Val"></span>
+            <label for="tb2"><span style="color: red;font-size:18px;">*</span>If so, when and why?</label> <span style="color: red;" id="tb2Val"></span>
             <input type="text" class="form-control"  name="tb2" id="tb2" placeholder="Enter answer" value="N/A"><br>
     </div>
     <br>
-        <label>4. Are you taking any prescription/non-prescription medication?</label> <span style="color: red;" id="Option4val"></span>
+        <label>4. <span style="color: red;font-size:18px;">*</span>Are you taking any prescription/non-prescription medication?</label> <span style="color: red;" id="Option4val"></span>
     <br>
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="Option4" id="inlineRadio7" value="Yes">
@@ -415,11 +455,11 @@
     </div>
     <br><br>
     <div class="form-group tb3Section" style="display:none;">
-            <label for="tb3">If so, please specify:</label> <span style="color: red;" id="tb3Val"></span>
+            <label for="tb3"><span style="color: red;font-size:18px;">*</span>If so, please specify:</label> <span style="color: red;" id="tb3Val"></span>
             <input type="text" class="form-control"  name="tb3" id="tb3" placeholder="Enter answer" value="N/A"><br>
     </div>
         <br>
-    <label>5. Do you smoke?</label> <span style="color: red;" id="Option5val"></span>
+    <label>5. <span style="color: red;font-size:18px;">*</span>Do you smoke?</label> <span style="color: red;" id="Option5val"></span>
     <br>
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="Option5" id="inlineRadio9" value="Yes">
@@ -430,7 +470,7 @@
         <label class="form-check-label" for="inlineRadio10">No</label>
     </div>
     <br><br><br>
-    <label>6. Do you use alcohol?</label> <span style="color: red;" id="Option6val"></span>
+    <label>6. <span style="color: red;font-size:18px;">*</span>Do you use alcohol?</label> <span style="color: red;" id="Option6val"></span>
     <br>
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="Option6" id="inlineRadio11" value="Yes">
@@ -445,7 +485,7 @@
           <br>
          <div class="row">
         <div class="col-md-6">
-        <label>7. Are you pregnant?</label> <span style="color: red;" id="Option7val"></span>
+        <label>7. <span style="color: red;font-size:18px;">*</span>Are you pregnant?</label> <span style="color: red;" id="Option7val"></span>
         <br>
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="Option7" id="inlineRadio13" value="Yes">
@@ -458,7 +498,7 @@
     </div>
     <br>
     <div class="col-md-6">
-        <label>8. Are you nursing?</label> <span style="color: red;" id="Option8val"></span>
+        <label>8. <span style="color: red;font-size:18px;">*</span>Are you nursing?</label> <span style="color: red;" id="Option8val"></span>
     <br>
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="Option8" id="inlineRadio15" value="Yes">
@@ -471,7 +511,7 @@
     </div>
     </div>
     <br><br>
-            <label>9. Are you taking birth control pills or others?</label> <span style="color: red;" id="Option9val"></span>
+            <label><span style="color: red;font-size:18px;">*</span>9. Are you taking birth control pills or others?</label> <span style="color: red;" id="Option9val"></span>
     <br>
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="Option9" id="inlineRadio17" value="Yes">
@@ -640,8 +680,8 @@
            </div>
                <br>
                  <div class="q-box__buttons">
-                    <button type="button" class="index-btn" onclick = "Prev2()">Previous</button>
-                    <button type="button" class="index-btn" onclick = "NextVal2()">Next</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "Prev2()">Previous</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "NextVal2()">Next</button>
                  </div>
             </div>
 
@@ -649,20 +689,20 @@
                 <h4>Upload Valid ID</h4>
                 <br>
                 <div class="form-group mb-3">
-                    <label for="image" class="form-label">Upload Image:</label>
+                    <label for="image" class="form-label"><span style="color: red;font-size:18px;">*</span>Upload Image:</label>
                     <input type="file" class="form-control" id="image" name ="image" accept="image/*" onchange="previewImage(event)">
                 </div><br>
                <div id="image-error" class="text-danger"></div>
                 <img class="img" id="preview" src="" alt="Preview Image" style="display: none;">
                <br>
                  <div class="q-box__buttons">
-                    <button type="button" class="index-btn" onclick = "Prev3()">Previous</button>
-                    <button type="button" class="index-btn" onclick = "NextVal3()">Next</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "Prev3()">Previous</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "NextVal3()">Next</button>
                  </div>
             </div>
 
            <div class="tab" id="tab-5">
-                <h4>Select Preferred Time/Date</h4>
+                <h4><span style="color: red;font-size:18px;">*</span>Select Preferred Time/Date</h4>
                              <button type="button" id="AppointmentButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#calendarModal">Book Appointment</button><label style="color:red;"><--- Click Here</label>
                  <br><br><br><br>
 
@@ -676,8 +716,8 @@
                                             <input type="hidden" name="appointment_schedule" class="selected-schedule-input">
 
                  <div class="q-box__buttons">
-                    <button type="button" class="index-btn" onclick = "Prev4()">Previous</button>
-                    <button type="button" class="index-btn" onclick = "NextVal4()">Next</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "Prev4()">Previous</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "NextVal4()">Next</button>
                  </div>
              </div>
 
@@ -703,8 +743,8 @@
                 <input type="hidden" id="submissionDate" name="submissionDate" value="">
 
                  <div class="q-box__buttons">
-                    <button type="button" class="index-btn" onclick = "Prev5()">Previous</button>
-                    <button id="submit-btn" class="index-btn" type="submit">Submit</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "Prev5()">Previous</button>
+                    <button id="submit-btn" class="index-btn btn-dark" type="submit">Submit</button>
                  </div>
 </div>
             <div id="success">
@@ -719,6 +759,8 @@
 </div>
    </div>
 </div>
+</div>
+
 
 <div id="preloader-wrapper">
    <div id="preloader"></div>
@@ -730,10 +772,11 @@
   <div class="modal-dialog modal-xl consent-modal">
     <div class="modal-content">
       <div class="modal-header">
+          <hr>
+          <h5 class="modal-title" style="color:white;">INFORMED CONSENT</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-             <h4 style="text-align: center;">INFORMED CONSENT</h4>
         <p style="font-size: 14px">
             <br><br><b>TREATMENT:</b> I understand and consent to have any treatment done by the dentist after the procedure, the risks & benefits & cost have been fully explained. These treatments include, but are not limited to, x-rays, cleaning, periodontal treatments, fillings, crowns, bridges, all types of extraction, root canals, &/or dentures, local anesthetics & surgical cases.
             <br><br><b>DRUGS & MEDICATIONS:</b> I understand that antibiotics, analgesics & other medications can cause allergic reactions like redness & swelling of tissues, pain, itching, vomiting. &/or anaphylactic shock.
@@ -761,7 +804,7 @@
                     <div class="modal-dialog modal-dialog-centered modalCalendar" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h6 class="modal-title appointment-modal-title" id="staticBackdropLabel">Create Appointment</h6>
+                                <h6 class="modal-title appointment-modal-title" id="staticBackdropLabel" style="color:white;">Create Appointment</h6>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -790,7 +833,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="notAvailableModalLabel">Not Available</h5>
+                <h5 class="modal-title" id="notAvailableModalLabel" style="color:white;">Not Available</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"></span>
                 </button>
@@ -809,7 +852,7 @@
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Select appointment time</h5>
+                                <h5 class="modal-title" style="color:white;">Select appointment time</h5>
                             </div>
                         <div class="modal-body">
                     <div class="timeslot-container"></div>
@@ -825,7 +868,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="selected_schedule_modalLabel">Selected Schedule</h5>
+                <h5 class="modal-title" id="selected_schedule_modalLabel" style="color:white;">Selected Schedule</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"></span>
                 </button>
@@ -845,7 +888,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">0 Slot Available</h5>
+                    <h5 class="modal-title" style="color:white;">0 Slot Available</h5>
                 </div>
                 <div class="modal-body">
                     <p>Sorry, we are fully booked today. Please select another day.</p>

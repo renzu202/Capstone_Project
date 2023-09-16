@@ -20,7 +20,7 @@
           <h5>TREATMENT RECORDS</h5>
           </div>
           <div class="col-sm-2">
-          <p><a href="/admin_tables_page"><button class="btn btn-secondary">Back to List</button></a></p>
+          <p><a href="/admin_tables_page"><button type="button" class="btn btn-dark">Back to List</button></a></p>
           </div>
          </div>
 
@@ -63,9 +63,9 @@
                     <a href="#" class="edit" title="Edit Record" data-bs-toggle="modal" data-bs-target="#editTreatmentModal" onclick="editRecord({{ record[0] }}, '{{ record[3] }}', '{{ record[4] }}', {{ record[5] }}, {{ record[6] }}, '{{ record[8] }}')">
                             <i class="fa-solid fa-pencil" style="color:yellow;"></i>
                     </a>
-                    <a href="/delete_treatment/{{ record[0] }}" class="delete" title="Delete Record" style="color:red;margin-left:10px;" onclick="return confirm('Are you sure you want to delete this record?');">
-                        <i class="material-icons">&#xE872;</i>
-                    </a>
+                            <a href="#" class="delete" title="Delete Record" style="color:red;margin-left:10px;" data-bs-toggle="modal" data-bs-target="#deleteRecordModal" data-record-id="{{ record[0] }}">
+                                <i class="material-icons">&#xE872;</i>
+                            </a>
                             </td>
                             </tr>
                             {% endfor %}
@@ -115,7 +115,7 @@
                   </div>
                 <br>
                     <input type="checkbox" name="checkAppointment" id="checkAppointment">
-                    <b>Add next appointment.</b>
+                    <label>Add next appointment.</label>
                   <div class="form-group" id="NA-section" style="display:none;">
                       <label for="NextAppointment">Next Appointment:</label>
                       <input  type="text" class="form-control" name="NextAppointment" id="NextAppointment" placeholder="mm/dd/yyyy" maxlength="10" required value="N/A">
@@ -185,6 +185,28 @@
         </div>
     </div>
 </div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteRecordModal" tabindex="-1" role="dialog" aria-labelledby="deleteRecordModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteRecordModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this record?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="#" id="deleteRecordLink" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 <!-- Jquery -->

@@ -1,3 +1,26 @@
 body {
-    background: #85AFAA;
+    background: #4D4C4C;
+}
+
+body, h5, p, span, th, td, a {
+    color: #D7D1D1;
+}
+
+.modal-content {
+    background-color: #fff;
+    color: #000;
+}
+
+
+.modal-header {
+    background-color: gray;
+}
+
+
+.modal-title {
+    color: white;
+}
+
+.btn-close {
+    color: #000;
 }

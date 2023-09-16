@@ -39,7 +39,7 @@
         <a class="nav-link" href="/contact_us_page">CONTACT US</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/admin_dashboard_page">ADMIN</a>
+        <a class="nav-link" href="/admin_dashboard_page" style="color:white;">ADMIN</a>
       </li>
     </ul>
   </div>
@@ -47,39 +47,41 @@
 <div class="container-xl">
   <div class="row justify-content-center">
     <div class="col-md-2">
-      <a href="/admin_dashboard_page" class="dashboard-link">
+      <a href="/admin_dashboard_page" class="dashboard-link hc">
         <i class="fa fa-tachometer mb-3" aria-hidden="true"></i>
         Dashboard
       </a>
     </div>
     <div class="col-md-2">
-      <a href="/admin_tables_page" class="patient-records-link">
+      <a href="/admin_tables_page" class="patient-records-link hc">
         <i class="fa fa-users mb-3" aria-hidden="true"></i>
         Patient Records
       </a>
     </div>
     <div class="col-md-2">
-      <a href="/admin_calendar_page" class="clinic-calendar-link">
+      <a href="/admin_calendar_page" class="clinic-calendar-link hcm">
         <i class="fa fa-calendar mb-3" aria-hidden="true"></i>
         Clinic Calendar
       </a>
     </div>
     <div class="col-md-3">
-      <a href="/admin_A&M_page" class="clinic-calendar-link">
+      <a href="/admin_A&M_page" class="clinic-calendar-link hc">
         <i class="fa fa-paper-plane mb-3" aria-hidden="true"></i>
         Appointments & Messages
       </a>
     </div>
   <div class="col-md-2">
   <form method="get" action="/logout">
-    <button class="btn-danger" type="submit">Log Out</button>
+    <button class="btn-outline-dark" style="width:100px; height:auto;border-radius:10px;" type="submit">Log Out</button>
   </form>
   </div>
   </div>
   <hr>
   <!--Calendar-->
-    <h4>Calendar</h4>
-    <button type="button" class="btn btn-primary btn-sm btn-calendar">Open Calendar</button>
+    <div class="d-flex">
+    <h3>Calendar</h3>
+    <button type="button" class="btn-outline-dark btn-calendar">Open Calendar</button>
+    </div>
     <hr>
     <input type="hidden" class="timeslot_input">
     <input type="hidden" class="date_input">
@@ -94,14 +96,14 @@
                         <div class="col-md-6 ddl">
                             <label style="color:red;">Disabled Dates</label>
                             <input type="text" id="deleteDisabledDate" placeholder="yyyy-mm-dd" class="form-control mb-2">
-                            <button class="btn btn-primary" id="deleteDateButton">Enable Date</button>
+                            <button type="button" class="btn-primary" id="deleteDateButton">Enable Date</button>
                             <hr>
                             <ul id="disabled-dates-list"></ul>
                         </div>
                           <div class="col-md-6 drs">
                             <label style="color:red;">Disabled or Reserved Slots</label>
                             <input type="text" id="deleteDisabledTimeslot" placeholder="yyyy-mm-dd hh:mm:ss" class="form-control mb-2">
-                            <button class="btn btn-primary" id="deleteTimeslotButton">Enable Timeslot</button>
+                            <button type="button" class="btn-primary" id="deleteTimeslotButton">Enable Timeslot</button>
                             <hr>
                             <ul id="timeslots-list"></ul>
                         </div>
@@ -116,7 +118,7 @@
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" style="color:red;">Select Appointment Time to Disable or Reserve</h5>
+                                <h5 class="modal-title">Select Appointment Time to Disable or Reserve</h5>
                             </div>
                         <div class="modal-body">
                     <div class="timeslot-container"></div>
@@ -133,7 +135,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" style="color: red;" id="confirm_disable_modalLabel">Are you sure?</h5>
+                <h5 class="modal-title" id="confirm_disable_modalLabel">Are you sure?</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"></span>
                 </button>
@@ -143,7 +145,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                <button type="button" class="btn btn-danger" id="confirm_disable_button">Yes</button>
+                <button type="button" class="btn btn-primary" id="confirm_disable_button">Yes</button>
             </div>
         </div>
     </div>
@@ -173,7 +175,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" style="color: red;" id="selected_schedule_modalLabel">Disable or Reserve this Timeslot</h5>
+                <h5 class="modal-title" id="selected_schedule_modalLabel">Disable or Reserve this Timeslot</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"></span>
                 </button>
