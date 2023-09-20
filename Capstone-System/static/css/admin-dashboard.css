@@ -31,25 +31,3 @@ body {
     padding-bottom: 10px;
 }
 
-.dashboard-link .fa,
-.patient-records-link .fa,
-.clinic-calendar-link .fa,
-.dashboard-link,
-.patient-records-link,
-.clinic-calendar-link {
-   color: black;
-}
-
-.hc {
-   color: black;
-}
-
-.hcm {
-   color: #F1E9E9;
-}
-
-.dashboard-link:hover,
-.patient-records-link:hover,
-.clinic-calendar-link:hover {
-  color: #CCC8C8;
-}

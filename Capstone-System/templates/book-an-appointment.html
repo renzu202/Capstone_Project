@@ -34,7 +34,7 @@
         <a class="nav-link" href="/services_page">SERVICES</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/book_an_appointment_page" style="color:white;"x>BOOK AN APPOINTMENT</a>
+        <a class="nav-link" href="/book_an_appointment_page" style="color:white;">BOOK AN APPOINTMENT</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/contact_us_page">CONTACT US</a>
@@ -151,7 +151,10 @@
          <div id="steps-container">
 
            <div class="tab" id="tab-0">
-            <h4 style="text-align: center;"> Select if you are an old patient or new patient:</h4><br><br>
+               <hr>
+            <h4 style="text-align: center;"> Select if you are an old patient or new patient:</h4>
+               <hr>
+               <br><br>
          <div class="q-box__buttons">
             <button type="button" class="index-btn btn-dark" id="OPB" onclick = "OP()">Old Patient</button>
          </div>
@@ -162,7 +165,9 @@
            </div>
 
            <div class="tab" id="tab-OP">
-               <h4 style="text-align:center;">Please enter your email address and 4-digit PIN:</h4>
+               <hr>
+               <h4 style="text-align:center;">Please enter your email address and Password:</h4>
+               <hr>
                <br><br>
                       <input type="email" class="form-control" style="margin: 0 auto; display: block;" name="emailV" id="emailV" placeholder="Enter email">
                <br>
@@ -470,7 +475,7 @@
         <label class="form-check-label" for="inlineRadio10">No</label>
     </div>
     <br><br><br>
-    <label>6. <span style="color: red;font-size:18px;">*</span>Do you use alcohol?</label> <span style="color: red;" id="Option6val"></span>
+    <label>6. <span style="color: red;font-size:18px;">*</span>Do you drink alcoholic beverages?</label> <span style="color: red;" id="Option6val"></span>
     <br>
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="Option6" id="inlineRadio11" value="Yes">
@@ -479,8 +484,25 @@
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="Option6" id="inlineRadio12" value="No">
         <label class="form-check-label" for="inlineRadio12">No</label>
+    </div><br><br>
+      <div id="tb4Section" style="display:none;">
+                <label for="tb1"><span style="color: red;font-size:18px;">*</span>If so, how often?</label> <span style="color: red;" id="tb4Val"></span>
+               <br>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="Option1_2" id="inlineRadio1_2" value="Occasionally">
+        <label class="form-check-label" for="inlineRadio1_2">Occasionally</label>
     </div>
-               <br><br>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="Option1_2" id="inlineRadio2_2" value="Every week">
+        <label class="form-check-label" for="inlineRadio2_2">Every week</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="Option1_2" id="inlineRadio3_2" value="Every two weeks">
+        <label class="form-check-label" for="inlineRadio3_2">Every two weeks</label>
+    </div>
+          <input class="form-check-input" type="radio" name="Option1_2" id="inlineRadio4_2" value="N/A" style="display:none;">
+               <br>
+      </div>
                <div id="women-section">
           <br>
          <div class="row">

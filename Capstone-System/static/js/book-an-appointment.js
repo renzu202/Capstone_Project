@@ -553,6 +553,9 @@ document.getElementById("inlineRadio6").addEventListener("change", handleOption3
 document.getElementById("inlineRadio7").addEventListener("change", handleOption4Change);
 document.getElementById("inlineRadio8").addEventListener("change", handleOption4Change);
 
+document.getElementById("inlineRadio11").addEventListener("change", handleOption5Change);
+document.getElementById("inlineRadio12").addEventListener("change", handleOption5Change);
+
 function handleOption2Change() {
     var option2Selected = document.querySelector('input[name="Option2"]:checked');
     var tb1 = document.getElementById("tb1");
@@ -592,7 +595,22 @@ function handleOption4Change() {
     }
 }
 
+function handleOption5Change() {
+    var option5Selected = document.querySelector('input[name="Option6"]:checked');
+    var option1_2Radios = document.querySelectorAll('input[name="Option1_2"]');
 
+ if (option5Selected.value === "Yes") {
+        // Reset or unselect all radio buttons in the Option1.2 group
+        option1_2Radios.forEach(function(radio) {
+            $("#tb4Section").show();
+            document.getElementById("inlineRadio4_2").checked = false;
+        });
+    } else if (option5Selected.value === "No") {
+        // Select the hidden input "inlineRadio4.2"
+        document.getElementById("inlineRadio4_2").checked = true;
+        $("#tb4Section").hide();
+    }
+}
 
  // medical conditions checkbox
         const medicalCheckbox = document.getElementById("medCheck");

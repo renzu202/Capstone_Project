@@ -48,32 +48,32 @@
 <div class="container-xl">
   <div class="row justify-content-center">
     <div class="col-md-2">
-      <a href="/admin_dashboard_page" class="dashboard-link hc">
+      <a href="/admin_dashboard_page"><button class="btn btn-dark" style="height:40px;width:155px;">
         <i class="fa fa-tachometer mb-3" aria-hidden="true"></i>
         Dashboard
-      </a>
+      </button></a>
     </div>
     <div class="col-md-2">
-      <a href="/admin_tables_page" class="patient-records-link hcm">
+      <a href="/admin_tables_page"><button class="btn btn-dark" style="height:40px;">
         <i class="fa fa-users mb-3" aria-hidden="true"></i>
         Patient Records
-      </a>
+      </button></a>
     </div>
     <div class="col-md-2">
-      <a href="/admin_calendar_page" class="clinic-calendar-link hc">
+      <a href="/admin_calendar_page"><button class="btn btn-dark" style="height:40px;">
         <i class="fa fa-calendar mb-3" aria-hidden="true"></i>
         Clinic Calendar
-      </a>
+      </button></a>
     </div>
     <div class="col-md-3">
-      <a href="/admin_A&M_page" class="clinic-calendar-link hc">
+      <a href="/admin_A&M_page"><button class="btn btn-dark" style="height:40px;">
         <i class="fa fa-paper-plane mb-3" aria-hidden="true"></i>
         Appointments & Messages
-      </a>
+      </button></a>
     </div>
   <div class="col-md-2">
   <form method="get" action="/logout">
-    <button class="btn-outline-dark" style="width:100px;height:auto;border-radius:10px;" type="submit">Log Out</button>
+    <button class="btn btn-outline-light" style="width:100px; height:auto;border-radius:10px;border-width:5px;" type="submit">Log Out</button>
   </form>
   </div>
   </div>
@@ -110,6 +110,7 @@
                             <td>{{ PIdata[5] }}</td>
                             <td>{{ PIdata[6] }}</td>
                             <td>
+                     <div class="d-flex">
                     <a href="#" class="view" title="View Record" data-bs-toggle="modal" data-bs-target="#userModal"
                        data-id="{{ PIdata[0] }}"
                        data-fname="{{ PIdata[1] }}"
@@ -130,6 +131,8 @@
                        data-reason="{{ PIdata[16] }}"
                        data-pdentist="{{ PIdata[17] }}"
                        data-ldental="{{ PIdata[18] }}"
+                       data-image="{{ PIdata[19] }}"
+                       data-created="{{ PIdata[21] }}"
                        data-pname="{{ medicalInfo[loop.index0][1] }}"
                        data-pmedical="{{ medicalInfo[loop.index0][2] }}"
                        data-q1="{{ medicalInfo[loop.index0][3] }}"
@@ -144,21 +147,22 @@
                        data-q10="{{ medicalInfo[loop.index0][12] }}"
                        data-q11="{{ medicalInfo[loop.index0][13] }}"
                        data-q12="{{ medicalInfo[loop.index0][14] }}"
-                       data-medicalcon="{{ medicalInfo[loop.index0][15] }}"
-                       data-others="{{ medicalInfo[loop.index0][16] }}"
-                       data-image="{{ PIdata[19] }}"
-                       data-schedule="{{ PIdata[20] }}"
-                       data-created="{{ PIdata[21] }}"
+                       data-q13="{{ medicalInfo[loop.index0][15] }}"
+                       data-medicalcon="{{ medicalInfo[loop.index0][16] }}"
+                       data-others="{{ medicalInfo[loop.index0][17] }}"
                         >
                         <i class="bi bi-eye-fill"></i>
                     </a>
-                    <a href="/read_one_treatment/{{ PIdata[0] }}" class="edit" title="View Treatment Record" data-bs-toggle="tooltip">
-                        <i class="bi bi-file-earmark-plus-fill"></i>
+                    <a href="/read_one_treatment/{{ PIdata[0] }}" class="view" title="View Treatment Record" data-bs-toggle="tooltip">
+                        <i class="fa-regular fa-clipboard"></i>
+                    </a>
+                    <a href="/edit_one_record/{{ PIdata[0] }}" class="edit" title="Update Record" data-bs-toggle="tooltip">
+                    <i class="fa-solid fa-pencil"></i>
                     </a>
                     <a href="/delete_user/{{ PIdata[0] }}" class="delete" title="Delete Record" onclick="return confirm('Are you sure you want to delete this record?');">
                         <i class="material-icons">&#xE872;</i>
                     </a>
-
+                    </div>
                             </td>
                         </tr>
                         {% endfor %}
@@ -179,6 +183,9 @@
             </div>
             <div class="modal-body">
                 <!--Content-->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

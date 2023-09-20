@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>VIEW TREATMENT RECORD</title>
+     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+<!--BOOTSTRAP CDN-->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<!--FONTS-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"/>
+<!--ICONS-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!--CSS-->
+<link rel="stylesheet" href="/static/css/edit-records.css">
+</head>
+<body>
+<div class="card-body">
+          <div class="row">
+          <div class="col-sm-10">
+          <h5>UPDATE RECORDS</h5>
+          </div>
+          <div class="col-sm-2">
+          <p><a href="/admin_tables_page"><button type="button" class="btn btn-dark" style="width:140px;">Back to List</button></a></p>
+          </div>
+         </div>
+        <hr>
+         <form action="/update_records" method="POST" enctype="multipart/form-data" id="updateForm">
+            <div class="row">
+                <div class="col-sm-10">
+                    <h5>Patient Information:</h5>
+                </div>
+                <div class="col-sm-2">
+                    <button type="submit" id="updateButton" class="btn btn-primary">Update Record</button>
+                </div>
+            </div>
+            <br><br>
+             <input type="hidden" id="ID" name="ID" value="{{ PIR[0] }}">
+            <div class="row">
+                <div class="col-sm-6">
+                    <label for="firstName">First Name:</label><br>
+                    <input type="text" id="firstName" name="firstName" value="{{ PIR[1] }}">
+                    <br><br>
+                    <label for="middleName">Middle Name:</label><br>
+                    <input type="text" id="middleName" name="middleName" value="{{ PIR[2] }}">
+                    <br><br>
+                    <label for="lastName">Last Name:</label><br>
+                    <input type="text" id="lastName" name="lastName" value="{{ PIR[3] }}">
+                    <br><br>
+                    <label for="Sex">Sex:</label><br>
+                    <input type="text" id="Sex" name="Sex" value="{{ PIR[4] }}">
+                    <br><br>
+                    <label for="ContactNo">Contact No.:</label><br>
+                    <input type="text" id="ContactNo" name="ContactNo" value="{{ PIR[5] }}">
+                    <br><br>
+                    <label for="Nationality">Nationality:</label><br>
+                    <input type="text" id="Nationality" name="Nationality" value="{{ PIR[10] }}">
+                    <br><br>
+                    <label for="Birthdate">Birthdate:</label><br>
+                    <input type="date" id="Birthdate" name="Birthdate" value="{{ PIR[7] }}" style="width:221px;height:30px;">
+                    <br><br>
+                    <label for="Age">Age:</label><br>
+                    <input type="number" id="Age" name="Age" value="{{ PIR[8] }}">
+                    <br><br>
+                    <label for="Religion">Religion:</label><br>
+                    <input type="text" id="Religion" name="Religion" value="{{ PIR[9] }}">
+                    <br><br>
+                    <label for="EmailAddress">Email Address:</label><br>
+                    <input type="text" id="EmailAddress" name="EmailAddress" value="{{ PIR[6] }}">
+                    <br><br>
+                    <label for="pass">Password:</label><br>
+                    <input type="text" id="pass" name="pass" value="{{ VF[2] }}">
+                </div>
+                <div class="col-sm-6">
+                    <label for="HomeAddress">Home Address:</label><br>
+                    <textarea id="HomeAddress" name="HomeAddress">{{ PIR[11] }}</textarea>
+                    <br><br>
+                    <label for="GN">Guardian's Name:</label><br>
+                    <input type="text" id="GN" name="GN" value="{{ PIR[12] }}">
+                    <br><br>
+                    <label for="GCN">Guardian's Contact no.:</label><br>
+                    <input type="text" id="GCN" name="GCN" value="{{ PIR[13] }}">
+                    <br><br>
+                    <label for="GO">Guardian's Occupation:</label><br>
+                    <input type="text" id="GO" name="GO" value="{{ PIR[14] }}">
+                    <br><br>
+                    <label for="PD">Previous Dentist:</label><br>
+                    <input type="text" id="PD" name="PD" value="{{ PIR[17] }}">
+                    <br><br>
+                    <label for="LV">Last Visit:</label><br>
+                    <input type="date" id="LV" name="LV" value="{{ PIR[18] }}" style="width:221px;height:30px;">
+                    <br><br>
+                    <label for="DC">Date Created:</label><br>
+                    <input type="date" id="Dc" name="Dc" value="{{ PIR[21] }}" style="width:221px;height:30px;">
+                    <br><br>
+                    <div class="d-flex">
+                    <label>Valid ID:</label><br>
+                    <input type="file" class="form-control" id="image" name ="image" accept="image/*" onchange="previewImage(event)" style="width:300px;margin-left:20px;">
+                     </div>
+                    <br>
+                    <img id="VIDImage" src="/static/img/uploads/{{ PIR[19] }}" alt="Valid ID" style="height:200px;width:400px;">
+                    <img class="img" id="preview" src="" alt="Preview Image" style="display:none;height:200px;width:400px;">
+                </div>
+            </div>
+            <hr>
+            <h5>Medical History</h5>
+            <br>
+             <div class="row">
+                 <div class="col-sm-6">
+            <label for="PN">Physician's Name:</label><br>
+            <input type="text" id="PN" name="PN" value="{{ MH[1] }}">
+            <br><br>
+            <label for="PMC">Present Medical Care:</label><br>
+            <input type="text" id="PMC" name="PMC" value="{{ MH[2] }}">
+            <br><br>
+            <label for="q1">Are you in good health?</label><br>
+            <input type="text" id="q1" name="q1" value="{{ MH[3] }}">
+            <br><br>
+            <label for="q2">Have you ever had serious illness or surgical operation?</label><br>
+            <input type="text" id="q2" name="q2" value="{{ MH[4] }}">
+            <br><br>
+            <label for="q3">If so, what illness or operation?</label><br>
+            <input type="text" id="q3" name="q3" value="{{ MH[5] }}">
+            <br><br>
+            <label for="q4">Have you ever been hospitalized?</label><br>
+            <input type="text" id="q4" name="q4" value="{{ MH[6] }}">
+            <br><br>
+            <label for="q5">If so, when and why?</label><br>
+            <input type="text" id="q5" name="q5" value="{{ MH[7] }}">
+            <br><br>
+            <label for="q6">Are you taking any prescription/non-prescription medication?</label><br>
+            <input type="text" id="q6" name="q6" value="{{ MH[8] }}">
+            <br><br>
+            <label for="q7">If so, please specify:</label><br>
+            <input type="text" id="q7" name="q7" value="{{ MH[9] }}">
+                 </div>
+
+             <div class="col-sm-6">
+            <label for="q8">Do you smoke?</label><br>
+            <input type="text" id="q8" name="q8" value="{{ MH[10] }}">
+            <br><br>
+            <label for="q9">Do you drink alcoholic beverages?</label><br>
+            <input type="text" id="q9" name="q9" value="{{ MH[11] }}">
+            <br><br>
+            <label for="q13">Do you drink alcoholic beverages?</label><br>
+            <input type="text" id="q13" name="q13" value="{{ MH[15] }}">
+            <br><br>
+            <label for="q10">Are you pregnant?</label><br>
+            <input type="text" id="q10" name="q10" value="{{ MH[12] }}">
+            <br><br>
+            <label for="q11">Are you nursing?</label><br>
+            <input type="text" id="q11" name="q11" value="{{ MH[13] }}">
+            <br><br>
+            <label for="q12">Are you taking birth control pills or others?</label><br>
+            <input type="text" id="q12" name="q12" value="{{ MH[14] }}">
+            <br><br>
+            <label for="MC">Medical Conditions:</label><br><br>
+            <textarea style="width:220px;height:90px;" id="MC" name="MC">{{ MH[16] }}</textarea>
+             </div>
+             </div>
+        </form>
+
+</div>
+
+<!-- Jquery -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<!-- Axios -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<!-- Bootstrap cdn -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- moment js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<!-- JS -->
+<script src="/static/js/edit-records.js"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 body {
     background: #4D4C4C;
-    font-family: "Verdana", sans-serif;
+        font-family: "Verdana", sans-serif;
 }
 
 body, h5, p, span, th, td, a {
@@ -25,3 +25,5 @@ body, h5, p, span, th, td, a {
 .btn-close {
     color: #000;
 }
+
+

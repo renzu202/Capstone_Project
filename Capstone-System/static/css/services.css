@@ -26,7 +26,25 @@
   padding-bottom: 100px;
 }
 
-/* Body */
+.modal-header,
+.modal-footer {
+    background-color: gray;
+}
+
+
+.modal-title {
+    color: white;
+}
+
+.modal-dialog {
+    min-width: 1300px;
+}
+
+.modal-body {
+    height: 450px;
+    background-image: url('/static/img/form-bg.jpg');
+}
+
 body {
     background-image: url('/static/img/bg-image.jpg');
     background-repeat: no-repeat;
@@ -42,7 +60,6 @@ body {
 }
 
 p,
-label,
 h1,
 h2,
 h3,
@@ -50,6 +67,12 @@ h4,
 h5,
 h6 {
     color: #00011c;
+}
+
+label {
+    font-size: 22px;
+    text-align: justify;
+    color: #F1F1F1;
 }
 
 /* Buttons */
@@ -120,6 +143,10 @@ h6 {
   display: block;
   max-width: 100%;
   height: auto; /* Setting height to "auto" maintains the aspect ratio */
+}
+
+.img-fluid {
+  border-radius: 20px;
 }
 
 /* Set specific dimensions for each container */

@@ -31,15 +31,6 @@ body {
     padding-bottom: 10px;
 }
 
-.dashboard-link .fa,
-.patient-records-link .fa,
-.clinic-calendar-link .fa,
-.dashboard-link,
-.patient-records-link,
-.clinic-calendar-link {
-   color: black;
-}
-
 #appointment-calendar {
     background: #535252;
     color: #CEB339;
@@ -107,23 +98,10 @@ body {
     color: white;
 }
 
-.hc {
-   color: black;
-}
-
-.hcm {
-   color: #F1E9E9;
-}
-
-.dashboard-link:hover,
-.patient-records-link:hover,
-.clinic-calendar-link:hover {
-  color: #CCC8C8;
-}
 
 .btn-calendar{
     margin-left: 50px;
-    height: 35px;
+    height: 45px;
     border-radius: 10px;
 }
 

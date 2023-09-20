@@ -86,10 +86,10 @@ $(document).ready(function() {
         var q10 = $(this).data('q10');
         var q11 = $(this).data('q11');
         var q12 = $(this).data('q12');
+        var q13 = $(this).data('q13');
         var medicalcon = $(this).data('medicalcon');
         var others = $(this).data('others');
         var imageFilename = $(this).data('image');
-        var schedule = $(this).data('schedule');
         var created = $(this).data('created');
 
 
@@ -97,7 +97,7 @@ $(document).ready(function() {
     var imageUrl = '/static/img/uploads/' + imageFilename;
 
     // Create the image tag HTML
-    var imageHtml = '<img id="userImage" src="' + imageUrl + '" alt="User Image" class="user-image">';
+    var imageHtml = '<div id="image-container"><img id="userImage" src="' + imageUrl + '" alt="User Image" class="user-image" width="800" height=500"></div>';
 
 
         // Set the user information in the modal 1
@@ -141,20 +141,20 @@ $(document).ready(function() {
             <p><strong>4. Are you taking any prescription/non-prescription medication?: </strong><span> ${q6}</span></p>
             <p><strong>If so, please specify:</strong><span> ${q7}</span></p>
             <p><strong>5. Do you smoke?:</strong><span> ${q8}</span></p>
-            <p><strong>6. Do you use alcohol?: </strong><span> ${q9}</span></p>
+            <p><strong>6. Do you drink alcoholic beverages?: </strong><span> ${q9}</span></p>
+            <p><strong>If so, how often?:</strong><span> ${q13}</span></p>
             <p>FOR WOMEN ONLY:</p>
             <p><strong>7. Are you pregnant?:</strong><span> ${q10}</span></p>
             <p><strong>8. Are you nursing?:</strong><span> ${q11}</span></p>
             <p><strong>9. Are you taking birth control pills or others?: </strong><span> ${q12}</span></p>
-            <p><strong>Medical Conditions:</strong><span> ${medicalcon}, ${others}</span></p>
+            <p><strong>Medical Conditions:</strong><span> ${medicalcon}</span></p>
+            <p><strong>other:</strong><span> ${others}</span></p>
             </div>
             </div>
             <hr style="height: 3px;">
+                         <p><strong>Date Created:</strong><span> ${created}</span></p>
              ${imageHtml}
              <br>
-             <p><strong>Date Created:</strong><span> ${created}</span></p>
-             <br>
-             <p><strong>Scheduled at:</strong><span> ${schedule}</span></p>
             </div>
         `);
     });

@@ -31,29 +31,6 @@ body {
     padding-bottom: 10px;
 }
 
-.dashboard-link .fa,
-.patient-records-link .fa,
-.clinic-calendar-link .fa,
-.dashboard-link,
-.patient-records-link,
-.clinic-calendar-link {
-    color: black;
-  }
-
-.hc {
-   color: black;
-}
-
-.hcm {
-   color: #F1E9E9;
-}
-
-.dashboard-link:hover,
-.patient-records-link:hover,
-.clinic-calendar-link:hover {
-  color: #CCC8C8;
-}
-
 .modal-header {
     background-color: gray;
 }
@@ -61,6 +38,10 @@ body {
 
 .modal-title {
     color: white;
+}
+
+#image-container {
+    text-align: center;
 }
 
 
@@ -189,6 +170,10 @@ table.table td i {
 .modal-dialog {
   max-width: 1000px;
   width: 100%;
+}
+
+.modal-footer {
+  background: #4C4A4A;
 }
 
 .modal-content p span {

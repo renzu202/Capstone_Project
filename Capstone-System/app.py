@@ -11,6 +11,7 @@ import jinja2
 import aiomysql
 import logging
 import bcrypt
+import aiohttp
 
 from aiohttp import web
 
@@ -275,6 +276,7 @@ async def book_appointment(request):
                 strtb3 = data['tb3']
                 strOption5 = data['Option5']
                 strOption6 = data['Option6']
+                strOption6_1 = data['Option1_2']
                 strOption7 = data['Option7']
                 strOption8 = data['Option8']
                 strOption9 = data['Option9']
@@ -305,9 +307,10 @@ async def book_appointment(request):
                 # SAVE RECORD TO DATABASE
                 sql1 = "INSERT INTO tbl_patient_information_record \
                    (First_Name, Middle_Name, Last_Name, Sex, Contact_No, Email_Address, Birthdate, Age, Religion, Nationality, Home_Address, Parent_Name, Parent_Contact_No, Parent_Occupation, Date, Dental_Reason, Previous_Dentist, Last_Visit, Valid_ID, Appointment_Schedule, Date_Created) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+
                 sql2 = "INSERT INTO tbl_medical_history \
-                    (Physicians_Name, Present_Medical_Care, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, \
-                    Medical_Conditions, other) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                    (Physicians_Name, Present_Medical_Care, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, \
+                Medical_Conditions, other) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
                 sql3 = "INSERT INTO tbl_appointments (First_Name, Middle_Name, Last_Name, Email_Address, Appointment_Schedule, Dental_Reason) VALUES(%s, %s, %s, %s, %s, %s)"
 
@@ -318,7 +321,7 @@ async def book_appointment(request):
                 data1 = (strFN, strMN, strLN, strSex, intCP, strEmail, intBirth, strAge, strRlg, strNational, strHA,
                          strPoG, intCP1, strOcp1, intDate, strDR, strDenT, strLV, unique_filename, data['appointment_schedule'], intDateCreated)
 
-                data2 = (strPName, strPMcare, strOption1, strOption2, strtb1, strOption3, strtb2, strOption4, strtb3, strOption5, strOption6, strOption7, strOption8, strOption9, checkbox_string, strothers)
+                data2 = (strPName, strPMcare, strOption1, strOption2, strtb1, strOption3, strtb2, strOption4, strtb3, strOption5, strOption6, strOption7, strOption8, strOption9, strOption6_1, checkbox_string, strothers)
 
                 data3 = (strFN, strMN, strLN, strEmail, data['appointment_schedule'], strDR)
 
@@ -548,6 +551,152 @@ async def read_one_treatment(request):
         print(e)
         return web.Response(text='Error while loading treatment records')
 
+async def edit_one_record(request):
+    try:
+        patient_id = request.match_info['id']
+        logging.info(f"Patient ID: {patient_id}")
+
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                await cursor.execute("SELECT * FROM tbl_patient_information_record WHERE id=%s", patient_id)
+                PIR = await cursor.fetchone()
+
+                await cursor.execute("SELECT * FROM tbl_medical_history WHERE ID=%s", patient_id)
+                MH = await cursor.fetchone()
+
+                await cursor.execute("SELECT * FROM tbl_verification WHERE ID=%s", patient_id)
+                VF = await cursor.fetchone()
+
+                if PIR:
+                    return aiohttp_jinja2.render_template('edit-records.html', request, {'PIR': PIR, 'MH': MH, 'VF': VF})
+                else:
+                    return web.Response(text='Error loading #{id}'.format(id=patient_id))
+
+    except Exception as e:
+        print(e)
+        return web.Response(text='Error while loading records')
+
+async def update_records(request):
+    try:
+        data = await request.post()
+
+        # Define the upload directory
+        upload_dir = 'static/img/uploads'
+
+        # GET USER INPUTS
+        patient_id = data['ID']
+        FN = data['firstName']
+        MN = data['middleName']
+        LN = data['lastName']
+        Sex = data['Sex']
+        Contact_No = data['ContactNo']
+        Email_Address = data['EmailAddress']
+        Birthdate = data['Birthdate']
+        Age = int(data['Age'])
+        Religion = data['Religion']
+        Nationality = data['Nationality']
+        Home_Address = data['HomeAddress']
+        GN = data['GN']
+        GCN = data['GCN']
+        GO = data['GO']
+        PD = data['PD']
+        LV = data['LV']
+        DC = data['Dc']
+        PN = data['PN']
+        PMC = data['PMC']
+        q1 = data['q1']
+        q2 = data['q2']
+        q3 = data['q3']
+        q4 = data['q4']
+        q5 = data['q5']
+        q6 = data['q6']
+        q7 = data['q7']
+        q8 = data['q8']
+        q9 = data['q9']
+        q10 = data['q10']
+        q11 = data['q11']
+        q12 = data['q12']
+        q13 = data['q13']
+        MC = data['MC']
+        Passw = data['pass']
+
+        # Initialize Valid_ID and unique_filename to None
+        Valid_ID = None
+        unique_filename = None
+
+        # Check if an image file is uploaded or not
+        if 'image' in data and isinstance(data['image'], aiohttp.web.FileField):
+            # An image is uploaded, use the uploaded image's filename as Valid_ID
+            file = data['image'].file
+            filename = data['image'].filename
+
+            def generate_unique_filename(filename):
+                timestamp = str(int(time.time() * 1000))
+                random_string = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
+                extension = os.path.splitext(filename)[1]
+                unique_filename = timestamp + '_' + random_string + extension
+                return unique_filename
+
+            unique_filename = generate_unique_filename(filename)
+
+            # Save the uploaded file to the desired directory
+            with open(os.path.join(upload_dir, unique_filename), 'wb') as f:
+                f.write(file.read())
+
+            # Set the Valid_ID to the unique filename
+            Valid_ID = unique_filename
+
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+
+                # Store the old Valid_ID before updating
+                old_Valid_ID = None
+                sql0 = "SELECT Valid_ID FROM tbl_patient_information_record WHERE ID=%s"
+                await cursor.execute(sql0, (patient_id,))
+                old_Valid_ID = await cursor.fetchone()
+                if old_Valid_ID:
+                    old_Valid_ID = old_Valid_ID[0]
+
+                # UPDATE PATIENT INFORMATION RECORD
+                sql1 = "UPDATE tbl_patient_information_record SET First_Name=%s, Middle_Name=%s, Last_Name=%s, Sex=%s, Contact_No=%s, Email_Address=%s, Birthdate=%s, Age=%s, Religion=%s, Nationality=%s, Home_Address=%s, Parent_Name=%s, Parent_Contact_No=%s, Parent_Occupation=%s, Previous_Dentist=%s, Last_Visit=%s, Date_Created=%s"
+
+                # Create data1 tuple based on whether image is uploaded or not
+                if Valid_ID is not None:
+                    sql1 += ", Valid_ID=%s"
+                    data1 = (FN, MN, LN, Sex, Contact_No, Email_Address, Birthdate, Age, Religion, Nationality, Home_Address, GN, GCN, GO, PD, LV, DC, Valid_ID)
+                else:
+                    data1 = (FN, MN, LN, Sex, Contact_No, Email_Address, Birthdate, Age, Religion, Nationality, Home_Address, GN, GCN, GO, PD, LV, DC)
+
+                sql1 += " WHERE ID=%s"
+                data1 += (patient_id,)
+
+                # UPDATE MEDICAL HISTORY RECORD
+                sql2 = "UPDATE tbl_medical_history SET Physicians_Name=%s, Present_Medical_Care=%s, q1=%s, q2=%s, q3=%s, q4=%s, q5=%s, q6=%s, q7=%s, q8=%s, q9=%s, q10=%s, q11=%s, q12=%s, q13=%s, Medical_Conditions=%s WHERE ID=%s"
+
+                data2 = (PN, PMC, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, MC, patient_id)
+
+                # UPDATE pass
+
+                sql3 = "UPDATE tbl_verification SET Password=%s WHERE ID=%s"
+
+                data3 = (Passw, patient_id)
+
+                await cursor.execute(sql1, data1)
+                await cursor.execute(sql2, data2)
+                await cursor.execute(sql3, data3)
+
+                # Delete the old image file if a new image was uploaded
+                if old_Valid_ID and Valid_ID and old_Valid_ID != Valid_ID:
+                    old_image_path = os.path.join(upload_dir, old_Valid_ID)
+                    if os.path.exists(old_image_path):
+                        os.remove(old_image_path)
+
+        redirect_url = '/admin_tables_page'
+        return web.HTTPFound(redirect_url)
+
+    except Exception as e:
+        print(e)
+        return web.Response(text='Error while updating the treatment record')
 
 async def delete_user(request):
     try:
@@ -742,6 +891,7 @@ app.router.add_get('/admin_A&M_page', admin_AandM_page)
 app.router.add_get('/admin_login_page', admin_login_page)
 app.router.add_post('/submit_treatment', submit_treatment)
 app.router.add_get('/read_one_treatment/{id}', read_one_treatment)
+app.router.add_get('/edit_one_record/{id}', edit_one_record)
 app.router.add_get('/delete_user/{id}', delete_user)
 app.router.add_get('/delete_appointment/{id}', delete_appointment)
 app.router.add_get('/delete_message/{id}', delete_message)
@@ -760,6 +910,7 @@ app.router.add_route('*', '/logout', logout)
 app.router.add_post('/validate-email-pin', validate_email_and_pin)
 app.router.add_post('/update_treatment', update_treatment)
 app.router.add_get('/api/fetch-patient-info', fetch_patient_info)
+app.router.add_post('/update_records', update_records)
 
 
 app.on_startup.append(create_pool)
