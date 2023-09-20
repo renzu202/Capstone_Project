@@ -1,0 +1,103 @@
+admin
+@rcSdental123
+
+srv419045.hstgr.cloud
+
+ArcSdent@l123
+
+
+ssh root@62.72.30.74 - server
+
+mkdir my-web-app - create my-web-app directory
+
+cd my-web-app - go to my web app
+
+python3 -m venv myenv
+   source myenv/bin/activate - activate virtua environment
+
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '123456' WITH GRANT OPTION;
+
+mysql -u root -p - connect mysql
+
+CREATE USER 'arcs'@'localhost' IDENTIFIED BY '12345678';
+
+GRANT ALL PRIVILEGES ON db_capstone.* TO 'arcs'@'localhost' IDENTIFIED BY '12345678';
+
+ls -d */ - view directories in vps
+
+pip install aiohttp_session
+pip install aiohttp_jinja2
+pip install aiomysql
+pip install cryptography
+pip install bcrypt
+
+// STEUP NGINX
+
+sudo pkill -f mysqld
+
+ssh root@62.72.30.74
+
+cd my-web-app
+cd Capstone_Project
+cd Capstone-System
+----------------------
+sudo nano /etc/nginx/sites-available/myapp.conf
+
+sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+
+sudo systemctl restart nginx
+---------------------
+server {
+    listen 80;
+    server_name www.arcsdental.site; # Replace with your actual domain or IP address
+
+    # Serve static files directly
+    location /static/ {
+        alias /root/Capstone_Project/Capstone-System/static/;
+    }
+
+    # Forward other requests to aiohttp
+    location / {
+        proxy_pass http://127.0.0.1:8000; # Assuming your aiohttp app is running on localhost:8080
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    # Additional Nginx configuration (e.g., SSL, caching, security headers) can go here
+}
+
+------------------------
+sudo nginx -t
+---------------------
+sudo systemctl restart nginx
+
+sudo ln -s /etc/nginx/sites-available/myapp.conf /etc/nginx/sites-enabled/
+
+python3 app.py
+
+nohup python3 app.py & - run in teh background
+
+cat nohup.out - output logs of hosted app
+
+9320588a-ef97-4f17-8ab5-6bd0f2b951dd - SSL PIN
+
+--------------------------------
+Successfully received certificate.
+Certificate is saved at: /etc/letsencrypt/live/www.arcsdental.site/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/www.arcsdental.site/privkey.pem
+This certificate expires on 2023-12-18.
+These files will be updated when the certificate renews.
+Certbot has set up a scheduled task to automatically renew this certificate in the background.
+
+Deploying certificate
+Successfully deployed certificate for www.arcsdental.site to /etc/nginx/sites-enabled/myapp.conf
+Congratulations! You have successfully enabled HTTPS on https://www.arcsdental.site
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
+
