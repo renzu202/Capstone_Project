@@ -80,6 +80,7 @@ CREATE TABLE `tbl_medical_history` (
   `q10` varchar(50) default NULL,
   `q11` varchar(50) default NULL,
   `q12` varchar(50) default NULL,
+  `q13` varchar(50) default NULL,
   `Medical_Conditions` varchar(800) default NULL,
   `other` varchar(200) default NULL,
   PRIMARY KEY  (`ID`)
