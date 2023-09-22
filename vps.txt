@@ -96,8 +96,11 @@ Successfully deployed certificate for www.arcsdental.site to /etc/nginx/sites-en
 Congratulations! You have successfully enabled HTTPS on https://www.arcsdental.site
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+systemctl status systemd-resolved - check system status
 
-
+systemctl restart systemd-resolved - restart dns client
+------------------------------------------------------------------
+ssh root@62.72.30.74
 
 
 

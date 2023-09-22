@@ -60,6 +60,22 @@ CREATE TABLE `tbl_appointments` (
   PRIMARY KEY  (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+/*Table structure for table `tbl_canceled_appointments` */
+
+DROP TABLE IF EXISTS `tbl_canceled_appointments`;
+
+CREATE TABLE `tbl_canceled_appointments` (
+  `Appointment_Schedule` datetime default NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `tbl_completed_appointments` */
+
+DROP TABLE IF EXISTS `tbl_completed_appointments`;
+
+CREATE TABLE `tbl_completed_appointments` (
+  `Appointment_Schedule` datetime default NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 /*Table structure for table `tbl_medical_history` */
 
 DROP TABLE IF EXISTS `tbl_medical_history`;
