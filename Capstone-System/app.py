@@ -730,7 +730,7 @@ async def delete_appointment(request):
 
         try:
             # Fetch the Appointment_Schedule data before deleting
-            await cursor.execute("SELECT Appointment_Schedule FROM tbl_timeslots_booked WHERE ID=%s", patient_id)
+            await cursor.execute("SELECT Appointment_Schedule FROM tbl_appointments WHERE ID=%s", patient_id)
             appointment_schedule_data = await cursor.fetchone()
 
             # Check if data is not None and access the field by integer index
@@ -771,7 +771,7 @@ async def finish_appointment(request):
 
         try:
             # Fetch the Appointment_Schedule data before deleting
-            await cursor.execute("SELECT Appointment_Schedule FROM tbl_timeslots_booked WHERE ID=%s", patient_id)
+            await cursor.execute("SELECT Appointment_Schedule FROM tbl_appointments WHERE ID=%s", patient_id)
             appointment_schedule_data = await cursor.fetchone()
 
             # Check if data is not None and access the field by integer index
