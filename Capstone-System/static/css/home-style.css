@@ -5,7 +5,6 @@
 }
 
 .logo {
-
  border-radius: 50%;
  margin-left: 20px;
 }
@@ -22,65 +21,376 @@
 }
 
 body {
-    background-image: url('/static/img/form-bg.jpg');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: 100% 100%;
+    background: black;
     font-family: 'Josefin Sans';
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.4;
-    padding-top: 100px;
-    padding-bottom: 10px;
     color: #566787;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    color: #00011c;
+footer {
+    position: relative; /* Keep it in the flow of the content */
+    text-align: center;
+    z-index: 2; /* Ensure it's above other content */
+    clear: both;
+    margin-top: 50px;
 }
 
-/*
-.mof-image {
-  position: absolute;
-  right: 100px;
-  width: 500px;
-  height: 540px;
-  z-index: 1;
+
+.custom-container {
+    min-height: 3900px;
+    max-height: none;
 }
-*/
+
+/* CSS for fading in */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fade-in.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/*Home Buttons*/
+.bookButton {
+    font-size: 20px;
+    margin-right: 100px;
+    width: 150px;
+}
+
+.fbButton {
+    font-size: 20px;
+    width: 60px;
+}
+
+.buttonLink {
+    margin-left: 200px;
+}
+
+/*Home Images*/
+.homeLogo{
+    border-radius: 50%;
+    width: 500px;
+    height: auto;
+    margin-top: 90px;
+    margin-left: 50px;
+    user-select: none;
+}
+
+.imgDOC {
+    width: 230px;
+    height: auto;
+    user-select: none;
+    margin-top: 50px;
+    margin-left: 200px;
+}
+
+.imgClinic1 {
+    width: 600px;
+    height: auto;
+    user-select: none;
+    margin-top: 150px;
+    margin-left: -90px;
+    border-radius: 20px;
+}
+
+.imgClinic2 {
+    width: 600px;
+    height: auto;
+    user-select: none;
+    margin-top: 150px;
+    border-radius: 20px;
+}
+
+.imgClinic3 {
+    width: 600px;
+    height: auto;
+    user-select: none;
+    margin-top: 150px;
+    margin-left: -90px;
+    border-radius: 20px;
+}
+
+/*Home Labels*/
+.lb1 {
+    font-size: 50px;
+    color: #E0E0E8;
+    margin-top: 150px;
+    user-select: none;
+    text-align: left;
+}
+
+.lb2{
+    text-align: left;
+    font-size: 32px;
+    color: #E0E0E8;
+    user-select: none;
+    margin-top: 140px;
+}
+
+.lb3 {
+    font-size: 50px;
+    user-select: none;
+    text-align: center;
+    color: #E0E0E8;
+    margin-top:300px;
+}
+
+.lb4{
+    text-align: justify;
+    font-size: 28px;
+    color: #E0E0E8;
+    user-select: none;
+    margin-top: 250px;
+}
+
+.lb5{
+    text-align: left;
+    font-size: 28px;
+    color: #E0E0E8;
+    user-select: none;
+    margin-top: 250px;
+}
+
+.lb6{
+    text-align: left;
+    font-size: 28px;
+    color: #E0E0E8;
+    user-select: none;
+    margin-top: 250px;
+}
+
+.lb7 {
+    font-size: 45px;
+    user-select: none;
+    text-align: center;
+    color: #E0E0E8;
+    margin-top:200px;
+}
+
+.contact-image-container {
+    position: relative;
+    text-align: center;
+}
 
 .contact-image {
-  display: block;
-  margin: 0 auto;
-  width: 900px;
-  height: 250px;
-  z-index: 1;
+    width: 630px;
+    height: auto;
+    user-select: none;
 }
 
-/* Left black column */
+.copyright-label {
+  position: absolute;
+  bottom: 0; /* Attach it to the bottom of the contact-image-container */
+  left: 0;
+  right: 0; /* Stretch it to both sides of the container */
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+  color: white;
+  padding: 5px; /* Add some padding for readability */
+  z-index: 3; /* Place it above other content */
+}
+
 .black-column {
     background-color: black;
     position: absolute;
-    top: 100px;
+    bottom: 0;
     left: 0;
     width: 100%;
-    height: 250px;
-    z-index: -1; /* Place it behind the image */
+    height: 240px;
+    z-index: -1;
+}
+
+/* Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile*/
+@media (max-width: 420px) {
+
+.dental-title {
+   font-size: 1rem;
+}
+
+html, body {
+    overflow-x: hidden;
+}
+
+.col-custom {
+   width: 50%; /* Set the column width to 50% for equal splitting */
 }
 
 
-/* Mobile */
-@media (max-width: 420px) {
 
-  .navbar-nav {
-    display: block;
-  }
+.navbar-nav .nav-item {
+  margin-right: 12px;
+  font-size: 15px;
+}
 
+footer {
+    position: relative; /* Keep it in the flow of the content */
+    text-align: center;
+    z-index: 2; /* Ensure it's above other content */
+    clear: both;
+    margin-top: 50px;
+}
+
+
+.custom-container {
+    min-height: 3000px;
+    max-height: none;
+}
+
+/*Home Buttons*/
+.bookButton {
+    font-size: 20px;
+    margin-right: 100px;
+    width: 150px;
+}
+
+.fbButton {
+    margin-top: 20px;
+    font-size: 20px;
+    width: 150px;
+}
+
+.buttonLink {
+    margin-top: 50px;
+    margin-left: 200px;
+}
+
+/*Home Images*/
+.homeLogo{
+    border-radius: 50%;
+    width: 190px;
+    height: auto;
+    margin-top: -140px;
+    margin-left: 20px;
+    user-select: none;
+}
+
+.imgDOC {
+    width: 150px;
+    height: auto;
+    user-select: none;
+    margin-top: 110px;
+    margin-left: 20px;
+}
+
+.imgClinic1 {
+    width: 380px;
+    height: auto;
+    user-select: none;
+    margin-top: 50px;
+    margin-left: 0px;
+    border-radius: 20px;
+}
+
+.imgClinic2 {
+    width: 380px;
+    height: auto;
+    user-select: none;
+    margin-left: 0px;
+    margin-top: -500px;
+    border-radius: 20px;
+}
+
+.imgClinic3 {
+    width: 380px;
+    height: auto;
+    user-select: none;
+    margin-top: 100px;
+    margin-left: 0px;
+    border-radius: 20px;
+}
+
+/*Home Labels*/
+.lb1 {
+    font-size: 30px;
+    color: #E0E0E8;
+    margin-top: 150px;
+    user-select: none;
+    text-align: center;
+}
+
+.lb2{
+    text-align: left;
+    font-size: 18px;
+    color: #E0E0E8;
+    user-select: none;
+    margin-top: 140px;
+}
+
+.lb3 {
+    font-size: 35px;
+    user-select: none;
+    text-align: center;
+    color: #E0E0E8;
+    margin-top: 150px;
+}
+
+.lb4{
+    text-align: justify;
+    font-size: 22px;
+    color: #E0E0E8;
+    user-select: none;
+    margin-top: 30px;
+}
+
+.lb5{
+    text-align: left;
+    font-size: 22px;
+    color: #E0E0E8;
+    user-select: none;
+    margin-top: 450px;
+}
+
+.lb6{
+    text-align: left;
+    font-size: 22px;
+    color: #E0E0E8;
+    user-select: none;
+    margin-top: 20px;
+}
+
+.lb7 {
+    font-size: 22px;
+    user-select: none;
+    text-align: center;
+    color: #E0E0E8;
+    margin-top:200px;
+}
+
+.contact-image-container {
+    position: relative;
+    text-align: center;
+}
+
+.contact-image {
+    width: 500px;
+    margin-left: -50px;
+    height: auto;
+    user-select: none;
+}
+
+.copyright-label {
+  position: absolute;
+  bottom: 0; /* Attach it to the bottom of the contact-image-container */
+  left: 0;
+  right: 0; /* Stretch it to both sides of the container */
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+  color: white;
+  padding: 5px; /* Add some padding for readability */
+  z-index: 3; /* Place it above other content */
+  font-size: 10px;
+}
+
+.black-column {
+    background-color: black;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 240px;
+    z-index: -1;
+}
 
 }
 

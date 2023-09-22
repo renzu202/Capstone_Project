@@ -65,15 +65,15 @@
         <label style="font-size: 18px;">
         <input type="checkbox" name="agree" id="OP-agreement">
 
-        <b style="color:#294FE1;">I understand the potential risks and benefits outlined in the informed consent.</b>
+        <b style="color:#294FE1;" class="tac">I understand the potential risks and benefits outlined in the informed consent.</b>
         </label>
         <span style="color: red;" id="OP-agreeVal"></span>
               <hr>
         <br><br><br><br>
 
          <div class="q-box__buttons">
-            <button type="button" class="index-btn btn-dark" onclick = "OPPrevVal1()">Previous</button>
-            <button type="button" class="index-btn btn-dark" onclick = "OPNextVal1()">Next</button>
+            <button type="button" class="index-btn btn-dark" onclick = "OPPrevVal1()" style="border: 3px solid #3A3D6D;">Previous</button>
+            <button type="button" class="index-btn btn-dark" onclick = "OPNextVal1()" style="border: 3px solid #3A3D6D;">Next</button>
          </div>
             </div>
 
@@ -83,7 +83,7 @@
 <input type="hidden" class="form-control"  name="OP-LastName" id="OP-LastName" placeholder="Enter last name">
 <input type="hidden" class="form-control"  name="OP-Contact" id="OP-Contact" placeholder="Enter contact">
 <input type="hidden" class="form-control"  name="OP-Email" id="OP-Email" placeholder="Enter email address">
-           <label>What is your reason for dental consultation:</label>
+           <label class="lblReason">What is your reason for dental consultation:</label>
             <br>
             <div class="form-group col-md-12 mb-4">
                 <input  type="text" class="form-control" name="OP-Reason" id="OP-Reason" placeholder="Enter reason for dental consultation" style="width:300px;">
@@ -107,13 +107,13 @@
             <input type="hidden" name="appointment_schedule" class="selected-schedule-input">
 
                  <div class="q-box__buttons">
-                    <button type="button" class="index-btn btn-dark" onclick = "OPPrevVal2()">Previous</button>
-                    <button type="button" class="index-btn btn-dark" onclick = "OPNextVal2()">Next</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "OPPrevVal2()" style="border: 3px solid #3A3D6D;">Previous</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "OPNextVal2()" style="border: 3px solid #3A3D6D;">Next</button>
                  </div>
        </div>
 
         <div class="tab" id="OP-tab-3">
-    <h4>Dental Clinic Appointment Confirmation Slip</h4>
+    <h4>Dental Clinic Appointment Confirmation Slip</h4><hr>
 <br><br>
     <h5 style="color: blue;">Patient Information:</h5>
     <p>
@@ -130,7 +130,7 @@
     </p>
      <br>
                  <div class="q-box__buttons">
-                    <button type="button" class="index-btn btn-dark" onclick ="OPPrevVal3()">Previous</button>
+                    <button type="button" class="index-btn btn-dark" onclick ="OPPrevVal3()" style="border: 3px solid #3A3D6D;">Previous</button>
                     <button id="OP-submit-btn" class="index-btn btn-dark" type="submit">Submit</button>
                  </div>
 </div>
@@ -156,11 +156,11 @@
                <hr>
                <br><br>
          <div class="q-box__buttons">
-            <button type="button" class="index-btn btn-dark" id="OPB" onclick = "OP()">Old Patient</button>
+            <button type="button" class="index-btn btn-dark" id="OPB" onclick = "OP()" style="border: 3px solid #3A3D6D;">Old Patient</button>
          </div>
          <br>
          <div class="q-box__buttons">
-            <button type="button" class="index-btn btn-dark" id="NPB" onclick = "NP()">New Patient</button>
+            <button type="button" class="index-btn btn-dark" id="NPB" onclick = "NP()" style="border: 3px solid #3A3D6D;">New Patient</button>
          </div>
            </div>
 
@@ -168,15 +168,16 @@
                <hr>
                <h4 style="text-align:center;">Please enter your email address and Password:</h4>
                <hr>
-               <br><br>
+               <span style="font-size:14px;">Send us a message in contact us page using your registered email if you forgot your password.</span>
+               <br><br><br><br>
                       <input type="email" class="form-control" style="margin: 0 auto; display: block;" name="emailV" id="emailV" placeholder="Enter email">
                <br>
                <br>
                       <input type="password" class="form-control" style="margin: 0 auto; display: block;" name="CodeV" id="CodeV" placeholder="Enter password" maxlength="20">
                 <br><br><br><br>
                  <div class="q-box__buttons">
-                    <button type="button" class="index-btn btn-dark" onclick = "PrevOP()">Previous</button>
-                    <button type="button" class="index-btn btn-dark" onclick="validateEmailAndPIN()">Next</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "PrevOP()" style="border: 3px solid #3A3D6D;">Previous</button>
+                    <button type="button" class="index-btn btn-dark" onclick="validateEmailAndPIN()" style="border: 3px solid #3A3D6D;">Next</button>
                  </div>
            </div>
 
@@ -189,15 +190,15 @@
         <label style="font-size: 18px;">
         <input type="checkbox" name="agree" id="agreement">
 
-        <b style="color:#294FE1;">I understand the potential risks and benefits outlined in the informed consent.</b>
+        <b style="color:#294FE1;" class="tac">I understand the potential risks and benefits outlined in the informed consent.</b>
         </label>
         <span style="color: red;" id="agreeVal"></span>
                <hr>
         <br><br><br><br><br><br>
 
          <div class="q-box__buttons">
-            <button type="button" class="index-btn btn-dark" onclick = "PrevVal()">Previous</button>
-            <button type="button" class="index-btn btn-dark" onclick = "NextVal()">Next</button>
+            <button type="button" class="index-btn btn-dark" onclick = "PrevVal()" style="border: 3px solid #3A3D6D;">Previous</button>
+            <button type="button" class="index-btn btn-dark" onclick = "NextVal()" style="border: 3px solid #3A3D6D;">Next</button>
          </div>
             </div>
 
@@ -276,11 +277,11 @@
 
             <div class="row">
                 <div class="form-group col-md-6 mb-4">
-                <label for="PIN">
-                    <span style="color: red;font-size:18px;">*</span>New Password:
+                <label for="password">
+                    <span style="color: red;font-size:18px;">*</span>New Password: <i style="color:gray;" class="fa-solid fa-eye" id="show-password"></i> <span style="font-size:12px;">hide/show</span>
                 </label>
-                <input type="password" class="form-control" name="PIN" id="PIN" maxlength="20" placeholder="Enter your new password">
-                     <span style="color: red;" id="PINval"></span>
+                <input type="password" class="form-control" name="password" id="password" maxlength="20" placeholder="Enter your new password">
+                     <span style="color: red;" id="PASSval"></span>
                  </div>
                <div class="col-md-6 mb-4">
                   <div class="form-group">
@@ -383,13 +384,13 @@
                  </div>
 
                  <div class="q-box__buttons">
-                    <button type="button" class="index-btn btn-dark" onclick = "Prev1()">Previous</button>
-                    <button type="button" class="index-btn btn-dark" onclick = "NextVal1()">Next</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "Prev1()" style="border: 3px solid #3A3D6D;">Previous</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "NextVal1()" style="border: 3px solid #3A3D6D;">Next</button>
                  </div>
             </div>
 
            <div class="tab" id="tab-3">
-               <h4>MEDICAL HISTORY</h4>
+               <h4>MEDICAL HISTORY</h4><hr>
     <br><br>
     <div class="row">
     <div class="form-group col-md-6 mb-4">
@@ -486,7 +487,7 @@
         <label class="form-check-label" for="inlineRadio12">No</label>
     </div><br><br>
       <div id="tb4Section" style="display:none;">
-                <label for="tb1"><span style="color: red;font-size:18px;">*</span>If so, how often?</label> <span style="color: red;" id="tb4Val"></span>
+                <label for="tb1"><span style="color: red;font-size:18px;">*</span>If so, how often?</label> <span style="color: red;" id="Option1_2val"></span>
                <br>
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="Option1_2" id="inlineRadio1_2" value="Occasionally">
@@ -702,13 +703,13 @@
            </div>
                <br>
                  <div class="q-box__buttons">
-                    <button type="button" class="index-btn btn-dark" onclick = "Prev2()">Previous</button>
-                    <button type="button" class="index-btn btn-dark" onclick = "NextVal2()">Next</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "Prev2()" style="border: 3px solid #3A3D6D;">Previous</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "NextVal2()" style="border: 3px solid #3A3D6D;">Next</button>
                  </div>
             </div>
 
            <div class="tab" id="tab-4">
-                <h4>Upload Valid ID</h4>
+                <h4>Upload Valid ID</h4><hr>
                 <br>
                 <div class="form-group mb-3">
                     <label for="image" class="form-label"><span style="color: red;font-size:18px;">*</span>Upload Image:</label>
@@ -717,15 +718,16 @@
                <div id="image-error" class="text-danger"></div>
                 <img class="img" id="preview" src="" alt="Preview Image" style="display: none;">
                <br>
-                 <div class="q-box__buttons">
-                    <button type="button" class="index-btn btn-dark" onclick = "Prev3()">Previous</button>
-                    <button type="button" class="index-btn btn-dark" onclick = "NextVal3()">Next</button>
+                 <div class="q-box__buttons" style="margin-top: 100px;">
+                    <button type="button" class="index-btn btn-dark" onclick = "Prev3()" style="border: 3px solid #3A3D6D;">Previous</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "NextVal3()" style="border: 3px solid #3A3D6D;">Next</button>
                  </div>
             </div>
 
            <div class="tab" id="tab-5">
                 <h4><span style="color: red;font-size:18px;">*</span>Select Preferred Time/Date</h4>
                              <button type="button" id="AppointmentButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#calendarModal">Book Appointment</button><label style="color:red;"><--- Click Here</label>
+               <hr>
                  <br><br><br><br>
 
                  <h4>Appointment Schedule:</h4><br>
@@ -737,14 +739,14 @@
 
                                             <input type="hidden" name="appointment_schedule" class="selected-schedule-input">
 
-                 <div class="q-box__buttons">
-                    <button type="button" class="index-btn btn-dark" onclick = "Prev4()">Previous</button>
-                    <button type="button" class="index-btn btn-dark" onclick = "NextVal4()">Next</button>
+                 <div class="q-box__buttons" style="margin-top: 100px;">
+                    <button type="button" class="index-btn btn-dark" onclick = "Prev4()" style="border: 3px solid #3A3D6D;">Previous</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "NextVal4()" style="border: 3px solid #3A3D6D;">Next</button>
                  </div>
              </div>
 
            <div class="tab" id="tab-6">
-    <h4>Dental Clinic Appointment Confirmation Slip</h4>
+    <h4>Dental Clinic Appointment Confirmation Slip</h4><hr>
 <br><br>
     <h5 style="color: blue;">Patient Information:</h5>
     <p>
@@ -765,7 +767,7 @@
                 <input type="hidden" id="submissionDate" name="submissionDate" value="">
 
                  <div class="q-box__buttons">
-                    <button type="button" class="index-btn btn-dark" onclick = "Prev5()">Previous</button>
+                    <button type="button" class="index-btn btn-dark" onclick = "Prev5()" style="border: 3px solid #3A3D6D;">Previous</button>
                     <button id="submit-btn" class="index-btn btn-dark" type="submit">Submit</button>
                  </div>
 </div>
@@ -871,10 +873,11 @@
 </div>
 
                  <div class="modal fade" id="timeslot_modal" role="dialog" style="z-index: 99999;">
-                    <div class="modal-dialog modal-lg">
+                    <div class="modal-dialog modal-lg customMD">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" style="color:white;">Select appointment time</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                         <div class="modal-body">
                     <div class="timeslot-container"></div>
@@ -921,6 +924,14 @@
             </div>
         </div>
     </div>
+
+<footer>
+    <div class="contact-image-container">
+        <img src="/static/img/contact.png" alt="Contact Image" class="contact-image"><br>
+        <span class="copyright-label">Copyright © 2023 ARC-Smile Dental Center All Right Reserved</span>
+        <div class="black-column"></div>
+    </div>
+</footer>
 
 <!-- Jquery -->
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>

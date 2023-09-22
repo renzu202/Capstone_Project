@@ -22,8 +22,10 @@
 }
 
 .container {
-  padding-top: 50px;
-  padding-bottom: 100px;
+    padding: 30px;
+    background: #52504E;
+    border-radius: 40px;
+    height: 2100px;
 }
 
 .modal-header,
@@ -55,18 +57,46 @@ body {
     font-weight: 600;
     line-height: 1.4;
     padding-top: 100px;
-    padding-bottom: 10px;
-    padding-bottom: 40px;
 }
 
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    color: #00011c;
+.contact-image-container {
+    position: relative;
+    text-align: center;
+}
+
+.contact-image {
+    width: 630px;
+    height: auto;
+    user-select: none;
+}
+
+footer {
+    position: relative; /* Keep it in the flow of the content */
+    text-align: center;
+    z-index: 2; /* Ensure it's above other content */
+    clear: both;
+    margin-top: 50px;
+}
+
+.copyright-label {
+  position: absolute;
+  bottom: 0; /* Attach it to the bottom of the contact-image-container */
+  left: 0;
+  right: 0; /* Stretch it to both sides of the container */
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+  color: white;
+  padding: 5px; /* Add some padding for readability */
+  z-index: 3; /* Place it above other content */
+}
+
+.black-column {
+    background-color: black;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 240px;
+    z-index: -1;
 }
 
 label {
@@ -76,11 +106,6 @@ label {
 }
 
 /* Buttons */
-
-.btn-container {
-  font-size: 0;
-  display: inline-block;
-}
 
 .btn-flip {
   opacity: 1;
@@ -143,6 +168,7 @@ label {
   display: block;
   max-width: 100%;
   height: auto; /* Setting height to "auto" maintains the aspect ratio */
+  user-select: none;
 }
 
 .img-fluid {
@@ -174,11 +200,151 @@ label {
     margin-bottom: 150px;
 }
 
+/* Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile*/
 @media (max-width: 420px) {
 
-.image1-container,
+.dental-title {
+   font-size: 1rem;
+}
+
+html, body {
+    overflow-x: hidden;
+}
+
+.contact-image {
+    width: 500px;
+    margin-left: -50px;
+    height: auto;
+    user-select: none;
+    margin-top: 50px;
+}
+
+.copyright-label {
+  position: absolute;
+  bottom: 0; /* Attach it to the bottom of the contact-image-container */
+  left: 0;
+  right: 0; /* Stretch it to both sides of the container */
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+  color: white;
+  padding: 5px; /* Add some padding for readability */
+  z-index: 3; /* Place it above other content */
+  font-size: 10px;
+}
+
+.container {
+    padding: 35px;
+    background: #52504E;
+    border-radius: 40px;
+    height: 5240px;
+    width: 350px;
+}
+
+.modal-dialog {
+    min-width: 400px;
+}
+
+.imgModal {
+    width: 50px;
+    height: auto;
+    display: none;
+}
+
+.Modalcontainer {
+    width: 370px !important;
+    height: 320px !important;
+}
+
+.lblModal {
+    text-align: left;
+    font-size: 18px;
+    margin-top: -30px;
+}
+
 .image2-container{
-    margin-bottom: 120px;
+    margin-bottom: 80px;
+    margin-top: 80px;
+}
+
+/* Set specific dimensions for each container */
+.image1-container {
+  width: 275px;
+  height: auto;
+}
+
+.image1-container2 {
+    margin-top: -60px;
+}
+
+.image2-container {
+  width: 275px;
+  height: auto;
+}
+
+.image3-container {
+  width: 275px;
+  height: auto;
+}
+
+
+/* Buttons */
+
+.btn-container {
+  font-size: 0;
+  display: inline-block;
+}
+
+.btn-flip {
+  opacity: 1;
+  outline: 0;
+  color: #fff;
+  line-height: 40px;
+  position: relative;
+  text-align: center;
+  letter-spacing: 1px;
+  display: inline-block;
+  text-decoration: none;
+  font-family: "Open Sans";
+  text-transform: uppercase;
+}
+.btn-flip:hover:after {
+  opacity: 1;
+  transform: translateY(0) rotateX(0);
+}
+.btn-flip:hover:before {
+  opacity: 0;
+  transform: translateY(50%) rotateX(90deg);
+}
+.btn-flip:after {
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 280px;
+  font-size: 12px;
+  color: #323237;
+  display: block;
+  transition: 0.5s;
+  position: absolute;
+  background: #adadaf;
+  content: attr(data-back);
+  transform: translateY(-50%) rotateX(90deg);
+  border-radius: 10px;
+}
+.btn-flip:before {
+  top: 0;
+  left: 0;
+  opacity: 1;
+  width: 280px;
+  font-size: 12px;
+  color: #adadaf;
+  display: block;
+  padding: 0 30px;
+  line-height: 40px;
+  transition: 0.5s;
+  position: relative;
+  background: #201F1E;
+  content: attr(data-front);
+  transform: translateY(0) rotateX(0);
+  border-radius: 10px;
 }
 
 

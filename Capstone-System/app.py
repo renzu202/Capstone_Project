@@ -12,6 +12,7 @@ import aiomysql
 import logging
 import bcrypt
 import aiohttp
+from datetime import datetime, date
 
 from aiohttp import web
 
@@ -251,7 +252,7 @@ async def book_appointment(request):
                 strSex = data['Sex']
                 intCP = int(data['Contact'])
                 strEmail = data['Email']
-                strPass = data['PIN']
+                strPass = data['password']
                 intBirth = data['Birth']
                 strAge = data['Age']
                 strRlg = data['Religion']
@@ -723,10 +724,76 @@ async def delete_appointment(request):
     try:
         patient_id = request.match_info['id']
 
-        async with request.app['db_pool'].acquire() as conn:
-            async with conn.cursor() as cursor:
+        pool = request.app['db_pool']
+        conn = await pool.acquire()
+        cursor = await conn.cursor()
+
+        try:
+            # Fetch the Appointment_Schedule data before deleting
+            await cursor.execute("SELECT Appointment_Schedule FROM tbl_timeslots_booked WHERE ID=%s", patient_id)
+            appointment_schedule_data = await cursor.fetchone()
+
+            # Check if data is not None and access the field by integer index
+            if appointment_schedule_data:
+                appointment_schedule = appointment_schedule_data[0]  # Use the correct integer index
+
+                # Delete records from tbl_appointments and tbl_timeslots_booked
                 await cursor.execute("DELETE FROM tbl_appointments WHERE ID=%s", patient_id)
                 await cursor.execute("DELETE FROM tbl_timeslots_booked WHERE ID=%s", patient_id)
+
+                # Insert the Appointment_Schedule data into tbl_completed_appointments
+                await cursor.execute("INSERT INTO tbl_canceled_appointments (Appointment_Schedule) VALUES (%s)", appointment_schedule)
+
+                # Commit the transaction
+                await conn.commit()
+        except Exception as e:
+            # Rollback the transaction on error
+            await conn.rollback()
+            raise e
+        finally:
+            await cursor.close()
+            pool.release(conn)
+
+        redirect_url = '/admin_A&M_page'
+        return web.HTTPFound(redirect_url)
+
+    except Exception as e:
+        print(e)
+        return web.Response(text='Error while deleting user')
+
+async def finish_appointment(request):
+    try:
+        patient_id = request.match_info['id']
+
+        pool = request.app['db_pool']
+        conn = await pool.acquire()
+        cursor = await conn.cursor()
+
+        try:
+            # Fetch the Appointment_Schedule data before deleting
+            await cursor.execute("SELECT Appointment_Schedule FROM tbl_timeslots_booked WHERE ID=%s", patient_id)
+            appointment_schedule_data = await cursor.fetchone()
+
+            # Check if data is not None and access the field by integer index
+            if appointment_schedule_data:
+                appointment_schedule = appointment_schedule_data[0]  # Use the correct integer index
+
+                # Delete records from tbl_appointments and tbl_timeslots_booked
+                await cursor.execute("DELETE FROM tbl_appointments WHERE ID=%s", patient_id)
+                await cursor.execute("DELETE FROM tbl_timeslots_booked WHERE ID=%s", patient_id)
+
+                # Insert the Appointment_Schedule data into tbl_completed_appointments
+                await cursor.execute("INSERT INTO tbl_completed_appointments (Appointment_Schedule) VALUES (%s)", appointment_schedule)
+
+                # Commit the transaction
+                await conn.commit()
+        except Exception as e:
+            # Rollback the transaction on error
+            await conn.rollback()
+            raise e
+        finally:
+            await cursor.close()
+            pool.release(conn)
 
         redirect_url = '/admin_A&M_page'
         return web.HTTPFound(redirect_url)
@@ -849,6 +916,66 @@ async def fetch_disabled_dates(request):
     except Exception as e:
         return web.json_response({'error': str(e)})
 
+async def fetch_completed_appointments(request):
+    try:
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                query = "SELECT Appointment_Schedule FROM tbl_completed_appointments"
+                await cursor.execute(query)
+                result = await cursor.fetchall()
+
+                timeslots = [
+                    timeslot[0].strftime('%Y-%m-%d %H:%M:%S')
+                    for timeslot in result
+                ]
+
+                print("Timeslots API Response:", timeslots)
+
+                return web.json_response(timeslots)
+    except Exception as e:
+        return web.json_response({'error': str(e)})
+
+async def fetch_canceled_appointments(request):
+    try:
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                query = "SELECT Appointment_Schedule FROM tbl_canceled_appointments"
+                await cursor.execute(query)
+                result = await cursor.fetchall()
+
+                timeslots = [
+                    timeslot[0].strftime('%Y-%m-%d %H:%M:%S')
+                    for timeslot in result
+                ]
+
+                print("Timeslots API Response:", timeslots)
+
+                return web.json_response(timeslots)
+    except Exception as e:
+        return web.json_response({'error': str(e)})
+
+async def delete_completed_appointments(request):
+    try:
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                query = "DELETE FROM tbl_completed_appointments"
+                await cursor.execute(query)
+
+        return web.json_response({'message': 'All completed appointments deleted successfully'})
+    except Exception as e:
+        return web.json_response({'error': str(e)})
+
+async def delete_canceled_appointments(request):
+    try:
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                query = "DELETE FROM tbl_canceled_appointments"
+                await cursor.execute(query)
+
+        return web.json_response({'message': 'All canceled appointments deleted successfully'})
+    except Exception as e:
+        return web.json_response({'error': str(e)})
+
 async def delete_disabled_date(request):
     date_to_delete = request.query.get('date')
     try:
@@ -871,10 +998,192 @@ async def delete_disabled_timeslot(request):
     except Exception as e:
         return web.json_response({'error': str(e)})
 
+async def add_completed_appointment(request):
+    try:
+        # Extract the appointment schedule from the request data
+        data = await request.post()
+        appointment_schedule = data.get('appointmentSchedule')
+
+        if not appointment_schedule:
+            return web.json_response({'error': 'Appointment schedule is missing'}, status=400)
+
+        # Assuming you have an aiohttp database pool stored in the app
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                # Insert the appointment schedule into tbl_completed_appointments
+                query = "INSERT INTO tbl_completed_appointments (Appointment_Schedule) VALUES (%s)"
+                await cursor.execute(query, appointment_schedule)
+
+        return web.json_response({'message': 'Appointment added to completed appointments successfully'})
+    except Exception as e:
+        return web.json_response({'error': str(e)}, status=500)
+
+async def fetch_registered_number(request):
+    try:
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                # Execute a query to count the registered patients
+                query = "SELECT COUNT(*) FROM tbl_patient_information_record"
+                await cursor.execute(query)
+                result = await cursor.fetchone()
+
+                if result:
+                    # Extract the count from the result
+                    registered_count = result[0]
+
+                    # Return the count as JSON
+                    return web.json_response({'registered_count': registered_count})
+                else:
+                    # Handle the case where no result is found
+                    return web.json_response({'error': 'No data found'})
+
+    except Exception as e:
+        return web.json_response({'error': str(e)}, status=500)
+
+async def fetch_ComAppointments_number(request):
+    try:
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                # Execute a query to count the registered patients
+                query = "SELECT COUNT(*) FROM tbl_completed_appointments"
+                await cursor.execute(query)
+                result = await cursor.fetchone()
+
+                if result:
+                    # Extract the count from the result
+                    completed_count = result[0]
+
+                    # Return the count as JSON
+                    return web.json_response({'completed_count': completed_count})
+                else:
+                    # Handle the case where no result is found
+                    return web.json_response({'error': 'No data found'})
+
+    except Exception as e:
+        return web.json_response({'error': str(e)}, status=500)
+
+async def fetch_CanAppointments_number(request):
+    try:
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                # Execute a query to count the registered patients
+                query = "SELECT COUNT(*) FROM tbl_canceled_appointments"
+                await cursor.execute(query)
+                result = await cursor.fetchone()
+
+                if result:
+                    # Extract the count from the result
+                    canceled_count = result[0]
+
+                    # Return the count as JSON
+                    return web.json_response({'canceled_count': canceled_count})
+                else:
+                    # Handle the case where no result is found
+                    return web.json_response({'error': 'No data found'})
+
+    except Exception as e:
+        return web.json_response({'error': str(e)}, status=500)
+
+async def fetch_PenAppointments_number(request):
+    try:
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                # Execute a query to count the registered patients
+                query = "SELECT COUNT(*) FROM tbl_appointments"
+                await cursor.execute(query)
+                result = await cursor.fetchone()
+
+                if result:
+                    # Extract the count from the result
+                    pending_count = result[0]
+
+                    # Return the count as JSON
+                    return web.json_response({'pending_count': pending_count})
+                else:
+                    # Handle the case where no result is found
+                    return web.json_response({'error': 'No data found'})
+
+    except Exception as e:
+        return web.json_response({'error': str(e)}, status=500)
+
+async def fetch_Messages_number(request):
+    try:
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                # Execute a query to count the registered patients
+                query = "SELECT COUNT(*) FROM tbl_messages"
+                await cursor.execute(query)
+                result = await cursor.fetchone()
+
+                if result:
+                    # Extract the count from the result
+                    message_count = result[0]
+
+                    # Return the count as JSON
+                    return web.json_response({'message_count': message_count})
+                else:
+                    # Handle the case where no result is found
+                    return web.json_response({'error': 'No data found'})
+
+    except Exception as e:
+        return web.json_response({'error': str(e)}, status=500)
 
 
 
+async def fetch_TodayAppointments_number(request):
+    try:
+        current_datetime = datetime.now()
+        start_of_day = datetime.combine(date.today(), datetime.min.time())
+        end_of_day = datetime.combine(date.today(), datetime.max.time())
 
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                query = """
+                    SELECT COUNT(*) FROM tbl_timeslots_booked
+                    WHERE Appointment_Schedule >= %s AND Appointment_Schedule <= %s
+                """
+                await cursor.execute(query, (start_of_day, end_of_day))
+                result = await cursor.fetchone()
+
+                if result:
+                    today_appointments_count = result[0]
+
+                    return web.json_response({'today_appointments_count': today_appointments_count})
+                else:
+                    print('No data found for today')
+                    return web.json_response({'error': 'No data found for today'})
+
+    except Exception as e:
+        print(f'Error: {str(e)}')  # Add this line for debugging
+        return web.json_response({'error': str(e)}, status=500)
+
+
+async def fetch_DoR_Timeslots(request):
+    try:
+        current_datetime = datetime.now()
+        start_of_day = datetime.combine(date.today(), datetime.min.time())
+        end_of_day = datetime.combine(date.today(), datetime.max.time())
+
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                query = """
+                    SELECT COUNT(*) FROM tbl_admin_timeslot
+                    WHERE DoR_Timeslots >= %s AND DoR_Timeslots <= %s
+                """
+                await cursor.execute(query, (start_of_day, end_of_day))
+                result = await cursor.fetchone()
+
+                if result:
+                    timeslots_count = result[0]
+
+                    return web.json_response({'doR_timeslots_count': timeslots_count})
+                else:
+                    print('No data found for today')
+                    return web.json_response({'error': 'No data found for today'})
+
+    except Exception as e:
+        print(f'Error: {str(e)}')  # Add this line for debugging
+        return web.json_response({'error': str(e)}, status=500)
 
 app.router.add_get('/', home_page)
 app.router.add_get('/services_page', services_page)
@@ -894,6 +1203,7 @@ app.router.add_get('/read_one_treatment/{id}', read_one_treatment)
 app.router.add_get('/edit_one_record/{id}', edit_one_record)
 app.router.add_get('/delete_user/{id}', delete_user)
 app.router.add_get('/delete_appointment/{id}', delete_appointment)
+app.router.add_get('/finish_appointment/{id}', finish_appointment)
 app.router.add_get('/delete_message/{id}', delete_message)
 app.router.add_get('/delete_treatment/{id}', delete_treatment)
 app.router.add_get('/delete_timeslots_booked/{id}', delete_timeslots_booked)
@@ -911,7 +1221,18 @@ app.router.add_post('/validate-email-pin', validate_email_and_pin)
 app.router.add_post('/update_treatment', update_treatment)
 app.router.add_get('/api/fetch-patient-info', fetch_patient_info)
 app.router.add_post('/update_records', update_records)
-
+app.router.add_get('/api/fetch-registered-number', fetch_registered_number)
+app.router.add_get('/api/fetch-ComAppointments-number', fetch_ComAppointments_number)
+app.router.add_get('/api/fetch-CanAppointments-number', fetch_CanAppointments_number)
+app.router.add_get('/api/fetch-PenAppointments-number', fetch_PenAppointments_number)
+app.router.add_get('/api/fetch-Messages-number', fetch_Messages_number)
+app.router.add_get('/api/fetch-TodayAppointments-number', fetch_TodayAppointments_number)
+app.router.add_get('/api/fetch-DOR-timeslots', fetch_DoR_Timeslots)
+app.router.add_get('/api/fetch-completed-appointments', fetch_completed_appointments)
+app.router.add_get('/api/fetch-canceled-appointments', fetch_canceled_appointments)
+app.router.add_post('/api/add-completed-appointment', add_completed_appointment)
+app.router.add_post('/api/delete-completed-appointments', delete_completed_appointments)
+app.router.add_post('/api/delete-canceled-appointments', delete_canceled_appointments)
 
 app.on_startup.append(create_pool)
 app.on_cleanup.append(close_pool)

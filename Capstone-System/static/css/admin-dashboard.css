@@ -21,6 +21,17 @@
     justify-content: flex-end;
 }
 
+.custom-icon {
+    font-size: 50px;
+}
+
+.box {
+    background-color: #F0ECEC;
+    border: 10px solid #444343;
+    padding: 30px;
+    height: 200px;
+  }
+
 body {
     background: gray;
     font-family: 'Josefin Sans';
@@ -29,5 +40,19 @@ body {
     line-height: 1.4;
     padding-top: 100px;
     padding-bottom: 10px;
+}
+
+/* Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile *Mobile*/
+@media (max-width: 420px) {
+
+html, body {
+    overflow-x: hidden;
+}
+
+.custom-tabs{
+    width: 300px !important;
+    margin-bottom: 10px;
+}
+
 }
 

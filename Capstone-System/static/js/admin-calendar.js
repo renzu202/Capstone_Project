@@ -491,6 +491,29 @@ function deleteDisabledTimeslot(timeslot) {
     });
 }
 
+// Function to add the timeslot to completed appointments
+function addCompletedAppointment(timeslotToAdd) {
+    // Assuming your API endpoint for adding completed appointments is '/api/add-completed-appointment'
+    var apiEndpoint = '/api/add-completed-appointment';
+
+    // Make an AJAX POST request to the API endpoint
+    $.ajax({
+        type: 'POST',
+        url: apiEndpoint,
+        data: {
+            appointmentSchedule: timeslotToAdd
+        },
+        success: function(response) {
+            // Handle success, e.g., show a success message to the user
+            alert('Slot Added to completed appointments successfully.');
+        },
+        error: function(error) {
+            // Handle error, e.g., show an error message to the user
+            alert('Error adding appointment to completed appointments: ' + error.responseText);
+        }
+    });
+}
+
 $(document).on('click', '#deleteDateButton', function() {
     var dateToDelete = $('#deleteDisabledDate').val();
 
@@ -517,7 +540,24 @@ $(document).on('click', '#deleteTimeslotButton', function() {
         deleteDisabledTimeslot(timeslotToDelete);
         $('.btn-calendar').click();
         $('.btn-calendar').click();
+        alert('Slot Enabled Successfully.');
 });
+
+$(document).on('click', '#CompleteTimeslotButton', function() {
+    var timeslotToDelete = $('#deleteDisabledTimeslot').val();
+
+     // Validate the input format (YYYY-MM-DD HH:MM:SS)
+    var datetimePattern = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+    if (!datetimePattern.test(timeslotToDelete)) {
+        alert('Invalid datetime format. Please use YYYY-MM-DD HH:MM:SS.');
+        return;
+    }
+        deleteDisabledTimeslot(timeslotToDelete);
+        addCompletedAppointment(timeslotToDelete);
+        $('.btn-calendar').click();
+        $('.btn-calendar').click();
+});
+
 
 
 

@@ -171,3 +171,47 @@ table.table td i {
 .modal-title {
     color: white;
 }
+
+.ddl {
+    width: 400px;
+    min-height: 300px;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 3px solid black;
+    padding: 10px;
+    background-color: #f9f9f9;
+    margin-right: 50px;
+}
+
+.drs {
+    width: 400px;
+    min-height: 300px;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 3px solid black;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+/* Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile *Mobile*/
+@media (max-width: 420px) {
+
+html, body {
+    overflow-x: hidden;
+}
+
+.custom-tabs{
+    width: 300px !important;
+    margin-bottom: 10px;
+}
+
+.ddl {
+    margin-bottom: 10px;
+    margin-right: -10px !important;
+}
+
+.drs {
+    margin-right: -10px !important;
+}
+
+}

@@ -26,4 +26,14 @@ body, h5, p, span, th, td, a {
     color: #000;
 }
 
+#pass {
+    position: relative;
+}
+
+#show-password {
+    position: absolute;
+    margin-top: 5px;
+    transform: translateX(-30px);
+    cursor: pointer;
+}
 

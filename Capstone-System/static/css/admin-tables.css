@@ -192,3 +192,17 @@ table.table td i {
 #treatmentModal span{
     color:black;
 }
+
+/* Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile * Mobile *Mobile*/
+@media (max-width: 420px) {
+
+html, body {
+    overflow-x: hidden;
+}
+
+.custom-tabs{
+    width: 300px !important;
+    margin-bottom: 10px;
+}
+
+}

@@ -18,3 +18,20 @@ function previewImage(event) {
   }
 }
 
+
+// Hide/Show Password
+const showPassword = document.querySelector("#show-password");
+const passwordField = document.querySelector("#pass");
+
+showPassword.addEventListener("click", function() {
+    const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+    passwordField.setAttribute("type", type);
+
+    // Toggle the color to yellow
+    if (type === "text") {
+        this.style.color = "blue";
+    } else {
+        this.style.color = "gray";
+    }
+});
+

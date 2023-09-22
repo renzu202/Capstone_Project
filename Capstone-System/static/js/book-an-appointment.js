@@ -44,6 +44,23 @@ inputElements.forEach(function(inputElement) {
     });
 });
 
+// Number Restrictions
+ var firstNameInput = document.getElementById("FirstName");
+        var middleNameInput = document.getElementById("MiddleName");
+        var lastNameInput = document.getElementById("LastName");
+
+        // Add an event listener to each input element to prevent numbers
+        firstNameInput.addEventListener("input", function () {
+            this.value = this.value.replace(/[0-9]/g, '');
+        });
+
+        middleNameInput.addEventListener("input", function () {
+            this.value = this.value.replace(/[0-9]/g, '');
+        });
+
+        lastNameInput.addEventListener("input", function () {
+            this.value = this.value.replace(/[0-9]/g, '');
+        });
 
 // Add a keydown event listener to the form
 myForm.addEventListener("keydown", function(event) {
@@ -336,6 +353,7 @@ function validateDate(input) {
         var q7input = document.getElementById("inlineRadio14");
         var q8input = document.getElementById("inlineRadio16");
         var q9input = document.getElementById("inlineRadio18");
+        var PASS = document.getElementById("password").value;
 
 
         if (FN === "") {
@@ -424,6 +442,17 @@ function validateDate(input) {
                     return false;
                 } else {
                     document.getElementById("EAval").innerHTML = "";
+
+        if (PASS === "") {
+            document.getElementById("PASSval").innerHTML = "*This field is required";
+            return false;
+        } else if (PASS.length < 8) {
+            document.getElementById("PASSval").innerHTML = "*Minimum character required is 8";
+            return false;
+        } else {
+            document.getElementById("PASSval").innerHTML = "";
+        }
+
 
         if (BD === "") {
             document.getElementById("BDval").innerHTML = "*This field is required";
@@ -633,6 +662,7 @@ function handleOption5Change() {
         var option4Selected = document.querySelector('input[name="Option4"]:checked');
         var option5Selected = document.querySelector('input[name="Option5"]:checked');
         var option6Selected = document.querySelector('input[name="Option6"]:checked');
+        var option7Selected = document.querySelector('input[name="Option1_2"]:checked');
         var tb1 = document.getElementById("tb1").value;
         var tb2 = document.getElementById("tb2").value;
         var tb3 = document.getElementById("tb3").value;
@@ -702,6 +732,13 @@ function handleOption5Change() {
             return false;
         } else {
             document.getElementById("Option6val").innerHTML = "";
+        }
+
+         if (!option7Selected) {
+            document.getElementById("Option1_2val").innerHTML = "*Please select an option";
+            return false;
+        } else {
+            document.getElementById("Option1_2val").innerHTML = "";
         }
 
 
@@ -1324,4 +1361,20 @@ $(document).ready(function() {
 function showNotAvailableModal() {
     $('#not_available_modal').modal('show');
 }
+
+// Hide/Show Password
+const showPassword = document.querySelector("#show-password");
+const passwordField = document.querySelector("#password");
+
+showPassword.addEventListener("click", function() {
+    const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+    passwordField.setAttribute("type", type);
+
+    // Toggle the color to yellow
+    if (type === "text") {
+        this.style.color = "blue";
+    } else {
+        this.style.color = "gray";
+    }
+});
 

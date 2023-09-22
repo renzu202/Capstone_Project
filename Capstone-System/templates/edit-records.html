@@ -20,7 +20,7 @@
           <h5>UPDATE RECORDS</h5>
           </div>
           <div class="col-sm-2">
-          <p><a href="/admin_tables_page"><button type="button" class="btn btn-dark" style="width:140px;">Back to List</button></a></p>
+          <p><a href="/admin_tables_page"><button type="button" class="btn btn-dark" style="width:140px;border: 3px solid #3A3D6D;border-radius:10px">Back to List</button></a></p>
           </div>
          </div>
         <hr>
@@ -30,7 +30,7 @@
                     <h5>Patient Information:</h5>
                 </div>
                 <div class="col-sm-2">
-                    <button type="submit" id="updateButton" class="btn btn-primary">Update Record</button>
+                    <button type="submit" id="updateButton" class="btn btn-dark" style="width:150px;border: 3px solid #3A3D6D;border-radius:10px">Update Record</button>
                 </div>
             </div>
             <br><br>
@@ -68,7 +68,8 @@
                     <input type="text" id="EmailAddress" name="EmailAddress" value="{{ PIR[6] }}">
                     <br><br>
                     <label for="pass">Password:</label><br>
-                    <input type="text" id="pass" name="pass" value="{{ VF[2] }}">
+                    <input type="password" id="pass" maxlength="20" name="pass" value="{{ VF[2] }}">
+                    <i style="color:gray;" class="fa-solid fa-eye" id="show-password"></i>
                 </div>
                 <div class="col-sm-6">
                     <label for="HomeAddress">Home Address:</label><br>
