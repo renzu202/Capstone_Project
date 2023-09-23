@@ -562,14 +562,11 @@ async def edit_one_record(request):
                 await cursor.execute("SELECT * FROM tbl_patient_information_record WHERE id=%s", patient_id)
                 PIR = await cursor.fetchone()
 
-                await cursor.execute("SELECT * FROM tbl_medical_history WHERE ID=%s", patient_id)
-                MH = await cursor.fetchone()
-
                 await cursor.execute("SELECT * FROM tbl_verification WHERE ID=%s", patient_id)
                 VF = await cursor.fetchone()
 
                 if PIR:
-                    return aiohttp_jinja2.render_template('edit-records.html', request, {'PIR': PIR, 'MH': MH, 'VF': VF})
+                    return aiohttp_jinja2.render_template('edit-records.html', request, {'PIR': PIR, 'VF': VF})
                 else:
                     return web.Response(text='Error loading #{id}'.format(id=patient_id))
 
@@ -603,22 +600,6 @@ async def update_records(request):
         PD = data['PD']
         LV = data['LV']
         DC = data['Dc']
-        PN = data['PN']
-        PMC = data['PMC']
-        q1 = data['q1']
-        q2 = data['q2']
-        q3 = data['q3']
-        q4 = data['q4']
-        q5 = data['q5']
-        q6 = data['q6']
-        q7 = data['q7']
-        q8 = data['q8']
-        q9 = data['q9']
-        q10 = data['q10']
-        q11 = data['q11']
-        q12 = data['q12']
-        q13 = data['q13']
-        MC = data['MC']
         Passw = data['pass']
 
         # Initialize Valid_ID and unique_filename to None
@@ -671,10 +652,6 @@ async def update_records(request):
                 sql1 += " WHERE ID=%s"
                 data1 += (patient_id,)
 
-                # UPDATE MEDICAL HISTORY RECORD
-                sql2 = "UPDATE tbl_medical_history SET Physicians_Name=%s, Present_Medical_Care=%s, q1=%s, q2=%s, q3=%s, q4=%s, q5=%s, q6=%s, q7=%s, q8=%s, q9=%s, q10=%s, q11=%s, q12=%s, q13=%s, Medical_Conditions=%s WHERE ID=%s"
-
-                data2 = (PN, PMC, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, MC, patient_id)
 
                 # UPDATE pass
 
@@ -683,7 +660,6 @@ async def update_records(request):
                 data3 = (Passw, patient_id)
 
                 await cursor.execute(sql1, data1)
-                await cursor.execute(sql2, data2)
                 await cursor.execute(sql3, data3)
 
                 # Delete the old image file if a new image was uploaded
