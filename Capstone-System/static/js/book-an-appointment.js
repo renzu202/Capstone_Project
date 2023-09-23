@@ -80,7 +80,7 @@ myForm.addEventListener("keydown", function(event) {
 
 // Tabs
 $(".tab").hide();
-$("#tab-0").show();
+$("#tab-4").show();
 
 //Tab 0 - Patient Selection
 function NP() {
@@ -769,6 +769,19 @@ function handleOption5Change() {
     } else {
         imageError.style.display = 'none';
     }
+
+     // Check the file size
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5MB in bytes
+    const fileSize = fileInput.files[0].size;
+
+    if (fileSize > maxSizeInBytes) {
+        imageError.textContent = 'File size exceeds the maximum allowed size (5MB), please upload below 5MB';
+        imageError.style.display = 'block';
+        return false;
+    } else {
+        imageError.style.display = 'none';
+    }
+
         // Proceed if all field have value
         $("#tab-4").hide();
         $("#tab-5").show();

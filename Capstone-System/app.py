@@ -16,7 +16,8 @@ from datetime import datetime, date
 
 from aiohttp import web
 
-app = web.Application()
+app = web.Application(client_max_size=1024 * 1024 * 5)  # Set a 5MB limit (adjust as needed)
+
 logging.basicConfig(level=logging.INFO)
 # Static files configuration
 static_path = os.path.join(os.path.dirname(__file__), 'static')
@@ -56,28 +57,25 @@ setup(app, EncryptedCookieStorage(secret_key))
 
 async def create_admin_credentials(app):
     admin_username = "admin"
-    admin_password = "password"
+    admin_password = "arcsdental2023!"
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(admin_password.encode('utf-8'), salt)
 
     async with aiomysql.create_pool(**db_config) as pool:
         async with pool.acquire() as conn:
             async with conn.cursor() as cursor:
+                # Delete existing admin credentials, if any
+                delete_admin_sql = "DELETE FROM admin_credentials WHERE username = %s"
+                await cursor.execute(delete_admin_sql, (admin_username,))
 
-                # Check if the admin already exists
-                check_admin_sql = "SELECT id FROM admin_credentials WHERE username = %s"
-                await cursor.execute(check_admin_sql, (admin_username,))
-                admin_exists = await cursor.fetchone()
+                # Insert new admin credentials into the table
+                insert_admin_sql = """
+                INSERT INTO admin_credentials (username, hashed_password, salt)
+                VALUES (%s, %s, %s)
+                """
+                await cursor.execute(insert_admin_sql, (admin_username, hashed_password.decode('utf-8'), salt.decode('utf-8')))
 
-                if not admin_exists:
-                    # Insert admin credentials into the table
-                    insert_admin_sql = """
-                    INSERT INTO admin_credentials (username, hashed_password, salt)
-                    VALUES (%s, %s, %s)
-                    """
-                    await cursor.execute(insert_admin_sql, (admin_username, hashed_password.decode('utf-8'), salt.decode('utf-8')))
-
-# Ensure that the admin credentials are created when the application starts
+# Ensure that the admin credentials are created or updated when the application starts
 app.on_startup.append(create_admin_credentials)
 
 async def login(request):
@@ -319,8 +317,7 @@ async def book_appointment(request):
 
                 sql5 = "INSERT INTO tbl_timeslots_booked (Appointment_Schedule) VALUES(%s)"
 
-                data1 = (strFN, strMN, strLN, strSex, intCP, strEmail, intBirth, strAge, strRlg, strNational, strHA,
-                         strPoG, intCP1, strOcp1, intDate, strDR, strDenT, strLV, unique_filename, data['appointment_schedule'], intDateCreated)
+                data1 = (strFN, strMN, strLN, strSex, intCP, strEmail, intBirth, strAge, strRlg, strNational, strHA, strPoG, intCP1, strOcp1, intDate, strDR, strDenT, strLV, unique_filename, data['appointment_schedule'], intDateCreated)
 
                 data2 = (strPName, strPMcare, strOption1, strOption2, strtb1, strOption3, strtb2, strOption4, strtb3, strOption5, strOption6, strOption7, strOption8, strOption9, strOption6_1, checkbox_string, strothers)
 
