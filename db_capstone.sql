@@ -143,7 +143,7 @@ CREATE TABLE `tbl_patient_information_record` (
   `Last_Visit` date default NULL,
   `Valid_ID` varchar(100) default NULL,
   `Appointment_Schedule` datetime default NULL,
-  `Date_Created` date default NULL,
+  `Date_Created` datetime default NULL,
   PRIMARY KEY  (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
