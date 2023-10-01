@@ -39,9 +39,6 @@
       <li class="nav-item">
         <a class="nav-link" href="/contact_us_page">CONTACT US</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/admin_dashboard_page">ADMIN</a>
-      </li>
     </ul>
   </div>
 </nav>
@@ -93,7 +90,7 @@
 
             <br><br>
                 <h4>Select Preferred Time/Date</h4>
-                             <button type="button" id="OP-AppointmentButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#calendarModal">Book Appointment</button><label style="color:red;"><--- Click Here</label>
+                             <button type="button" id="OP-AppointmentButton" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#calendarModal" style="border: 3px solid #3A3D6D;">Book Appointment</button><label style="color:red;"><--- Click Here</label>
                     <hr>
                  <br><br>
 
@@ -390,7 +387,9 @@
             </div>
 
            <div class="tab" id="tab-3">
-               <h4>MEDICAL HISTORY</h4><hr>
+               <h4>MEDICAL HISTORY</h4>
+`               <span style="font-size: 13px;">Fields containing  "<span style="color: red; font-size:15px;">*</span>" or asterisk are required.</span>`
+               <hr>
     <br><br>
     <div class="row">
     <div class="form-group col-md-6 mb-4">
@@ -726,7 +725,7 @@
 
            <div class="tab" id="tab-5">
                 <h4><span style="color: red;font-size:18px;">*</span>Select Preferred Time/Date</h4>
-                             <button type="button" id="AppointmentButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#calendarModal">Book Appointment</button><label style="color:red;"><--- Click Here</label>
+                             <button type="button" id="AppointmentButton" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#calendarModal" style="border: 3px solid #3A3D6D;">Book Appointment</button><label style="color:red;"><--- Click Here</label>
                <hr>
                  <br><br><br><br>
 
@@ -837,7 +836,7 @@
                                                 <div class="col-md-12">
                                                     <div class="form-group">
                                                         <label class="form-label">Select schedule</label>
-                                                        <button type="button" class="btn btn-primary btn-sm btn-calendar">Open Calendar</button>
+                                                        <button type="button" class="btn btn-dark btn-sm btn-calendar" style="border: 3px solid #3A3D6D;">Open Calendar</button>
                                     <hr><br>
                                             Selected schedule: <span style="color:red;" class="selected-schedule"></span>
                                                         <div class="appointment-calendar"></div>

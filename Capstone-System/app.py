@@ -596,7 +596,6 @@ async def update_records(request):
         GO = data['GO']
         PD = data['PD']
         LV = data['LV']
-        DC = data['Dc']
         Passw = data['pass']
 
         # Initialize Valid_ID and unique_filename to None
@@ -637,14 +636,14 @@ async def update_records(request):
                     old_Valid_ID = old_Valid_ID[0]
 
                 # UPDATE PATIENT INFORMATION RECORD
-                sql1 = "UPDATE tbl_patient_information_record SET First_Name=%s, Middle_Name=%s, Last_Name=%s, Sex=%s, Contact_No=%s, Email_Address=%s, Birthdate=%s, Age=%s, Religion=%s, Nationality=%s, Home_Address=%s, Parent_Name=%s, Parent_Contact_No=%s, Parent_Occupation=%s, Previous_Dentist=%s, Last_Visit=%s, Date_Created=%s"
+                sql1 = "UPDATE tbl_patient_information_record SET First_Name=%s, Middle_Name=%s, Last_Name=%s, Sex=%s, Contact_No=%s, Email_Address=%s, Birthdate=%s, Age=%s, Religion=%s, Nationality=%s, Home_Address=%s, Parent_Name=%s, Parent_Contact_No=%s, Parent_Occupation=%s, Previous_Dentist=%s, Last_Visit=%s"
 
                 # Create data1 tuple based on whether image is uploaded or not
                 if Valid_ID is not None:
                     sql1 += ", Valid_ID=%s"
-                    data1 = (FN, MN, LN, Sex, Contact_No, Email_Address, Birthdate, Age, Religion, Nationality, Home_Address, GN, GCN, GO, PD, LV, DC, Valid_ID)
+                    data1 = (FN, MN, LN, Sex, Contact_No, Email_Address, Birthdate, Age, Religion, Nationality, Home_Address, GN, GCN, GO, PD, LV, Valid_ID)
                 else:
-                    data1 = (FN, MN, LN, Sex, Contact_No, Email_Address, Birthdate, Age, Religion, Nationality, Home_Address, GN, GCN, GO, PD, LV, DC)
+                    data1 = (FN, MN, LN, Sex, Contact_No, Email_Address, Birthdate, Age, Religion, Nationality, Home_Address, GN, GCN, GO, PD, LV)
 
                 sql1 += " WHERE ID=%s"
                 data1 += (patient_id,)
