@@ -1,3 +1,10 @@
+{% if not user_authenticated %}
+    <script>
+        // Redirect the user to the login page if they are not authenticated
+        window.location.href = "/admin_login_page";
+    </script>
+{% endif %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

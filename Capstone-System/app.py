@@ -172,7 +172,15 @@ async def admin_dashboard_page(request):
 
 
 async def admin_calendar_page(request):
-    return aiohttp_jinja2.render_template('admin-calendar.html', request, {})
+    session = await get_session(request)
+    user_id = session.get('user_id')
+
+    if user_id:
+        # User is authenticated, allow access to the admin dashboard page
+        return aiohttp_jinja2.render_template('admin-calendar.html', request, {'user_authenticated': True})
+
+    # User is not authenticated, render the admin login page without redirecting
+    return aiohttp_jinja2.render_template('admin-login.html', request, {'user_authenticated': False})
 
 async def admin_login_page(request):
     return aiohttp_jinja2.render_template('admin-login.html', request, {})
@@ -226,6 +234,10 @@ async def get_all_email_addresses(request):
         return web.json_response({'error': str(e)}, status=500)
 
 async def admin_AandM_page(request):
+
+    session = await get_session(request)
+    user_id = session.get('user_id')
+
     async with request.app['db_pool'].acquire() as conn:
         async with conn.cursor() as cursor:
             await cursor.execute("SELECT * FROM tbl_appointments")
@@ -234,7 +246,12 @@ async def admin_AandM_page(request):
             await cursor.execute("SELECT * FROM tbl_messages")
             MessInfo = await cursor.fetchall()
 
-            return aiohttp_jinja2.render_template('admin-A&M.html', request, {'AptInfo': AptInfo, 'MessInfo': MessInfo})
+            if user_id:
+                # User is authenticated, allow access to the admin dashboard page
+                return aiohttp_jinja2.render_template('admin-A&M.html', request, {'user_authenticated': True, 'AptInfo': AptInfo, 'MessInfo': MessInfo})
+
+    # User is not authenticated, render the admin login page without redirecting
+    return aiohttp_jinja2.render_template('admin-login.html', request, {'user_authenticated': False})
 
 async def book_appointment(request):
     async with request.app['db_pool'].acquire() as conn:
@@ -440,6 +457,10 @@ async def send_message(request):
 
 
 async def admin_tables_page(request):
+
+    session = await get_session(request)
+    user_id = session.get('user_id')
+
     async with request.app['db_pool'].acquire() as conn:
         async with conn.cursor() as cursor:
             await cursor.execute("SELECT * FROM tbl_patient_information_record")
@@ -448,8 +469,12 @@ async def admin_tables_page(request):
             await cursor.execute("SELECT * FROM tbl_medical_history")
             medicalInfo = await cursor.fetchall()
 
-            return aiohttp_jinja2.render_template('admin-tables.html', request, {'personalInfo': personalInfo, 'medicalInfo': medicalInfo})
+            if user_id:
+                # User is authenticated, allow access to the admin dashboard page
+                return aiohttp_jinja2.render_template('admin-tables.html', request, {'user_authenticated': True, 'personalInfo': personalInfo, 'medicalInfo': medicalInfo})
 
+    # User is not authenticated, render the admin login page without redirecting
+    return aiohttp_jinja2.render_template('admin-login.html', request, {'user_authenticated': False})
 
 async def get_image_url(request):
     user_id = request.query.get('id')
@@ -531,6 +556,9 @@ async def read_one_treatment(request):
         patient_id = request.match_info['id']
         logging.info(f"Patient ID: {patient_id}")
 
+        session = await get_session(request)
+        user_id = session.get('user_id')
+
         async with request.app['db_pool'].acquire() as conn:
             async with conn.cursor() as cursor:
                 await cursor.execute("SELECT * FROM tbl_patient_information_record WHERE id=%s", patient_id)
@@ -540,19 +568,21 @@ async def read_one_treatment(request):
                 await cursor.execute("SELECT * FROM tbl_treatment_record WHERE ID=%s", patient_id)
                 treatment_records = await cursor.fetchall()
 
-                if row:
-                    return aiohttp_jinja2.render_template('treatment-records.html', request, {'row': row, 'treatment_records': treatment_records})
-                else:
-                    return web.Response(text='Error loading #{id}'.format(id=patient_id))
+                if user_id:
+                    # User is authenticated, allow access to the admin dashboard page
+                    return aiohttp_jinja2.render_template('treatment-records.html', request, {'user_authenticated': True, 'row': row, 'treatment_records': treatment_records})
 
     except Exception as e:
-        print(e)
-        return web.Response(text='Error while loading treatment records')
+        # User is not authenticated, render the admin login page without redirecting
+        return aiohttp_jinja2.render_template('admin-login.html', request, {'user_authenticated': False})
 
 async def edit_one_record(request):
     try:
         patient_id = request.match_info['id']
         logging.info(f"Patient ID: {patient_id}")
+
+        session = await get_session(request)
+        user_id = session.get('user_id')
 
         async with request.app['db_pool'].acquire() as conn:
             async with conn.cursor() as cursor:
@@ -562,14 +592,16 @@ async def edit_one_record(request):
                 await cursor.execute("SELECT * FROM tbl_verification WHERE ID=%s", patient_id)
                 VF = await cursor.fetchone()
 
-                if PIR:
-                    return aiohttp_jinja2.render_template('edit-records.html', request, {'PIR': PIR, 'VF': VF})
-                else:
-                    return web.Response(text='Error loading #{id}'.format(id=patient_id))
+                if user_id:
+                    # User is authenticated, allow access to the admin dashboard page
+                    return aiohttp_jinja2.render_template('edit-records.html', request, {'user_authenticated': True, 'PIR': PIR, 'VF': VF})
 
     except Exception as e:
         print(e)
         return web.Response(text='Error while loading records')
+
+    # User is not authenticated, render the admin login page without redirecting
+    return aiohttp_jinja2.render_template('admin-login.html', request, {'user_authenticated': False})
 
 async def update_records(request):
     try:
