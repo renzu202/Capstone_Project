@@ -22,11 +22,21 @@ DROP TABLE IF EXISTS `admin_credentials`;
 
 CREATE TABLE `admin_credentials` (
   `id` int(11) NOT NULL auto_increment,
-  `username` varchar(100) NOT NULL default '',
+  `username` varchar(50) NOT NULL default '',
   `hashed_password` varchar(255) NOT NULL,
-  `salt` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `secretary_credentials` */
+
+DROP TABLE IF EXISTS `secretary_credentials`;
+
+CREATE TABLE `secretary_credentials` (
+  `id` int(11) NOT NULL auto_increment,
+  `username` varchar(50) NOT NULL,
+  `hashed_password` varchar(200) NOT NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Table structure for table `tbl_admin_date` */
@@ -124,7 +134,7 @@ DROP TABLE IF EXISTS `tbl_patient_information_record`;
 CREATE TABLE `tbl_patient_information_record` (
   `ID` int(100) NOT NULL auto_increment,
   `First_Name` varchar(100) default NULL,
-  `Middle_Name` varchar(100) default NULL,
+  `Middle_Name` varchar(100) NOT NULL,
   `Last_Name` varchar(100) default NULL,
   `Sex` varchar(50) default NULL,
   `Contact_No` varchar(11) default NULL,
@@ -140,6 +150,8 @@ CREATE TABLE `tbl_patient_information_record` (
   `Date` date default NULL,
   `Dental_Reason` varchar(200) default NULL,
   `Previous_Dentist` varchar(50) default NULL,
+  `Dentist_Contact` varchar(11) default NULL,
+  `Dentist_License` varchar(50) default NULL,
   `Last_Visit` date default NULL,
   `Valid_ID` varchar(100) default NULL,
   `Appointment_Schedule` datetime default NULL,
