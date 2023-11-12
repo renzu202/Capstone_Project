@@ -308,14 +308,20 @@ ageInput.addEventListener("blur", function() {
         historyCheckbox.addEventListener("change", function() {
         var prevDenInput = document.getElementById("Dentist");
         var lastVisitInput = document.getElementById("LastVisit");
+        var CNPDInput = document.getElementById("CNPD");
+        var LNPDInput = document.getElementById("LNPD");
 
             if (historyCheckbox.checked) {
                 historySection.style.display = "block";
                 prevDenInput.value = "";
+                CNPDInput.value = "";
+                LNPDInput.value = "";
                 lastVisitInput.value = "";
             } else {
                 historySection.style.display = "none";
                 prevDenInput.value = "N/A";
+                CNPDInput.value = "N/A";
+                LNPDInput.value = "N/A";
                 lastVisitInput.value = "1111-11-11";
             }
         });
@@ -336,7 +342,6 @@ function validateDate(input) {
 
     function NextVal1() {
         var FN = document.getElementById("FirstName").value;
-        var MN = document.getElementById("MiddleName").value;
         var LN = document.getElementById("LastName").value;
         var Sex = document.getElementById("Sex").value;
         var CN1 = document.getElementById("Contact").value;
@@ -349,6 +354,7 @@ function validateDate(input) {
         var CN2 = document.getElementById("Contact2").value;
         var Reason = document.getElementById("Reason").value;
         var PD = document.getElementById("Dentist").value;
+        var CNPD = document.getElementById("CNPD").value;
         var LV = document.getElementById("LastVisit").value;
         var q7input = document.getElementById("inlineRadio14");
         var q8input = document.getElementById("inlineRadio16");
@@ -364,13 +370,6 @@ function validateDate(input) {
             document.getElementById("FNval").innerHTML = "";
         }
 
-        if (MN === "") {
-            document.getElementById("MNval").innerHTML = "*This field is required";
-            return false;
-        }
-        else {
-            document.getElementById("MNval").innerHTML = "";
-        }
 
         if (LN === "") {
             document.getElementById("LNval").innerHTML = "*This field is required";
@@ -527,6 +526,14 @@ function validateDate(input) {
         }
         else {
             document.getElementById("PDval").innerHTML = "";
+        }
+
+        if (CNPD === "") {
+            document.getElementById("CNPDval").innerHTML = "*This field is required";
+            return false;
+        }
+        else {
+            document.getElementById("CNPDval").innerHTML = "";
         }
 
         if (LV === "") {
@@ -890,6 +897,11 @@ submitBtn.addEventListener('click', async (event) => {
         const otherValue = otherField.value.trim();
         const strothers = otherValue !== '' ? otherValue : 'N/A';
 
+        // Handle Middle Name field
+        const MiddleField = document.getElementById('MiddleName');
+        const MiddleValue = MiddleField.value.trim();
+        const strMiddle = MiddleValue !== '' ? MiddleValue : '';
+
                 // Handle Religion field
         const religionField = document.getElementById('Religion');
         const strRlg = religionField.value.trim();
@@ -905,22 +917,29 @@ submitBtn.addEventListener('click', async (event) => {
         const strOcp1 = occupation2Field.value.trim();
         const strOccupation2 = strOcp1 !== '' ? strOcp1 : 'N/A';
 
+        // Handle License field
+        const LNPDField = document.getElementById('LNPD');
+        const strLNPD = LNPDField.value.trim();
+        const strLNPD2 = strLNPD !== '' ? strLNPD : 'N/A';
+
         // Handle PName field
         const pNameField = document.getElementById('PName');
         const strPName = pNameField.value.trim();
         const strPatientName = strPName !== '' ? strPName : 'N/A';
 
-// Handle PMCare field
-const pmCareField = document.getElementById('PMCare');
-const strPMcare = pmCareField.value.trim();
-const strPMCare = strPMcare !== '' ? strPMcare : 'N/A';
+        // Handle PMCare field
+        const pmCareField = document.getElementById('PMCare');
+        const strPMcare = pmCareField.value.trim();
+        const strPMCare = strPMcare !== '' ? strPMcare : 'N/A';
 
         // Set the modified values to the form fields
         formData.set('checkbox_field', checkboxString);
         formData.set('Other', strothers);
+        formData.set('MiddleName', strMiddle)
         formData.set('Religion', strReligion);
         formData.set('Nationality', strNationality);
         formData.set('Occupation2', strOccupation2);
+        formData.set('LNPD', strLNPD2);
         formData.set('PName', strPatientName);
         formData.set('PMCare', strPMCare);
 

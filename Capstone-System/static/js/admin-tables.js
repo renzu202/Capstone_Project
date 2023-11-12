@@ -71,6 +71,8 @@ $(document).ready(function() {
         var datetoday = $(this).data('datetoday');
         var reason = $(this).data('reason');
         var pdentist = $(this).data('pdentist');
+        var cndentist = $(this).data('cndentist');
+        var lndentist = $(this).data('lndentist');
         var ldental = $(this).data('ldental');
         var pname = $(this).data('pname');
         var pmedical = $(this).data('pmedical');
@@ -127,6 +129,8 @@ $(document).ready(function() {
             <p>DENTAL HISTORY</span></p>
             <p><strong>Previous Dentist Dr.:</strong><span> ${pdentist}</span></p>
             <p><strong>Last Dental Visit:</strong><span> ${ldental}</span></p>
+            <p><strong>Contact No. of Previous Dentist:</strong><span> ${cndentist}</span></p>
+            <p><strong>License No. of Previous  Dentist:</strong><span> ${lndentist}</span></p>
             <br>
             </div>
             <div class="col-sm-6 column-right">

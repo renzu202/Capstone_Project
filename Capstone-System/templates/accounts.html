@@ -82,18 +82,15 @@
 </div>
     <div class="container-xl">
   <hr>
+
+<div class="row">
+<div class="col-sm-6">
       <div class="table-responsive mb-4">
         <div class="table-wrapper">
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-8">
-                        <h2><b>Appointments</b></h2>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="search-box">
-                            <i class="material-icons">&#xE8B6;</i>
-                            <input type="text" id="searchInput" class="form-control" placeholder="Search&hellip;">
-                        </div>
+                        <h2><b>Admin</b></h2>
                     </div>
                 </div>
             </div>
@@ -101,31 +98,18 @@
                 <table class="table table-striped table-hover table-bordered" id="AppointmentTable">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Email Address</th>
-                            <th>Schedule</th>
+                            <th>Username</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for Aptdata in AptInfo %}
+                        {% for adminData in adminInfo %}
                         <tr>
-                            <td>{{ Aptdata[3] }}, {{ Aptdata[1] }} {{ Aptdata[2] }}</td>
-                            <td>{{ Aptdata[4] }}</td>
-                            <td>{{ Aptdata[5] }}</td>
+                            <td>{{ adminData[1] }}</td>
                             <td>
                      <div class="d-flex">
-                    <a href="#" class="view" title="View Dental Reason" data-bs-toggle="modal" data-bs-target="#ReasonModal" data-dental="{{ Aptdata[6] }}">
-                        <i class="bi bi-eye-fill"></i>
-                    </a>
-                    <a href="#" class="view" title="Enable Timeslot" data-bs-toggle="modal" data-bs-target="#EnableCon" data-patient-id="{{ Aptdata[0] }}">
-                        <i class="fa-solid fa-clock" style="color: #2b2b27;"></i>
-                    </a>
-                    <a href="/finish_appointment/{{ Aptdata[0] }}" class="complete" title="Finish Appointment">
-                    <i class="fa-solid fa-flag-checkered" style="color:green;"></i>
-                    </a>
-                    <a href="/delete_appointment/{{ Aptdata[0] }}" class="delete" title="Cancel Appointment" onclick="return confirm('Are you sure you want to cancel this appointment?');">
-                        <i class="fa-solid fa-ban" style="color:red;"></i>
+                    <a href="#" class="view" title="Update Admin Credentials" data-bs-toggle="modal" data-bs-target="#editAdminModal" onclick="updateAdminRecord({{ adminData[0] }}, '{{ adminData[1] }}')">
+                       <i class="fa-solid fa-pencil"></i>
                     </a>
                      </div>
                             </td>
@@ -136,19 +120,14 @@
             </div>
         </div>
     </div>
-    <hr>
+</div>
+<div class="col-sm-6">
            <div class="table-responsive">
         <div class="table-wrapper">
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-8">
-                        <h2><b>Messages</b></h2>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="search-box">
-                            <i class="material-icons">&#xE8B6;</i>
-                            <input type="text" id="searchMessageInput" class="form-control" placeholder="Search&hellip;">
-                        </div>
+                        <h2><b>Secretary</b></h2>
                     </div>
                 </div>
             </div>
@@ -156,27 +135,20 @@
                 <table class="table table-striped table-hover table-bordered" id="MessageTable">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Email Address</th>
-                            <th>Subject</th>
+                            <th>Username</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for Messdata in MessInfo %}
+                        {% for secData in secInfo %}
                         <tr>
-                            <td>{{ Messdata[3] }}, {{ Messdata[1] }} {{ Messdata[2] }}</td>
-                            <td>{{ Messdata[4] }}</td>
-                            <td>{{ Messdata[5] }}</td>
+                            <td>{{ secData[1] }}</td>
                             <td>
-                    <a href="#" class="view" title="View Message" data-bs-toggle="modal" data-bs-target="#messageModal"
-                       data-mess="{{ Messdata[6] }}">
-                       <i class="fa-regular fa-message"></i>
+                     <div class="d-flex">
+                    <a href="#" class="view" title="Update Secretary Credentials" data-bs-toggle="modal" data-bs-target="#editSecModal" onclick="updateSecRecord({{ secData[0] }}, '{{ secData[1] }}')">
+                       <i class="fa-solid fa-pencil"></i>
                     </a>
-                    <a href="/delete_message/{{ Messdata[0] }}" class="delete" title="Delete Message" onclick="return confirm('Are you sure you want to delete this message?');">
-                        <i class="material-icons">&#xE872;</i>
-                    </a>
-
+                     </div>
                             </td>
                         </tr>
                         {% endfor %}
@@ -185,86 +157,80 @@
             </div>
         </div>
     </div>
-        <hr>
-    <div class="container d-flex justify-content-center">
-        <div class="row d-flex">
-            <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-6 ddl">
-                            <label style="color:green;">Completed Appointments</label>
-                            <button type="button" style="border: 3px solid #3A3D6D;" class="btn btn-dark" id="clearCompletedAppointments">Clear Completed Appointments</button>
-                            <hr>
-                            <ul id="completed-appointment-list"></ul>
-                        </div>
-                          <div class="col-md-6 drs">
-                            <label style="color:red;">Canceled Appointments</label>
-                            <button type="button" style="border: 3px solid #3A3D6D;" class="btn btn-dark" id="clearCanceledAppointments">Clear Canceled Appointments</button>
-                            <hr>
-                            <ul id="canceled-appointment-list"></ul>
-                        </div>
+</div>
+</div>
+</div>
+
+<!-- Update Admin Credentials Modal -->
+<div class="modal fade" id="editAdminModal" tabindex="-1" role="dialog" aria-labelledby="editAdminModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editAdminModalLabel">Update Admin</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!--Form -->
+                <form action="/update_admin_credentials" method="POST" enctype="multipart/form-data" id="edit-form-wrapper" name="edit-form-wrapper">
+                    <!-- Hidden input for record ID -->
+                    <input type="number" name="adminID" id="edit-id-admin" style="display:none">
+
+                    <!-- Edit fields with distinct IDs -->
+                    <div class="form-group">
+                      <label for="edit-username-admin">Username:</label>
+                      <input type="text" class="form-control" name="adminUser" id="edit-username-admin" placeholder="enter username" required>
                     </div>
-                </div>
-          </div>
-    </div>
-
-<!--Enable Confirmation Modal-->
-    <div class="modal fade" id="EnableCon" tabindex="-1" role="dialog" aria-labelledby="EnableModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="EnableModalLabel">Enable Timeslot</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"></span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>This will enable the timeslot of this patient from calendar but will not cancel the appointment.</p>
-                <br>
-                <p style="color:red;">Warning:</p>
-                <p>Disabling and Enabling it again will need to do manually from clinic calendar.</p>
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-             <a href="#" class="btn btn-danger" id="confirm_enable_button">Yes</a>
+                    <br>
+                    <div class="form-group">
+                        <label for="edit-password-admin">New Password:</label>
+                        <input  type="text" class="form-control" name="adminPass" id="edit-password-admin" placeholder="enter password" required>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <button type="submit" class="form-control btn btn-primary mb-2" id="admin-btnSubmit">SAVE</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
-<!--View Message Modal-->
-    <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
+<!-- Update Sec Credentials Modal -->
+<div class="modal fade" id="editSecModal" tabindex="-1" role="dialog" aria-labelledby="editAdminModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="messageModalLabel">View Message</h5>
+                <h5 class="modal-title" id="editSecModalLabel">Update Secretary</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"></span>
                 </button>
             </div>
             <div class="modal-body">
-                <!--Content-->
+                <!--Form -->
+                <form action="/update_secretary_credentials" method="POST" enctype="multipart/form-data" id="edit-form-wrapper-sec" name="edit-form-wrapper">
+                    <!-- Hidden input for record ID -->
+                    <input type="number" name="secID" id="edit-id-sec" style="display:none">
+
+                    <!-- Edit fields with distinct IDs -->
+                    <div class="form-group">
+                      <label for="edit-username-admin">Username:</label>
+                      <input type="text" class="form-control" name="secUser" id="edit-username-sec" placeholder="enter username" required>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="edit-password-admin">New Password:</label>
+                        <input  type="text" class="form-control" name="secPass" id="edit-password-sec" placeholder="enter password" required>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <button type="submit" class="form-control btn btn-primary mb-2" id="sec-btnSubmit">SAVE</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
-
-<!--View Dental Reason Modal-->
-    <div class="modal fade" id="ReasonModal" tabindex="-1" role="dialog" aria-labelledby="ReasonModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="ReasonModalLabel">Reason for dental consultation</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"></span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!--Content-->
-            </div>
-        </div>
-    </div>
-</div>
-
 </div>
 
 <!-- Jquery -->
@@ -276,6 +242,6 @@
 <!-- moment js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 <!-- JS -->
-<script src="/static/js/admin-A&M.js" crossorigin="anonymous"></script>
+<script src="/static/js/admin-account.js" crossorigin="anonymous"></script>
 </body>
 </html>

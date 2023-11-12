@@ -44,13 +44,13 @@
 <div class="container-xl">
   <div class="row justify-content-center">
     <div class="col-md-2">
-      <a href="/admin_dashboard_page"><button class="btn btn-dark custom-tabs" style="height:40px;width:170px;">
+      <a href="/admin_dashboard_page"><button class="btn btn-dark custom-tabs" style="height:40px;border: 2px solid #E1E4E0;width:170px;">
         <i class="fa fa-tachometer mb-3" aria-hidden="true"></i>
         Dashboard
       </button></a>
     </div>
     <div class="col-md-2">
-      <a href="/admin_tables_page"><button class="btn btn-dark custom-tabs" style="height:40px;border: 2px solid #E1E4E0;width:170px;">
+      <a href="/admin_tables_page"><button class="btn btn-dark custom-tabs" style="height:40px;width:170px;">
         <i class="fa fa-users mb-3" aria-hidden="true"></i>
         Patient Records
       </button></a>
@@ -67,7 +67,13 @@
         Appointments & Messages
       </button></a>
     </div>
-  <div class="col-md-2">
+    <div class="col-md-2">
+      <a href="/admin_account_page"><button class="btn btn-dark custom-tabs" style="height:40px;">
+        <i class="fa fa-paper-plane mb-3" aria-hidden="true"></i>
+        Accounts
+      </button></a>
+    </div>
+  <div class="col-md-1">
   <form method="get" action="/logout">
     <button class="btn btn-dark" style="width:100px; height:auto;border-radius:10px;border-width:5px;border: 3px solid #3A3D6D;" type="submit">Log Out</button>
   </form>
@@ -126,9 +132,11 @@
                        data-datetoday="{{ PIdata[15] }}"
                        data-reason="{{ PIdata[16] }}"
                        data-pdentist="{{ PIdata[17] }}"
-                       data-ldental="{{ PIdata[18] }}"
-                       data-image="{{ PIdata[19] }}"
-                       data-created="{{ PIdata[21] }}"
+                       data-cndentist="{{ PIdata[18] }}"
+                       data-lndentist="{{ PIdata[19] }}"
+                       data-ldental="{{ PIdata[20] }}"
+                       data-image="{{ PIdata[21] }}"
+                       data-created="{{ PIdata[22] }}"
                        data-pname="{{ medicalInfo[loop.index0][1] }}"
                        data-pmedical="{{ medicalInfo[loop.index0][2] }}"
                        data-q1="{{ medicalInfo[loop.index0][3] }}"

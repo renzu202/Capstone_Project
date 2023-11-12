@@ -37,6 +37,37 @@ db_config = {
 async def create_pool(app):
     app['db_pool'] = await aiomysql.create_pool(**db_config)
 
+    # Check if the 'admin_credentials' table is empty, and if so, insert an initial record
+    async with app['db_pool'].acquire() as conn:
+        async with conn.cursor() as cursor:
+            # Check if there are any records in the 'admin_credentials' table
+            await cursor.execute("SELECT COUNT(*) FROM admin_credentials")
+            admin_count = await cursor.fetchone()
+
+            # Check if there are any records in the 'secretary_credentials' table
+            await cursor.execute("SELECT COUNT(*) FROM secretary_credentials")
+            secretary_count = await cursor.fetchone()
+
+            if admin_count[0] == 0:  # The 'admin_credentials' table is empty
+                # Insert an initial record for admin
+                initial_admin_username = 'admin'
+                initial_admin_password = 'arcsdental2023!'  # Set this to a secure initial password
+                hashed_admin_password = bcrypt.hashpw(initial_admin_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+                admin_insert_query = "INSERT INTO admin_credentials (username, hashed_password) VALUES (%s, %s)"
+                await cursor.execute(admin_insert_query, (initial_admin_username, hashed_admin_password))
+
+            if secretary_count[0] == 0:  # The 'secretary_credentials' table is empty
+                # Insert an initial record for secretary
+                initial_secretary_username = 'secretary'
+                initial_secretary_password = 'arcsdental2023!'  # Set this to a secure initial password
+                hashed_secretary_password = bcrypt.hashpw(initial_secretary_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+                secretary_insert_query = "INSERT INTO secretary_credentials (username, hashed_password) VALUES (%s, %s)"
+                await cursor.execute(secretary_insert_query, (initial_secretary_username, hashed_secretary_password))
+
+
+
 
 async def close_pool(app):
     app['db_pool'].close()
@@ -55,29 +86,6 @@ print(key.decode())
 secret_key = key_bytes
 setup(app, EncryptedCookieStorage(secret_key))
 
-async def create_admin_credentials(app):
-    admin_username = "admin"
-    admin_password = "arcsdental2023!"
-    salt = bcrypt.gensalt()
-    hashed_password = bcrypt.hashpw(admin_password.encode('utf-8'), salt)
-
-    async with aiomysql.create_pool(**db_config) as pool:
-        async with pool.acquire() as conn:
-            async with conn.cursor() as cursor:
-                # Delete existing admin credentials, if any
-                delete_admin_sql = "DELETE FROM admin_credentials WHERE username = %s"
-                await cursor.execute(delete_admin_sql, (admin_username,))
-
-                # Insert new admin credentials into the table
-                insert_admin_sql = """
-                INSERT INTO admin_credentials (username, hashed_password, salt)
-                VALUES (%s, %s, %s)
-                """
-                await cursor.execute(insert_admin_sql, (admin_username, hashed_password.decode('utf-8'), salt.decode('utf-8')))
-
-# Ensure that the admin credentials are created or updated when the application starts
-app.on_startup.append(create_admin_credentials)
-
 async def login(request):
     if request.method == 'POST':
         data = await request.post()
@@ -86,20 +94,19 @@ async def login(request):
 
         async with request.app['db_pool'].acquire() as conn:
             async with conn.cursor() as cursor:
-                # Retrieve the hashed password and salt based on the provided username
-                query = "SELECT hashed_password, salt FROM admin_credentials WHERE username = %s"
+                # Retrieve the hashed password based on the provided username
+                query = "SELECT hashed_password FROM admin_credentials WHERE username = %s"
                 await cursor.execute(query, (username,))
                 result = await cursor.fetchone()
 
                 if result:
                     stored_hashed_password = result[0]
-                    salt = result[1]
 
                     # Verify the entered password
                     if bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
                         # Password is correct, set a session cookie with the username
                         session = await get_session(request)
-                        session['user_id'] = username  # Set the user_id in the session
+                        session['admin_id'] = username  # Set the admin_id in the session
                         # Set user_authenticated to True to indicate a successful login
                         user_authenticated = True
                         return aiohttp_jinja2.render_template('admin-dashboard.html', request, {'user_authenticated': user_authenticated})
@@ -114,15 +121,57 @@ async def login(request):
     # Handle GET requests, render the login form
     return aiohttp_jinja2.render_template('admin-login.html', request, {'error': False, 'success': False})
 
+async def login_sec(request):
+    if request.method == 'POST':
+        data = await request.post()
+        username = data.get('username')
+        password = data.get('password')
+
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                # Retrieve the hashed password based on the provided username
+                query = "SELECT hashed_password FROM secretary_credentials WHERE username = %s"
+                await cursor.execute(query, (username,))
+                result = await cursor.fetchone()
+
+                if result:
+                    stored_hashed_password = result[0]
+
+                    # Verify the entered password
+                    if bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
+                        # Password is correct, set a session cookie with the username
+                        session = await get_session(request)
+                        session['sec_id'] = username  # Set the admin_id in the session
+                        # Set user_authenticated to True to indicate a successful login
+                        user_authenticated = True
+                        return aiohttp_jinja2.render_template('secretary-dashboard.html', request, {'user_authenticated': user_authenticated})
+
+                    else:
+                        # Invalid password, redirect to error page
+                        return aiohttp_jinja2.render_template('secretary-login.html', request, {'error': True})
+                else:
+                    # Admin not found, redirect to error page
+                    return aiohttp_jinja2.render_template('secretary-login.html', request, {'error': True})
+
+    # Handle GET requests, render the login form
+    return aiohttp_jinja2.render_template('secretary-login.html', request, {'error': False, 'success': False})
 
 
 async def logout(request):
     # Remove the user's session or any necessary logout logic
     session = await get_session(request)
-    session.pop('user_id', None)  # Remove the user_id from the session
+    session.pop('admin_id', None)  # Remove the admin_id from the session
 
     # Redirect to the login page or another appropriate page after logout
     return web.HTTPFound('/admin_login_page')  # Redirect to the login page
+
+async def sec_logout(request):
+    # Remove the user's session or any necessary logout logic
+    session = await get_session(request)
+    session.pop('sec_id', None)  # Remove the admin_id from the session
+
+    # Redirect to the login page or another appropriate page after logout
+    return web.HTTPFound('/secretary_login_page')  # Redirect to the login page
 
 # Endpoint for validating email and password
 async def validate_email_and_pin(request):
@@ -161,29 +210,54 @@ async def book_an_appointment_page(request):
 
 async def admin_dashboard_page(request):
     session = await get_session(request)
-    user_id = session.get('user_id')
+    admin_id = session.get('admin_id')
 
-    if user_id:
+    if admin_id:
         # User is authenticated, allow access to the admin dashboard page
         return aiohttp_jinja2.render_template('admin-dashboard.html', request, {'user_authenticated': True})
 
     # User is not authenticated, render the admin login page without redirecting
     return aiohttp_jinja2.render_template('admin-login.html', request, {'user_authenticated': False})
 
+async def secretary_dashboard_page(request):
+    session = await get_session(request)
+    sec_id = session.get('sec_id')
+
+    if sec_id:
+        # User is authenticated, allow access to the admin dashboard page
+        return aiohttp_jinja2.render_template('secretary-dashboard.html', request, {'user_authenticated': True})
+
+    # User is not authenticated, render the admin login page without redirecting
+    return aiohttp_jinja2.render_template('secretary-login.html', request, {'user_authenticated': False})
+
 
 async def admin_calendar_page(request):
     session = await get_session(request)
-    user_id = session.get('user_id')
+    admin_id = session.get('admin_id')
 
-    if user_id:
+    if admin_id:
         # User is authenticated, allow access to the admin dashboard page
         return aiohttp_jinja2.render_template('admin-calendar.html', request, {'user_authenticated': True})
 
     # User is not authenticated, render the admin login page without redirecting
     return aiohttp_jinja2.render_template('admin-login.html', request, {'user_authenticated': False})
 
+async def secretary_calendar_page(request):
+    session = await get_session(request)
+    sec_id = session.get('sec_id')
+
+    if sec_id:
+        # User is authenticated, allow access to the admin dashboard page
+        return aiohttp_jinja2.render_template('secretary-calendar.html', request, {'user_authenticated': True})
+
+    # User is not authenticated, render the admin login page without redirecting
+    return aiohttp_jinja2.render_template('secretary-login.html', request, {'user_authenticated': False})
+
 async def admin_login_page(request):
     return aiohttp_jinja2.render_template('admin-login.html', request, {})
+
+async def secretary_login_page(request):
+    return aiohttp_jinja2.render_template('secretary-login.html', request, {})
 
 async def verify_timeslot(request):
     try:
@@ -236,7 +310,7 @@ async def get_all_email_addresses(request):
 async def admin_AandM_page(request):
 
     session = await get_session(request)
-    user_id = session.get('user_id')
+    admin_id = session.get('admin_id')
 
     async with request.app['db_pool'].acquire() as conn:
         async with conn.cursor() as cursor:
@@ -246,12 +320,52 @@ async def admin_AandM_page(request):
             await cursor.execute("SELECT * FROM tbl_messages")
             MessInfo = await cursor.fetchall()
 
-            if user_id:
+            if admin_id:
                 # User is authenticated, allow access to the admin dashboard page
                 return aiohttp_jinja2.render_template('admin-A&M.html', request, {'user_authenticated': True, 'AptInfo': AptInfo, 'MessInfo': MessInfo})
 
     # User is not authenticated, render the admin login page without redirecting
     return aiohttp_jinja2.render_template('admin-login.html', request, {'user_authenticated': False})
+
+async def admin_account_page(request):
+
+    session = await get_session(request)
+    admin_id = session.get('admin_id')
+
+    async with request.app['db_pool'].acquire() as conn:
+        async with conn.cursor() as cursor:
+            await cursor.execute("SELECT * FROM admin_credentials")
+            adminInfo = await cursor.fetchall()
+
+            await cursor.execute("SELECT * FROM secretary_credentials")
+            secInfo = await cursor.fetchall()
+
+            if admin_id:
+                # User is authenticated, allow access to the admin dashboard page
+                return aiohttp_jinja2.render_template('accounts.html', request, {'user_authenticated': True, 'adminInfo': adminInfo, 'secInfo': secInfo})
+
+    # User is not authenticated, render the admin login page without redirecting
+    return aiohttp_jinja2.render_template('admin-login.html', request, {'user_authenticated': False})
+
+async def secretary_AandM_page(request):
+
+    session = await get_session(request)
+    sec_id = session.get('sec_id')
+
+    async with request.app['db_pool'].acquire() as conn:
+        async with conn.cursor() as cursor:
+            await cursor.execute("SELECT * FROM tbl_appointments")
+            AptInfo = await cursor.fetchall()
+
+            await cursor.execute("SELECT * FROM tbl_messages")
+            MessInfo = await cursor.fetchall()
+
+            if sec_id:
+                # User is authenticated, allow access to the admin dashboard page
+                return aiohttp_jinja2.render_template('secretary-A&M.html', request, {'user_authenticated': True, 'AptInfo': AptInfo, 'MessInfo': MessInfo})
+
+    # User is not authenticated, render the admin login page without redirecting
+    return aiohttp_jinja2.render_template('secretary-login.html', request, {'user_authenticated': False})
 
 async def book_appointment(request):
     async with request.app['db_pool'].acquire() as conn:
@@ -279,6 +393,8 @@ async def book_appointment(request):
                 intDate = data['CDate']
                 strDR = data['Reason']
                 strDenT = data['Dentist']
+                strCNPD = data['CNPD']
+                strLNPD = data['LNPD']
                 strLV = data['LastVisit']
 
                 strPName = data['PName']
@@ -322,7 +438,7 @@ async def book_appointment(request):
 
                 # SAVE RECORD TO DATABASE
                 sql1 = "INSERT INTO tbl_patient_information_record \
-                   (First_Name, Middle_Name, Last_Name, Sex, Contact_No, Email_Address, Birthdate, Age, Religion, Nationality, Home_Address, Parent_Name, Parent_Contact_No, Parent_Occupation, Date, Dental_Reason, Previous_Dentist, Last_Visit, Valid_ID, Appointment_Schedule, Date_Created) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                   (First_Name, Middle_Name, Last_Name, Sex, Contact_No, Email_Address, Birthdate, Age, Religion, Nationality, Home_Address, Parent_Name, Parent_Contact_No, Parent_Occupation, Date, Dental_Reason, Previous_Dentist, Dentist_Contact, Dentist_License, Last_Visit, Valid_ID, Appointment_Schedule, Date_Created) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
                 sql2 = "INSERT INTO tbl_medical_history \
                     (Physicians_Name, Present_Medical_Care, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, \
@@ -334,7 +450,7 @@ async def book_appointment(request):
 
                 sql5 = "INSERT INTO tbl_timeslots_booked (Appointment_Schedule) VALUES(%s)"
 
-                data1 = (strFN, strMN, strLN, strSex, intCP, strEmail, intBirth, strAge, strRlg, strNational, strHA, strPoG, intCP1, strOcp1, intDate, strDR, strDenT, strLV, unique_filename, data['appointment_schedule'], intDateCreated)
+                data1 = (strFN, strMN, strLN, strSex, intCP, strEmail, intBirth, strAge, strRlg, strNational, strHA, strPoG, intCP1, strOcp1, intDate, strDR, strDenT, strCNPD, strLNPD, strLV, unique_filename, data['appointment_schedule'], intDateCreated)
 
                 data2 = (strPName, strPMcare, strOption1, strOption2, strtb1, strOption3, strtb2, strOption4, strtb3, strOption5, strOption6, strOption7, strOption8, strOption9, strOption6_1, checkbox_string, strothers)
 
@@ -459,7 +575,7 @@ async def send_message(request):
 async def admin_tables_page(request):
 
     session = await get_session(request)
-    user_id = session.get('user_id')
+    admin_id = session.get('admin_id')
 
     async with request.app['db_pool'].acquire() as conn:
         async with conn.cursor() as cursor:
@@ -469,7 +585,7 @@ async def admin_tables_page(request):
             await cursor.execute("SELECT * FROM tbl_medical_history")
             medicalInfo = await cursor.fetchall()
 
-            if user_id:
+            if admin_id:
                 # User is authenticated, allow access to the admin dashboard page
                 return aiohttp_jinja2.render_template('admin-tables.html', request, {'user_authenticated': True, 'personalInfo': personalInfo, 'medicalInfo': medicalInfo})
 
@@ -477,14 +593,14 @@ async def admin_tables_page(request):
     return aiohttp_jinja2.render_template('admin-login.html', request, {'user_authenticated': False})
 
 async def get_image_url(request):
-    user_id = request.query.get('id')
+    admin_id = request.query.get('id')
 
-    if not user_id:
+    if not admin_id:
         return web.Response(text="Missing user ID", status=400)
 
     async with request.app['db_pool'].acquire() as conn:
         async with conn.cursor() as cursor:
-            await cursor.execute("SELECT Valid_ID FROM tbl_patient_information_record WHERE ID = %s", (user_id,))
+            await cursor.execute("SELECT Valid_ID FROM tbl_patient_information_record WHERE ID = %s", (admin_id,))
             image_url = await cursor.fetchone()
 
             if image_url:
@@ -549,6 +665,57 @@ async def update_treatment(request):
         print(e)
         return web.Response(text='Error while updating treatment record')
 
+async def update_admin_credentials(request):
+    try:
+        data = await request.post()
+
+        # GET USER INPUTS
+        admin_id = data['adminID']
+        strUser = data['adminUser']
+        strPass = data['adminPass']
+
+        # Hash the password
+        hashed_password = bcrypt.hashpw(strPass.encode('utf-8'), bcrypt.gensalt())
+
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                # UPDATE EXISTING RECORD
+                sql = "UPDATE admin_credentials SET username=%s, hashed_password=%s WHERE id=%s"
+                data = (strUser, hashed_password, admin_id)
+
+                await cursor.execute(sql, data)
+
+        return web.Response(text='Admin credentials updated successfully')
+
+    except Exception as e:
+        print(e)
+        return web.Response(text='Error while updating admin credentials')
+
+async def update_secretary_credentials(request):
+    try:
+        data = await request.post()
+
+        # GET USER INPUTS
+        patient_id = data['secID']
+        strUser = data['secUser']
+        strPass = data['secPass']
+
+        # Hash the password
+        hashed_password = bcrypt.hashpw(strPass.encode('utf-8'), bcrypt.gensalt())
+
+        async with request.app['db_pool'].acquire() as conn:
+            async with conn.cursor() as cursor:
+                # UPDATE EXISTING RECORD
+                sql = "UPDATE secretary_credentials SET username=%s, hashed_password=%s WHERE id=%s"
+                data = (strUser, hashed_password, patient_id)
+
+                await cursor.execute(sql, data)
+
+        return web.Response(text='Secretary credentials updated successfully')
+
+    except Exception as e:
+        print(e)
+        return web.Response(text='Error while updating treatment record')
 
 
 async def read_one_treatment(request):
@@ -557,7 +724,7 @@ async def read_one_treatment(request):
         logging.info(f"Patient ID: {patient_id}")
 
         session = await get_session(request)
-        user_id = session.get('user_id')
+        admin_id = session.get('admin_id')
 
         async with request.app['db_pool'].acquire() as conn:
             async with conn.cursor() as cursor:
@@ -568,7 +735,7 @@ async def read_one_treatment(request):
                 await cursor.execute("SELECT * FROM tbl_treatment_record WHERE ID=%s", patient_id)
                 treatment_records = await cursor.fetchall()
 
-                if user_id:
+                if admin_id:
                     # User is authenticated, allow access to the admin dashboard page
                     return aiohttp_jinja2.render_template('treatment-records.html', request, {'user_authenticated': True, 'row': row, 'treatment_records': treatment_records})
 
@@ -582,7 +749,7 @@ async def edit_one_record(request):
         logging.info(f"Patient ID: {patient_id}")
 
         session = await get_session(request)
-        user_id = session.get('user_id')
+        admin_id = session.get('admin_id')
 
         async with request.app['db_pool'].acquire() as conn:
             async with conn.cursor() as cursor:
@@ -592,7 +759,7 @@ async def edit_one_record(request):
                 await cursor.execute("SELECT * FROM tbl_verification WHERE ID=%s", patient_id)
                 VF = await cursor.fetchone()
 
-                if user_id:
+                if admin_id:
                     # User is authenticated, allow access to the admin dashboard page
                     return aiohttp_jinja2.render_template('edit-records.html', request, {'user_authenticated': True, 'PIR': PIR, 'VF': VF})
 
@@ -1201,7 +1368,12 @@ app.router.add_get('/admin_tables_page', admin_tables_page)
 app.router.add_get('/admin_dashboard_page', admin_dashboard_page)
 app.router.add_get('/admin_calendar_page', admin_calendar_page)
 app.router.add_get('/admin_A&M_page', admin_AandM_page)
+app.router.add_get('/admin_account_page', admin_account_page)
 app.router.add_get('/admin_login_page', admin_login_page)
+app.router.add_get('/secretary_dashboard_page', secretary_dashboard_page)
+app.router.add_get('/secretary_calendar_page', secretary_calendar_page)
+app.router.add_get('/secretary_A&M_page', secretary_AandM_page)
+app.router.add_get('/secretary_login_page', secretary_login_page)
 app.router.add_post('/submit_treatment', submit_treatment)
 app.router.add_get('/read_one_treatment/{id}', read_one_treatment)
 app.router.add_get('/edit_one_record/{id}', edit_one_record)
@@ -1220,9 +1392,13 @@ app.router.add_get('/api/get-all-emails', get_all_email_addresses)
 app.router.add_delete('/delete-disabled-date', delete_disabled_date)
 app.router.add_delete('/delete-disabled-timeslot', delete_disabled_timeslot)
 app.router.add_post('/login', login)
+app.router.add_post('/login_sec', login_sec)
 app.router.add_route('*', '/logout', logout)
+app.router.add_route('*', '/sec_logout', sec_logout)
 app.router.add_post('/validate-email-pin', validate_email_and_pin)
 app.router.add_post('/update_treatment', update_treatment)
+app.router.add_post('/update_admin_credentials', update_admin_credentials)
+app.router.add_post('/update_secretary_credentials', update_secretary_credentials)
 app.router.add_get('/api/fetch-patient-info', fetch_patient_info)
 app.router.add_post('/update_records', update_records)
 app.router.add_get('/api/fetch-registered-number', fetch_registered_number)

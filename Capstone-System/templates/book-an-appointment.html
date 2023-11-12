@@ -80,16 +80,36 @@
 <input type="hidden" class="form-control"  name="OP-LastName" id="OP-LastName" placeholder="Enter last name">
 <input type="hidden" class="form-control"  name="OP-Contact" id="OP-Contact" placeholder="Enter contact">
 <input type="hidden" class="form-control"  name="OP-Email" id="OP-Email" placeholder="Enter email address">
-           <label class="lblReason">What is your reason for dental consultation:</label>
+            <label class="lblReason"><span style="color: red;font-size:18px;">*</span>What is your reason for dental consultation:</label>
+            <div class="row">
             <br>
             <div class="form-group col-md-12 mb-4">
-                <input  type="text" class="form-control" name="OP-Reason" id="OP-Reason" placeholder="Enter reason for dental consultation" style="width:300px;">
-                <span style="color: red;" id="OP-Reasonval"></span>
+                            <select class="form-control form-select" id="OP-Reason" name="OP-Reason">
+                            <option value="" selected disabled>select</option>
+                            <option>Self Ligating Braces</option>
+                            <option>Ceramic Braces</option>
+                            <option>Crown</option>
+                            <option>Dental Implants</option>
+                            <option>Surgery For Impacted Teeth</option>
+                            <option>Gum Contouring</option>
+                            <option>Invisalign (Clear Braces)</option>
+                            <option>Oral Prophylaxis</option>
+                            <option>Orthodontic Braces</option>
+                            <option>Prosthodontics</option>
+                            <option>Restoration</option>
+                            <option>Retainer</option>
+                            <option>Root Canal Treatment</option>
+                            <option>Teeth Whitening</option>
+                            <option>Tooth Extraction Services</option>
+                            <option>Conventional Braces</option>
+                            </select>
+                          <span style="color: red;" id="OP-Reasonval"></span>
+            </div>
             </div>
            <hr>
 
             <br><br>
-                <h4>Select Preferred Time/Date</h4>
+                <h4><span style="color: red;font-size:18px;">*</span>Select Preferred Time/Date</h4>
                              <button type="button" id="OP-AppointmentButton" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#calendarModal" style="border: 3px solid #3A3D6D;">Book Appointment</button><label class="clickLabel" style="color:red;"><--- Click Here</label>
                     <hr>
                  <br><br>
@@ -220,7 +240,7 @@
                     </div>
                     <div class="form-group col-md-4 mb-4">
                          <label for="MiddleName">
-                            <span style="color: red;font-size:18px;">*</span>Middle Name:
+                           Middle Name:
                          </label>
                          <input type="text" class="form-control"  name="MiddleName" id="MiddleName" placeholder="Enter middle name">
                          <span style="color: red;" id="MNval"></span>
@@ -344,8 +364,26 @@
             <div class="row">
             <br>
             <div class="form-group col-md-12 mb-4">
-                <input  type="text" class="form-control" name="Reason" id="Reason" placeholder="Enter reason for dental consultation">
-                <span style="color: red;" id="Reasonval"></span>
+                            <select class="form-control form-select" id="Reason" name="Reason">
+                            <option value="" selected disabled>select</option>
+                            <option>Self Ligating Braces</option>
+                            <option>Ceramic Braces</option>
+                            <option>Crown</option>
+                            <option>Dental Implants</option>
+                            <option>Surgery For Impacted Teeth</option>
+                            <option>Gum Contouring</option>
+                            <option>Invisalign (Clear Braces)</option>
+                            <option>Oral Prophylaxis</option>
+                            <option>Orthodontic Braces</option>
+                            <option>Prosthodontics</option>
+                            <option>Restoration</option>
+                            <option>Retainer</option>
+                            <option>Root Canal Treatment</option>
+                            <option>Teeth Whitening</option>
+                            <option>Tooth Extraction Services</option>
+                            <option>Conventional Braces</option>
+                            </select>
+                          <span style="color: red;" id="Reasonval"></span>
             </div>
             </div>
 
@@ -371,6 +409,23 @@
                 </label>
                 <input  type="date" class="form-control" name="LastVisit" id="LastVisit" placeholder="Enter date" value="1111-11-11">
                 <span style="color: red;" id="LVval"></span>
+            </div>
+            </div>
+
+             <div class="row">
+            <div class="form-group col-md-6 mb-4">
+                <label for="CNPD">
+                    <span style="color: red;font-size:18px;">*</span>Contact No. of Previous Dentist:
+                </label>
+                <input  type="text" class="form-control" name="CNPD" id="CNPD" placeholder="Enter contact no." value="N/A" maxlength="11">
+                <span style="color: red;" id="CNPDval"></span>
+            </div>
+
+            <div class="form-group col-md-6 mb-4">
+                <label for="LNPD">
+                    License No. of Previous Dentist:
+                </label>
+                <input  type="text" class="form-control" name="LNPD" id="LNPD" placeholder="Enter license no." value="N/A">
             </div>
             </div>
             </div>
