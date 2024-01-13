@@ -80,7 +80,7 @@
           </table>
      </div>
 <!-- Modal -->
-<div class="modal fade" id="treatmentModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+ <div class="modal fade" id="treatmentModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -151,7 +151,7 @@
                 <!-- Edit Treatment Record Form -->
                 <form action="/update_treatment" method="POST" enctype="multipart/form-data" id="edit-form-wrapper" name="edit-form-wrapper">
                     <!-- Hidden input for record ID -->
-                    <input type="number" name="ID" id="edit-ID">
+                    <input type="hidden" name="ID" id="edit-ID">
 
                     <!-- Edit fields with distinct IDs -->
                     <div class="form-group" style="display:none;">

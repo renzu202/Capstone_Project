@@ -581,7 +581,7 @@ async def admin_tables_page(request):
         async with conn.cursor() as cursor:
             await cursor.execute("SELECT * FROM tbl_patient_information_record")
             personalInfo = await cursor.fetchall()
-
+            print(personalInfo)
             await cursor.execute("SELECT * FROM tbl_medical_history")
             medicalInfo = await cursor.fetchall()
 
@@ -635,7 +635,6 @@ async def submit_treatment(request):
 
     except Exception as e:
         print(e)
-        return web.Response(text='Error while submitting message')
 
 async def update_treatment(request):
     try:
